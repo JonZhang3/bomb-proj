@@ -1,0 +1,12 @@
+app:
+    aesKey: 123
+spring:
+    thymeleaf:
+        suffix: .html
+        prefix: classpath:/static/html/
+    mvc:
+        view:
+            suffix: .jsp
+            prefix: classpath:/templates/
+server:
+    port: 8081

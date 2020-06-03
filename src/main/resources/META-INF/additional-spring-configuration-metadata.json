@@ -1,0 +1,9 @@
+{
+    "groups": [
+        {
+            "sourceType": "com.bombproj.config.AppProperties",
+            "name": "app",
+            "type": "com.bombproj.config.AppProperties"
+        }
+    ]
+}
