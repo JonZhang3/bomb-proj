@@ -50,13 +50,14 @@ public class UserController {
         return JsonResult.success().data(user);
     }
 
+    @ApiOperation("用户退出（DONE）")
     @GetMapping("/logout")
     public JsonResult logout() {
         WebUtils.removeSessionAttribute(SessionConfig.KEY_SESSION_CONFIG);
         return JsonResult.success();
     }
 
-    @ApiOperation("用户注册")
+    @ApiOperation("用户注册（DONE）")
     @PostMapping("/register")
     public JsonResult register(@ModelAttribute @Validated({LoginDto.Register.class}) LoginDto model) {
         this.userService.register(model);

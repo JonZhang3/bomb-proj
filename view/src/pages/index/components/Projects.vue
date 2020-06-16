@@ -9,7 +9,7 @@
                 </el-radio-group>
             </el-col>
             <el-col :span="6">
-                <search-input placeholder="项目名称"></search-input>
+                <search-input placeholder="项目名称" button-text="搜索" style="width: 60%;"></search-input>
             </el-col>
         </el-row>
     </div>
