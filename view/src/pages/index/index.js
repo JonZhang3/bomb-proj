@@ -1,18 +1,13 @@
 import Vue from 'vue'
-import VueRouter from 'vue-router';
 import ElementUI from 'element-ui';
 import '../../common/common-style';
-import routers from './router';
+import './style/index.css';
+import router from './router';
 import App from './App.vue'
 
-Vue.use(VueRouter);
 Vue.use(ElementUI);
 
 Vue.config.productionTip = false;
-
-const router = new VueRouter({
-    routers: routers
-});
 
 new Vue({
     router,

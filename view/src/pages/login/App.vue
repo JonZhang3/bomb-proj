@@ -75,6 +75,6 @@
     }
     .container {
         margin: 0 auto;
-        padding-top: 100px;
+        padding-top: 50px;
     }
 </style>

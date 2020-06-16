@@ -1,0 +1,36 @@
+.app-header-root {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    padding: 0;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    background-color: #303543;
+}
+
+.app-header-title-root {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 300px;
+    text-align: center;
+    padding-left: 20px;
+}
+
+.app-header-operation-root {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-right: 20px;
+}
+
+.app-header-operation-list-root {
+    background-color: #3e4458;
+    border: 1px solid #3e4458;
+    color: #fff;
+}
+
+.el-menu-item.is-active {
+    background-color: #D9ECFD;
+}

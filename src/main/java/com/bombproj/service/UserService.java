@@ -47,6 +47,12 @@ public class UserService {
         if (!model.getVerificationCode().equals(WebUtils.getSessionAttribute(SessionConfig.KEY_VERIFICATION_CODE))) {
             throw new BusinessException("验证码有误");
         }
+        if(!Utils.checkEmail(model.getEmail())) {
+            throw new BusinessException("邮箱格式错误");
+        }
+        if(!Utils.checkPhone(model.getPhone())) {
+            throw new BusinessException("手机号格式错误");
+        }
         int count = this.userDao.queryUserCountByUsername(model.getUserName());
         if(count > 0) {
             throw new BusinessException("该用户名已存在");

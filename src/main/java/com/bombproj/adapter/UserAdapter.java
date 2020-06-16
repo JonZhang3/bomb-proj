@@ -1,6 +1,7 @@
 package com.bombproj.adapter;
 
 import com.bombproj.constants.Constants;
+import com.bombproj.constants.LoginType;
 import com.bombproj.constants.UserStatus;
 import com.bombproj.constants.UserType;
 import com.bombproj.dto.LoginDto;
@@ -31,6 +32,13 @@ public final class UserAdapter {
         user.setEmail(loginDto.getEmail());
         user.setPhone(loginDto.getPhone());
         user.setPasswordSalt(salt);
+        user.setAuth("");
+        user.setAuthName("");
+        user.setRoleId("");
+        user.setRoleName("");
+        user.setAvatarUrl("");
+        user.setLoginType(LoginType.COMMON.getCode());
+        user.setSequence(0L);
         return user;
     }
 

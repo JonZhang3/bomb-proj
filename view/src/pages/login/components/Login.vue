@@ -1,7 +1,7 @@
 <template>
     <div class="panel">
         <blockquote class="panel-title"><span>登录</span></blockquote>
-        <el-form :model="loginForm" :rules="loginFormRules" style="margin-top: 10px;">
+        <el-form ref="loginForm" :model="loginForm" :rules="loginFormRules" style="margin-top: 10px;">
             <el-form-item prop="userName">
                 <el-input v-model="loginForm.userName" placeholder="用户名/邮箱/手机号"></el-input>
             </el-form-item>
@@ -33,7 +33,8 @@
 
 <script>
 
-    import settings from '../../../common/settings';
+    import apis from '../../../api/apis';
+    import utils from '../../../common/utils';
 
     export default {
         name: 'Login',
@@ -53,18 +54,49 @@
                         {required: true, message: '请输入密码', trigger: 'blur'}
                     ],
                     verificationCode: [
-                        {required: true, message: '请输入验证码', trigger: 'blur'}
+                        {required: true, message: '请输入验证码', trigger: 'blur'},
+                        {
+                            validator: (rule, value, callback) => {
+                                apis.checkCaptcha(value).then(data => {
+                                    if(data.code === -1) {
+                                        callback(new Error(data.message));
+                                    } else {
+                                        callback();
+                                    }
+                                });
+                            },
+                            trigger: 'blur'
+                        }
                     ]
                 },
-                imageCodeUrl: `${settings.baseUrl}/common/captcha`
+                imageCodeUrl: apis.captchaUrl
             }
         },
         methods: {
             changeCode() {
-                this.imageCodeUrl = `${settings.baseUrl}/common/captcha?${new Date().getTime()}`
+                this.imageCodeUrl = `${apis.captchaUrl}?${new Date().getTime()}`
+                this.loginForm.verificationCode = '';
             },
             login() {
-                console.log(this.loginForm);
+                this.$refs['loginForm'].validate((valid) => {
+                    console.log(valid);
+                    if(valid) {
+                        apis.login({
+                            userName: this.loginForm.userName,
+                            verificationCode: this.loginForm.verificationCode,
+                            password: utils.md5(this.loginForm.password),
+                            remberPwd: this.loginForm.remberPwd ? 'yes' : 'no'
+                        }).then(data => {
+                            if(data.code === 1) {
+                                this.$message.success('登录成功');
+                            } else {
+                                this.$message.error(data.message);
+                            }
+                        });
+                    } else {
+                        return false;
+                    }
+                });
             },
             toRegisterPage() {
                 this.$router.push('register');
