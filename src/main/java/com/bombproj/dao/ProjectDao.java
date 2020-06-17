@@ -13,7 +13,7 @@ public class ProjectDao {
     public void pageQueryProjects(ProjectDto query) {
         List<Object> values = new LinkedList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT p.id, p.name, p.createTime, p.cover, p.status ");
+        sql.append(" SELECT p.id, p.name, p.createTime, p.cover, p.status,p.uniKey ");
         sql.append(" FROM project p LEFT JOIN project_user ON p.id=u.projectId ");
         sql.append(" WHERE u.userId = ? ");
         values.add(query.getUserId());
@@ -21,7 +21,7 @@ public class ProjectDao {
             sql.append(" AND projectName LIKE ? ");
             values.add("%" + query.getName() + "%");
         }
-        sql.append(" ORDER BY  ");
+        sql.append(" ORDER BY p.createTime DESC ");
 
     }
 

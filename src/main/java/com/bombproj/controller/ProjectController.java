@@ -28,4 +28,8 @@ public class ProjectController {
         return null;
     }
 
+    public JsonResult delete(@ModelAttribute ProjectDto project) {
+        return null;
+    }
+
 }
