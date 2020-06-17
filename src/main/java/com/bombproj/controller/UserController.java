@@ -1,5 +1,6 @@
 package com.bombproj.controller;
 
+import com.bombproj.constants.UserType;
 import com.bombproj.dto.LoginDto;
 import com.bombproj.framework.CookieConfig;
 import com.bombproj.framework.JsonResult;
@@ -40,6 +41,7 @@ public class UserController {
         sessionConfig.setUserId(user.getId());
         sessionConfig.setUserName(user.getUserName());
         sessionConfig.setNickName(user.getNickName());
+        sessionConfig.setUserType(UserType.ofValue(user.getType()));
         WebUtils.setSessionAttribute(SessionConfig.KEY_SESSION_CONFIG, sessionConfig);
         WebUtils.removeSessionAttribute(SessionConfig.KEY_VERIFICATION_CODE);
         if("yes".equalsIgnoreCase(model.getRemberPwd())) {

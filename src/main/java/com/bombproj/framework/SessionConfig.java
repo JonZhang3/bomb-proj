@@ -1,7 +1,11 @@
 package com.bombproj.framework;
 
+import com.bombproj.constants.UserType;
+import lombok.Data;
+
 import java.io.Serializable;
 
+@Data
 public class SessionConfig implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -12,28 +16,10 @@ public class SessionConfig implements Serializable {
     private String userId;
     private String userName;
     private String nickName;
+    private UserType userType;
 
-    public String getUserId() {
-        return userId;
+    public static SessionConfig current() {
+        return (SessionConfig) WebUtils.getSessionAttribute(KEY_SESSION_CONFIG);
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
 }

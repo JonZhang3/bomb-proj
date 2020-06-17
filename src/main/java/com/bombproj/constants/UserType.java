@@ -21,6 +21,15 @@ public enum UserType {
         return name;
     }
 
+    public static UserType ofValue(byte type) {
+        for (UserType userType : UserType.values()) {
+            if(userType.code == type) {
+                return userType;
+            }
+        }
+        return null;
+    }
+
     public static String getNameByValue(byte type) {
         for (UserType value : UserType.values()) {
             if (value.getCode() == type) {
