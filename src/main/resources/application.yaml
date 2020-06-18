@@ -1,12 +1,5 @@
 app:
-    aesKey: 123
-spring:
-    thymeleaf:
-        suffix: .html
-        prefix: classpath:/static/html/
-    mvc:
-        view:
-            suffix: .jsp
-            prefix: classpath:/templates/
+    aesKey: 123,
+    coverImagePath: /Users/jadyn/Desktop/files/cover/
 server:
     port: 8081

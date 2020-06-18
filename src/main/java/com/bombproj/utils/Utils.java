@@ -45,4 +45,11 @@ public final class Utils {
         return PATTERN_PHONE.matcher(phone).matches();
     }
 
+    public static String getFileSuffix(String fileName) {
+        if(isEmpty(fileName)) {
+            return "";
+        }
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
+    }
+
 }
