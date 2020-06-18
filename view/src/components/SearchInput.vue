@@ -28,7 +28,7 @@
         },
         methods: {
             handleClick(evt) {
-                this.$emit('search', evt);
+                this.$emit('search', this.searchText);
             }
         }
     }

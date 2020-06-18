@@ -1,27 +1,32 @@
 package com.bombproj.model;
 
+import com.queryflow.annotation.Table;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @Data
+@Table("project")
 public class Project implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private String id;
     private String uniKey;
-    private String name;
+    private String projectName;
+    private String projectDesc;
     private Date createTime;
     private Date updateTime;
-    private Byte status;
+    private Integer state;
     private Long sequence;
     private String remark;
     private String userId;
-    private Byte type;
-    private String password;
+    private String userName;
+    private Integer type;
+    private String pass;
     private String cover;
-    private Byte lucenSearch;
+    private Integer luceneSearch;
+    private String gitAddr;
 
 }

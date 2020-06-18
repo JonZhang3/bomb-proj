@@ -79,7 +79,6 @@
             },
             login() {
                 this.$refs['loginForm'].validate((valid) => {
-                    console.log(valid);
                     if(valid) {
                         apis.login({
                             userName: this.loginForm.userName,

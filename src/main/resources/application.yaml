@@ -1,5 +1,5 @@
 app:
     aesKey: 123,
-    coverImagePath: /Users/jadyn/Desktop/files/cover/
+    coverImagePath: /Users/jon/Desktop/files/cover/
 server:
     port: 8081

@@ -18,8 +18,17 @@ public class SessionConfig implements Serializable {
     private String nickName;
     private UserType userType;
 
+    private static final SessionConfig TESTER = new SessionConfig();
+    static {
+        TESTER.setUserId("admin");
+        TESTER.setUserName("admin");
+        TESTER.setNickName("admin");
+        TESTER.setUserType(UserType.NORMAL);
+    }
+
     public static SessionConfig current() {
-        return (SessionConfig) WebUtils.getSessionAttribute(KEY_SESSION_CONFIG);
+        return TESTER;
+//        return (SessionConfig) WebUtils.getSessionAttribute(KEY_SESSION_CONFIG);
     }
 
 }

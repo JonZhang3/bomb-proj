@@ -43,4 +43,20 @@ export const post = (url, params, configs = {useLoading: true}) => {
     });
 }
 
-
+export const del = (url, params, configs = {useLoading: true}) => {
+    let loading;
+    if(configs.useLoading) {
+        loading = Loading.service({fullscreen: true});
+    }
+    return new Promise((resolve, reject) => {
+        axios.delete(url, {
+            params: params
+        }).then(res => {
+            loading && loading.close();
+            resolve(res.data);
+        }).catch(err => {
+            loading && loading.close();
+            reject(err.data);
+        });
+    });
+}
