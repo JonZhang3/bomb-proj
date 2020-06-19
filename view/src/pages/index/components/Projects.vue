@@ -100,7 +100,7 @@
             handleProjectTableRowClick(row, column, e) {
                 e.stopPropagation();
                 e.preventDefault();
-                alert(1);
+                this.$router.push({path: `/project/${row.id}`});
             },
             handleProjectTableRowEditClick(project, e) {
                 e.stopPropagation();

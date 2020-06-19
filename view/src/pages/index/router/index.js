@@ -4,6 +4,9 @@ import VueRouter from 'vue-router';
 import Index from '../components/Index';
 import Projects from "../components/Projects";
 
+import ProjectDetail from "../components/ProjectDetail";
+import ProjectDashboard from "../components/project/detail/ProjectDashboard";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -16,6 +19,18 @@ const routes = [
                 path: '/',
                 name:'projects',
                 component: Projects
+            }
+        ]
+    },
+    {
+        path: '/project/:id',
+        name: 'project-detail',
+        component: ProjectDetail,
+        children: [
+            {
+                path: '/',
+                name:'project-dashboard',
+                component: ProjectDashboard
             }
         ]
     }
