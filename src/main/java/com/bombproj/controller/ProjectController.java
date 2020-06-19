@@ -36,7 +36,7 @@ public class ProjectController {
 
     @AuthPassport
     @PostMapping("")
-    public JsonResult newProject(@ModelAttribute @Validated(ProjectDto.NewProjectGroup.class) ProjectDto dto) {
+    public JsonResult newProject(@ModelAttribute @Validated(ProjectDto.NewOrUpdateProjectGroup.class) ProjectDto dto) {
         SessionConfig sessionConfig = SessionConfig.current();
         dto.setUserId(sessionConfig.getUserId());
         dto.setUserName(sessionConfig.getNickName());
@@ -44,8 +44,24 @@ public class ProjectController {
         return JsonResult.success();
     }
 
-    public JsonResult delete(@ModelAttribute ProjectDto project) {
+    @AuthPassport
+    @DeleteMapping("/{projectId}")
+    public JsonResult deleteProject(@PathVariable("projectId") String projectId) {
+        // TODO check permission
+
         return null;
+    }
+
+    @AuthPassport
+    @PutMapping("/{projectId}")
+    public JsonResult updateProject(@PathVariable("projectId") String projectId,
+                                    @ModelAttribute @Validated(ProjectDto.NewOrUpdateProjectGroup.class) ProjectDto dto) {
+        SessionConfig sessionConfig = SessionConfig.current();
+        // TODO check permission
+        dto.setId(projectId);
+        dto.setUserId(sessionConfig.getUserId());
+        this.projectService.updateProject(dto);
+        return JsonResult.success();
     }
 
 }

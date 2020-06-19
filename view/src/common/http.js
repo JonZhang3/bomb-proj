@@ -60,3 +60,19 @@ export const del = (url, params, configs = {useLoading: true}) => {
         });
     });
 }
+
+export const put = (url, params, configs = {useLoading: true}) => {
+    let loading;
+    if(configs.useLoading) {
+        loading = Loading.service({fullscreen: true});
+    }
+    return new Promise((resolve, reject) => {
+        axios.put(url, qs.stringify(params), configs).then(res => {
+            loading && loading.close();
+            resolve(res.data);
+        }).catch(err => {
+            loading && loading.close();
+            reject(err.data);
+        });
+    });
+}

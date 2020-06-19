@@ -9,6 +9,7 @@ import com.queryflow.page.Pager;
 import com.queryflow.sql.SqlBox;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,8 +19,8 @@ public class ProjectDao {
     public Pager<Project> pageQueryProjects(ProjectDto query) {
         List<Object> values = new LinkedList<>();
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT p.id, p.projectName, p.projectDesc, p.createTime, p.cover, p.uniKey, p.type,p.userId,p.userName FROM project p ");
-        sql.append("  ");
+        sql.append(" SELECT p.id, p.projectName, p.projectDesc, p.createTime, p.gitAddr, ");
+        sql.append(" p.cover, p.uniKey, p.type,p.userId,p.userName FROM project p ");
         sql.append(" WHERE p.state = ? ");
         values.add(ProjectState.COMMON.getState());
         if(Utils.isNotEmpty(query.getName())) {
@@ -49,6 +50,23 @@ public class ProjectDao {
 
     public void insertProject(Project project) {
         SqlBox.insert(project);
+    }
+
+    public void deleteProject(String projectId, String userId) {
+        String sql = "UPDATE project SET state = ? WHERE userId = ? AND id = ?";
+        A.update(sql, ProjectState.DELETED.getState(), userId, projectId);
+    }
+
+    public void updateProject(ProjectDto dto) {
+        SqlBox.update("project").set("projectName", dto.getName())
+            .set("projectDesc", dto.getDesc())
+            .set("type", dto.getType())
+            .set("cover", dto.getCover())
+            .set("gitAddr", dto.getGitAddr())
+            .set("updateTime", new Date())
+            .where().eq("id", dto.getId())
+            .and().eq("userId", dto.getUserId())
+            .execute();
     }
 
 }

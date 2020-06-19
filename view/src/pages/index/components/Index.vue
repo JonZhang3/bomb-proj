@@ -9,13 +9,13 @@
                      style="height: 100%;">
                 <el-menu-item index="/">
                     <template slot="title">
-                        <i class="el-icon-location"></i>
+                        <i class="el-icon-s-cooperation"></i>
                         <span>项目管理</span>
                     </template>
                 </el-menu-item>
                 <el-menu-item index="2">
                     <template slot="title">
-                        <i class="el-icon-location"></i>
+                        <i class="el-icon-s-custom"></i>
                         <span>个人资料</span>
                     </template>
                 </el-menu-item>

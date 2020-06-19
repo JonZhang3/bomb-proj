@@ -1,4 +1,4 @@
-import {get, post, del} from '../common/http';
+import {get, post, del, put} from '../common/http';
 import settings from '../common/settings';
 import urls from './urls';
 
@@ -28,6 +28,14 @@ function queryProjects(params) {
     return get(urls.listProject, params);
 }
 
+function deleteProject(projectId) {
+    return del(`${urls.deleteProject}${projectId}`);
+}
+
+function updateProject(projectId, params) {
+    return put(`${urls.updateProject}${projectId}`, params);
+}
+
 export default {
     captchaUrl,
     coverBaseUrl,
@@ -36,5 +44,6 @@ export default {
     login,
     register,
     newProject,
-    queryProjects
+    queryProjects,
+    updateProject,
 }

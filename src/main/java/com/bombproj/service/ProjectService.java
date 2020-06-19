@@ -25,14 +25,14 @@ public class ProjectService {
         return this.projectDao.pageQueryProjects(dto);
     }
 
-    public void deleteProject(ProjectDto project) {
-        if(Utils.isEmpty(project.getId())) {
+    public void deleteProject(String projectId, String userId) {
+        if(Utils.isEmpty(projectId)) {
             throw new BusinessException("");
         }
-        if("web".equals(project.getId())) {
+        if("web".equals(projectId)) {
             throw new BusinessException("系统数据，不允许删除");
         }
-
+        this.projectDao.deleteProject(projectId, userId);
     }
 
     public void newProject(ProjectDto dto) {
@@ -40,6 +40,11 @@ public class ProjectService {
             throw new BusinessException("该名称的项目已存在");
         }
         this.projectDao.insertProject(ProjectAdapter.getModel(dto));
+    }
+
+    public void updateProject(ProjectDto dto) {
+        this.projectDao.updateProject(dto);
+        // TODO log
     }
 
 }

@@ -1,5 +1,6 @@
 package com.bombproj.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.queryflow.annotation.Table;
 import lombok.Data;
 
@@ -16,7 +17,9 @@ public class Project implements Serializable {
     private String uniKey;
     private String projectName;
     private String projectDesc;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date createTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date updateTime;
     private Integer state;
     private Long sequence;

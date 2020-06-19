@@ -4,5 +4,7 @@ export default {
     captcha: '/common/captcha',
     checkCaptcha: '/common/checkCaptcha',
     newProject: '/project',
-    listProject: '/project'
+    listProject: '/project',
+    deleteProject: '/project/',
+    updateProject: '/project/',
 }
