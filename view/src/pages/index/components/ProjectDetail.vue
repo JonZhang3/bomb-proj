@@ -25,7 +25,7 @@
                         <span>项目成员</span>
                     </template>
                 </el-menu-item>
-                <el-menu-item index="/project/ds/ds">
+                <el-menu-item :index="`/project/${$route.params.id}/code`">
                     <template slot="title">
                         <i class="el-icon-error"></i>
                         <span>状态码</span>
@@ -42,8 +42,34 @@
 
 <script>
 
+    import apis from "../../../api/apis";
+
     export default {
-        name: 'project-detail'
+        name: 'project-detail',
+        data() {
+            return {
+
+            }
+        },
+        beforeMount() {
+            this.projectDetail();
+        },
+        mounted() {
+            console.log('root mounted');
+        },
+        methods: {
+            projectDetail() {
+                const projectId = this.$route.params.id;
+                apis.getProjectDetail(projectId).then(data => {
+                    if(data.code === 1) {
+                        this.$store.commit('setProjectName', data.data.projectName);
+                        this.$store.commit('setProjectId', data.data.id);
+                    } else {
+                        this.$message.error(data.message);
+                    }
+                });
+            }
+        }
     }
 
 </script>

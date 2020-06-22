@@ -6,7 +6,8 @@ import Projects from "../components/Projects";
 
 import ProjectDetail from "../components/ProjectDetail";
 import ProjectDashboard from "../components/project/detail/ProjectDashboard";
-import ProjectMember from "../components/project/detail/ProjectMember";
+import ProjectMember from "../components/project/member/ProjectMember";
+import ProjectCode from "../components/project/code/ProjectCode";
 
 Vue.use(VueRouter);
 
@@ -37,6 +38,11 @@ const routes = [
                 path: 'member',
                 name: 'project-member',
                 component: ProjectMember
+            },
+            {
+                path: 'code',
+                name: 'project-code',
+                component: ProjectCode
             }
         ]
     }

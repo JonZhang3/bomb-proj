@@ -1,6 +1,7 @@
 package com.bombproj.dao;
 
 import com.bombproj.constants.ProjectMemberState;
+import com.bombproj.constants.ProjectMemberType;
 import com.bombproj.constants.ProjectState;
 import com.bombproj.constants.UserState;
 import com.bombproj.dto.ProjectDto;
@@ -10,6 +11,7 @@ import com.bombproj.utils.Utils;
 import com.bombproj.vo.ProjectMemberListVO;
 import com.bombproj.vo.UserQueryResultVO;
 import com.queryflow.accessor.A;
+import com.queryflow.key.KeyGenerateUtil;
 import com.queryflow.page.Pager;
 import com.queryflow.sql.SqlBox;
 import org.springframework.stereotype.Repository;
@@ -86,7 +88,7 @@ public class ProjectDao {
 
     public Pager<ProjectMemberListVO> pageProjectMemebers(ProjectMemberDto dto) {
         StringBuilder sql = new StringBuilder();
-        sql.append(" SELECT m.id, m.userId, m.permission, u.userName, u.nickName, u.email, u.phone ");
+        sql.append(" SELECT m.id, m.userId, m.permission, m.createTime, u.userName, u.nickName, u.email, u.phone ");
         sql.append(" FROM project_member m JOIN project p ON m.projectId = p.id ");
         sql.append(" JOIN users u ON m.userId = u.id ");
         sql.append(" WHERE u.state = ? AND p.userId = ? AND m.state = ? ");
@@ -101,6 +103,7 @@ public class ProjectDao {
         }
         sql.append(" AND m.projectId = ? ");
         values.add(dto.getProjectId());
+        sql.append(" ORDER BY m.createTime DESC ");
         return A.page(sql.toString(), values, dto.getPage(), ProjectMemberListVO.class);
     }
 
@@ -117,6 +120,32 @@ public class ProjectDao {
             projectId, UserState.VALID.getCode(), "%" + name + "%",
             projectId, UserState.VALID.getCode(), "%" + name + "%")
             .list(UserQueryResultVO.class);
+    }
+
+    public void batchInsertMember(String projectId, String[] userIds, String permissions, ProjectMemberType memberType) {
+        String sql = "INSERT INTO project_member SELECT " +
+            "?, ?, ?, ?, ?, ?, ?, ?, ? FROM DUAL WHERE NOT EXISTS (SELECT * FROM project_member WHERE " +
+            "projectId = ? AND userId = ?)";
+        List<List<Object>> values = new LinkedList<>();
+        Date now = new Date();
+        for (String userId : userIds) {
+            if(Utils.isNotEmpty(userId)) {
+                List<Object> value = new LinkedList<>();
+                value.add(KeyGenerateUtil.generateId() + "");
+                value.add(ProjectMemberState.NORMAL.getState());
+                value.add("0");
+                value.add(now);
+                value.add(now);
+                value.add(projectId);
+                value.add(userId);
+                value.add(permissions);
+                value.add(memberType.getType());
+                value.add(projectId);
+                value.add(userId);
+                values.add(value);
+            }
+        }
+        A.batch(sql, values);
     }
 
 }

@@ -10,7 +10,7 @@
                     <el-button @click="listProjectMemebers(null, 1)"
                                icon="el-icon-refresh" size="mini" round>刷新</el-button>
                     <el-button type="primary"
-                               @click="newProjectMemberDialogVisible = true"
+                               @click="addProjectMemberDialogVisible = true"
                                icon="el-icon-plus" size="mini" round>新增成员</el-button>
                 </el-button-group>
             </el-col>
@@ -25,6 +25,7 @@
                 <el-table-column prop="nickName" label="成员"></el-table-column>
                 <el-table-column prop="email" label="成员邮箱"></el-table-column>
                 <el-table-column prop="phone" label="成员手机号"></el-table-column>
+                <el-table-column prop="createTime" label="加入时间"></el-table-column>
                 <el-table-column width="500" label="成员权限">
                     <template slot-scope="scope">
                         <div v-if="scope.row.permission" class="project-member-permiss-tags">
@@ -45,7 +46,7 @@
                                        icon="el-icon-edit" circle size="small"></el-button>
                         </el-tooltip>
                         <el-tooltip effect="dark" content="删除" placement="top">
-                            <el-button @click="handleMemberTableDelete"
+                            <el-button @click="handleMemberTableDelete(scope.row.nickName, scope.row.id)"
                                        type="danger" icon="el-icon-delete" circle size="small"></el-button>
                         </el-tooltip>
                     </template>
@@ -57,7 +58,9 @@
                            :page-size="pager.pageSize"
                            :current-page="pager.page" :total="pager.total"></el-pagination>
         </el-row>
-        <add-project-member-dialog :visible.sync="newProjectMemberDialogVisible"></add-project-member-dialog>
+        <add-project-member-dialog :visible.sync="addProjectMemberDialogVisible"
+                                   @added="handleMemberAdded"
+                                   @cancel="addProjectMemberDialogVisible = false"></add-project-member-dialog>
     </el-row>
 </template>
 
@@ -77,7 +80,7 @@
         },
         data() {
             return {
-                newProjectMemberDialogVisible: false,
+                addProjectMemberDialogVisible: false,
                 pager: {
                     pageSize: 0,
                     page: 1,
@@ -101,7 +104,7 @@
             listProjectMemebers(name, page) {
                 const params = {};
                 if(name) {
-                    params['name'] = name;
+                    params['userName'] = name;
                 }
                 params['page'] = page;
                 apis.queryProjectMembers(this.projectId, params).then(data => {
@@ -118,11 +121,21 @@
             handleSearch(searchText) {
                 this.listProjectMemebers(searchText, 1);
             },
+            handleMemberAdded() {
+                this.addProjectMemberDialogVisible = false;
+                this.listProjectMemebers(null, 1);
+            },
             getPermissionName(key) {
                 return permission.getName(key);
             },
-            handleMemberTableDelete(id) {
-                // this.$confirm()
+            handleMemberTableDelete(nickName, id) {
+                this.$confirm(`<span>确定删除 [<strong style="color: #f56c6c;">${nickName}</strong>] 成员吗</span>`, "提示", {
+                    dangerouslyUseHTMLString: true,
+                    confirmButtonText: '删除',
+                    type: 'warning'
+                }).then(() => {
+                    // TODO delete member
+                }).catch(() => {});
             }
         }
     }

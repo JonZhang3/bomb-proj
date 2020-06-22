@@ -124,7 +124,7 @@
                     type: 'warning'
                 }).then(() => {
                     // TODO delete project
-                });
+                }).catch(() => {});
             },
             handleSearch(searchText) {
                 this.listProjects(searchText, 1);

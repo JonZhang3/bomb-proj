@@ -20,6 +20,12 @@ public class ProjectController {
     private ProjectService projectService;
 
     @AuthPassport
+    @GetMapping("/permission")
+    public JsonResult listPermissions() {
+        return JsonResult.success(this.projectService.listProjectPermissions());
+    }
+
+    @AuthPassport
     @GetMapping("")
     public JsonResult listProject(@ModelAttribute ProjectDto dto,
                            @RequestParam(defaultValue = "3") Integer projectShowType) {
@@ -71,31 +77,6 @@ public class ProjectController {
         // TODO check permission
 
         return JsonResult.success(this.projectService.projectDetail(projectId, sessionConfig.getUserId()));
-    }
-
-    @AuthPassport
-    @GetMapping("/{projectId}/member")
-    public JsonResult listProjectMembers(@PathVariable("projectId") String projectId,
-                                     @ModelAttribute ProjectMemberDto dto) {
-        SessionConfig sessionConfig = SessionConfig.current();
-        dto.setProjectId(projectId);
-        dto.setCreateUserId(sessionConfig.getUserId());
-        return JsonResult.success(this.projectService.pageProjectMembers(dto));
-    }
-
-    @AuthPassport
-    @PostMapping("/{projectId}/member")
-    public JsonResult addProjectMembers(@PathVariable("projectId") String projectId,
-                                        @RequestParam("userIds") String userIds) {
-
-        return JsonResult.success();
-    }
-
-    @AuthPassport
-    @GetMapping("/{projectId}/not-exists-users")
-    public JsonResult queryNotExistsUsers(@RequestParam("name") String name,
-                                          @PathVariable("projectId") String projectId) {
-        return JsonResult.success(this.projectService.queryNotExistsUsers(name, projectId));
     }
 
 }

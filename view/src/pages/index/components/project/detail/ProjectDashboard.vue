@@ -47,6 +47,11 @@
                         <br/>
                         <span class="desc">成员数：3</span>
                     </a>
+                    <a class="project-db-statistics-item">
+                        <span class="title"><i class="el-icon el-icon-edit"></i>项目成员</span>
+                        <br/>
+                        <span class="desc">成员数：3</span>
+                    </a>
                 </div>
             </div>
         </div>

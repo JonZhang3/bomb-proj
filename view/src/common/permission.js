@@ -8,8 +8,8 @@ const permissions = {
     delModule: '删除模块',
 
     modCode: '修改状态码',
-    addError: '添加状态码',
-    delError: '删除状态码',
+    addCode: '添加状态码',
+    delCode: '删除状态码',
 
     modArticle: '修改文档',
     addArticle: '添加文档',

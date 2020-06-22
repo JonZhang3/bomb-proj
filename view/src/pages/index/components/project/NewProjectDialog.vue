@@ -103,6 +103,7 @@
                         }).then(data => {
                             if(data.code === 1) {
                                 this.$message.success('新增项目成功');
+                                this.$refs['newProjectForm'].resetFields();
                                 this.$emit('added', e);
                             } else {
                                 this.$message.error(data.message);

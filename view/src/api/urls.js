@@ -16,5 +16,7 @@ export default {
     },
     addProjectMembers: function(projectId) {
         return `/project/${projectId}/member`;
-    }
+    },
+    listProjectPermissions: '/project/permission',
+
 }

@@ -38,7 +38,10 @@ export default {
     queryProjectNotExistsUsers(projectId, params, configs) {
         return get(urls.queryProjectNotExistsUsers(projectId), params, configs);
     },
-    addProjectMembers(projectId, userIds) {
-        return get(urls.addProjectMembers(projectId), {userIds: userIds});
+    addProjectMembers(projectId, userIds, permissions) {
+        return post(urls.addProjectMembers(projectId), {userIds: userIds, permissions: permissions});
+    },
+    listProjectPermissions() {
+        return get(urls.listProjectPermissions);
     }
 }
