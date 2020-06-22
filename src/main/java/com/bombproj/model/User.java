@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
-@Table
+@Table("users")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -22,7 +22,7 @@ public class User implements Serializable {
     private String authName;
     private Date createTime;// 创建时间
     private Date updateTime;// 更新时间
-    private Byte status;// 状态 1- 有效
+    private Integer state;// 状态 1- 有效
     private Long sequence;// 排序，越大越靠前
     private Byte type;// 用户类型：1普通用户，100：管理员
     private String email;// 邮箱

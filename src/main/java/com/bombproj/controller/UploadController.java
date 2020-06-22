@@ -16,7 +16,7 @@ import java.io.File;
 import java.io.IOException;
 
 @Controller
-@RequestMapping("/upload")
+@RequestMapping("/api/upload")
 public class UploadController {
 
     @Autowired

@@ -1,20 +1,20 @@
 package com.bombproj.constants;
 
-public enum UserStatus {
+public enum UserState {
 
-    VALID((byte) 1, "有效"),
-    INVALID((byte) 2, "邮箱未验证"),
-    FORBID((byte) 0, "无效");
+    VALID(1, "有效"),
+    INVALID(2, "邮箱未验证"),
+    FORBID(0, "无效");
 
-    private final byte code;
+    private final int code;
     private final String name;
 
-    UserStatus(byte code, String name) {
+    UserState(int code, String name) {
         this.code = code;
         this.name = name;
     }
 
-    public byte getCode() {
+    public int getCode() {
         return code;
     }
 
@@ -23,7 +23,7 @@ public enum UserStatus {
     }
 
     public static String getNameByValue(byte type) {
-        for (UserStatus value : UserStatus.values()) {
+        for (UserState value : UserState.values()) {
             if (value.getCode() == type) {
                 return value.getName();
             }

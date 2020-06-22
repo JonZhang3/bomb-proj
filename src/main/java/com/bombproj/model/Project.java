@@ -1,6 +1,7 @@
 package com.bombproj.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.queryflow.annotation.Column;
 import com.queryflow.annotation.Table;
 import lombok.Data;
 
@@ -25,7 +26,10 @@ public class Project implements Serializable {
     private Long sequence;
     private String remark;
     private String userId;
+
+    @Column(exists = false)
     private String userName;
+
     private Integer type;
     private String pass;
     private String cover;

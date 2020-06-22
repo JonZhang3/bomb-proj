@@ -3,6 +3,7 @@ package com.bombproj.controller;
 import com.bombproj.constants.ProjectShowType;
 import com.bombproj.constants.UserType;
 import com.bombproj.dto.ProjectDto;
+import com.bombproj.dto.ProjectMemberDto;
 import com.bombproj.framework.JsonResult;
 import com.bombproj.framework.SessionConfig;
 import com.bombproj.framework.interceptor.AuthPassport;
@@ -12,7 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/project")
+@RequestMapping("/api/project")
 public class ProjectController {
 
     @Autowired
@@ -39,7 +40,6 @@ public class ProjectController {
     public JsonResult newProject(@ModelAttribute @Validated(ProjectDto.NewOrUpdateProjectGroup.class) ProjectDto dto) {
         SessionConfig sessionConfig = SessionConfig.current();
         dto.setUserId(sessionConfig.getUserId());
-        dto.setUserName(sessionConfig.getNickName());
         this.projectService.newProject(dto);
         return JsonResult.success();
     }
@@ -62,6 +62,40 @@ public class ProjectController {
         dto.setUserId(sessionConfig.getUserId());
         this.projectService.updateProject(dto);
         return JsonResult.success();
+    }
+
+    @AuthPassport
+    @GetMapping("/{projectId}")
+    public JsonResult projectDetail(@PathVariable("projectId") String projectId) {
+        SessionConfig sessionConfig = SessionConfig.current();
+        // TODO check permission
+
+        return JsonResult.success(this.projectService.projectDetail(projectId, sessionConfig.getUserId()));
+    }
+
+    @AuthPassport
+    @GetMapping("/{projectId}/member")
+    public JsonResult listProjectMembers(@PathVariable("projectId") String projectId,
+                                     @ModelAttribute ProjectMemberDto dto) {
+        SessionConfig sessionConfig = SessionConfig.current();
+        dto.setProjectId(projectId);
+        dto.setCreateUserId(sessionConfig.getUserId());
+        return JsonResult.success(this.projectService.pageProjectMembers(dto));
+    }
+
+    @AuthPassport
+    @PostMapping("/{projectId}/member")
+    public JsonResult addProjectMembers(@PathVariable("projectId") String projectId,
+                                        @RequestParam("userIds") String userIds) {
+
+        return JsonResult.success();
+    }
+
+    @AuthPassport
+    @GetMapping("/{projectId}/not-exists-users")
+    public JsonResult queryNotExistsUsers(@RequestParam("name") String name,
+                                          @PathVariable("projectId") String projectId) {
+        return JsonResult.success(this.projectService.queryNotExistsUsers(name, projectId));
     }
 
 }

@@ -13,11 +13,15 @@ Vue.config.productionTip = false;
 
 const store = new Vuex.Store({
     state: {
-        projectName: '不知道',
+        projectName: '',
+        projectId: '',
     },
     mutations: {
-        setProjectName(state) {
-            // state.projectName;
+        setProjectName(state, newProjectName) {
+            state.projectName = newProjectName;
+        },
+        setProjectId(state, newProjectId) {
+            state.projectId = newProjectId;
         }
     }
 });

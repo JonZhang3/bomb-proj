@@ -1,9 +1,14 @@
 package com.bombproj.dao;
 
+import com.bombproj.constants.ProjectMemberState;
 import com.bombproj.constants.ProjectState;
+import com.bombproj.constants.UserState;
 import com.bombproj.dto.ProjectDto;
+import com.bombproj.dto.ProjectMemberDto;
 import com.bombproj.model.Project;
 import com.bombproj.utils.Utils;
+import com.bombproj.vo.ProjectMemberListVO;
+import com.bombproj.vo.UserQueryResultVO;
 import com.queryflow.accessor.A;
 import com.queryflow.page.Pager;
 import com.queryflow.sql.SqlBox;
@@ -20,14 +25,16 @@ public class ProjectDao {
         List<Object> values = new LinkedList<>();
         StringBuilder sql = new StringBuilder();
         sql.append(" SELECT p.id, p.projectName, p.projectDesc, p.createTime, p.gitAddr, ");
-        sql.append(" p.cover, p.uniKey, p.type,p.userId,p.userName FROM project p ");
+        sql.append(" p.cover, p.uniKey, p.type, p.userId, u.nickName userName FROM project p ");
+        sql.append(" JOIN users u ON p.userId = u.id ");
         sql.append(" WHERE p.state = ? ");
         values.add(ProjectState.COMMON.getState());
-        if(Utils.isNotEmpty(query.getName())) {
+        if (Utils.isNotEmpty(query.getName())) {
             sql.append(" AND p.projectName LIKE ? ");
             values.add("%" + query.getName() + "%");
         }
-        if(query.isAdmin()) {
+
+        if (query.isAdmin()) {
 
         } else {
             sql.append(" AND p.userId = ? ");
@@ -39,7 +46,8 @@ public class ProjectDao {
 
     /**
      * 查询改用户下是否有相同名称的项目
-     * @param projectName 项目名称
+     *
+     * @param projectName  项目名称
      * @param createUserId 创建用户 ID
      * @return 返回指定名称项目的数量
      */
@@ -67,6 +75,48 @@ public class ProjectDao {
             .where().eq("id", dto.getId())
             .and().eq("userId", dto.getUserId())
             .execute();
+    }
+
+    public Project queryProjectById(String projectId, String userId) {
+        String sql = "SELECT p.id, p.projectName, p.projectDesc, p.createTime, p.updateTime, " +
+            "p.gitAddr,p.cover, p.uniKey, p.type, p.userId, u.nickName userName " +
+            "FROM project p JOIN users u ON p.userId=u.id WHERE p.id = ? AND p.userId = ?";
+        return A.query(sql, projectId, userId).one(Project.class);
+    }
+
+    public Pager<ProjectMemberListVO> pageProjectMemebers(ProjectMemberDto dto) {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" SELECT m.id, m.userId, m.permission, u.userName, u.nickName, u.email, u.phone ");
+        sql.append(" FROM project_member m JOIN project p ON m.projectId = p.id ");
+        sql.append(" JOIN users u ON m.userId = u.id ");
+        sql.append(" WHERE u.state = ? AND p.userId = ? AND m.state = ? ");
+        List<Object> values = new LinkedList<>();
+        values.add(UserState.VALID.getCode());
+        values.add(dto.getCreateUserId());
+        values.add(ProjectMemberState.NORMAL.getState());
+
+        if (Utils.isNotEmpty(dto.getUserName())) {
+            sql.append(" AND u.nickName LIKE ? ");
+            values.add("%" + dto.getUserName() + "%");
+        }
+        sql.append(" AND m.projectId = ? ");
+        values.add(dto.getProjectId());
+        return A.page(sql.toString(), values, dto.getPage(), ProjectMemberListVO.class);
+    }
+
+    public List<UserQueryResultVO> queryNotExistsUsers(String name, String projectId) {
+        String sqlPrefix = "SELECT u.id, u.userName, u.nickName, u.email, u.phone FROM users u WHERE NOT EXISTS " +
+            "(SELECT * FROM project_member m WHERE m.userId = u.id AND m.projectId = ? ) AND u.state = ? ";
+        String sql = sqlPrefix + " AND u.userName LIKE ? " +
+            " UNION " + sqlPrefix + " AND u.nickName LIKE ? " +
+            " UNION " + sqlPrefix + " AND u.email LIKE ? " +
+            " UNION " + sqlPrefix + " AND u.phone LIKE ? ";
+        return A.query(sql,
+            projectId, UserState.VALID.getCode(), "%" + name + "%",
+            projectId, UserState.VALID.getCode(), "%" + name + "%",
+            projectId, UserState.VALID.getCode(), "%" + name + "%",
+            projectId, UserState.VALID.getCode(), "%" + name + "%")
+            .list(UserQueryResultVO.class);
     }
 
 }

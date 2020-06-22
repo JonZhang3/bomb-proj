@@ -2,7 +2,7 @@ package com.bombproj.adapter;
 
 import com.bombproj.constants.Constants;
 import com.bombproj.constants.LoginType;
-import com.bombproj.constants.UserStatus;
+import com.bombproj.constants.UserState;
 import com.bombproj.constants.UserType;
 import com.bombproj.dto.LoginDto;
 import com.bombproj.model.User;
@@ -27,7 +27,7 @@ public final class UserAdapter {
         user.setNickName(loginDto.getNickName());
         user.setCreateTime(now);
         user.setUpdateTime(now);
-        user.setStatus(UserStatus.VALID.getCode());
+        user.setState(UserState.VALID.getCode());
         user.setType(UserType.NORMAL.getCode());
         user.setEmail(loginDto.getEmail());
         user.setPhone(loginDto.getPhone());

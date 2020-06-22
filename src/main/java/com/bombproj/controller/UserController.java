@@ -6,6 +6,7 @@ import com.bombproj.framework.CookieConfig;
 import com.bombproj.framework.JsonResult;
 import com.bombproj.framework.SessionConfig;
 import com.bombproj.framework.WebUtils;
+import com.bombproj.framework.interceptor.AuthPassport;
 import com.bombproj.model.User;
 import com.bombproj.service.UserService;
 import io.swagger.annotations.Api;
@@ -18,11 +19,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = "1.0.0", value = "用户管理")
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Autowired
@@ -44,7 +46,7 @@ public class UserController {
         sessionConfig.setUserType(UserType.ofValue(user.getType()));
         WebUtils.setSessionAttribute(SessionConfig.KEY_SESSION_CONFIG, sessionConfig);
         WebUtils.removeSessionAttribute(SessionConfig.KEY_VERIFICATION_CODE);
-        if("yes".equalsIgnoreCase(model.getRemberPwd())) {
+        if ("yes".equalsIgnoreCase(model.getRemberPwd())) {
             WebUtils.addCookie(CookieConfig.KEY_PWD, model.getPassword(), true);
         } else {
             WebUtils.deleteCookie(CookieConfig.KEY_PWD);

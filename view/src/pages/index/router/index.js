@@ -6,6 +6,7 @@ import Projects from "../components/Projects";
 
 import ProjectDetail from "../components/ProjectDetail";
 import ProjectDashboard from "../components/project/detail/ProjectDashboard";
+import ProjectMember from "../components/project/detail/ProjectMember";
 
 Vue.use(VueRouter);
 
@@ -29,8 +30,13 @@ const routes = [
         children: [
             {
                 path: '/',
-                name:'project-dashboard',
+                name: 'project-dashboard',
                 component: ProjectDashboard
+            },
+            {
+                path: 'member',
+                name: 'project-member',
+                component: ProjectMember
             }
         ]
     }

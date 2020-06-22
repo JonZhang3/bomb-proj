@@ -33,7 +33,7 @@
         </el-form>
         <span slot="footer">
             <el-button @click="handleCancel">取 消</el-button>
-            <el-button type="primary" @click="handleEdit">新 增</el-button>
+            <el-button type="primary" @click="handleEdit">更 新</el-button>
         </span>
     </el-dialog>
 </template>
@@ -107,7 +107,7 @@
                         }).then(data => {
                             if(data.code === 1) {
                                 this.$message.success('修改项目成功');
-                                this.$emit('edited', e);
+                                this.$emit('edited');
                             } else {
                                 this.$message.error(data.message);
                             }

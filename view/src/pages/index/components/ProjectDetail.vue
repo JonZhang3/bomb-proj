@@ -7,10 +7,22 @@
                      active-text-color="#409EFF"
                      :router="true"
                      style="height: 100%;">
+                <el-menu-item index="/">
+                    <template slot="title">
+                        <i class="el-icon-arrow-left"></i>
+                        <span>返回</span>
+                    </template>
+                </el-menu-item>
                 <el-menu-item :index="`/project/${$route.params.id}`">
                     <template slot="title">
                         <i class="el-icon-s-home"></i>
                         <span>项目详情</span>
+                    </template>
+                </el-menu-item>
+                <el-menu-item :index="`/project/${$route.params.id}/member`">
+                    <template slot="title">
+                        <i class="el-icon-user-solid"></i>
+                        <span>项目成员</span>
                     </template>
                 </el-menu-item>
                 <el-menu-item index="/project/ds/ds">

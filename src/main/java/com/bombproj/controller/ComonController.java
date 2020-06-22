@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Controller
-@RequestMapping("/common")
+@RequestMapping("/api/common")
 public class ComonController {
 
     @RequestMapping("/captcha")
