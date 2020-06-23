@@ -22,6 +22,8 @@ public class ProjectCodeDto {
 
     private Integer page;
 
+    private String queryText;
+
     public interface AddOrUpdateProjectCodeGroup {
 
     }

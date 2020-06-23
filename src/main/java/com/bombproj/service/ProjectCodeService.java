@@ -36,7 +36,14 @@ public class ProjectCodeService {
         if(Utils.isEmpty(dto.getId())) {
             throw new BusinessException("修改失败");
         }
+        if(this.projectCodeDao.countProjectCodeByCode(dto.getCode(), dto.getProjectId()) > 0) {
+            throw new BusinessException("已存在相同的状态码");
+        }
+        this.projectCodeDao.updateProjectId(dto);
+    }
 
+    public void deleteProjectCode(ProjectCodeDto dto) {
+        this.projectCodeDao.deleteProjectId(dto.getId(), dto.getProjectId());
     }
 
 }

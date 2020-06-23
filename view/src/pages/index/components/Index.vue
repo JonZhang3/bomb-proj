@@ -1,7 +1,7 @@
 <template>
     <el-container style="position: relative;bottom: 0;overflow-y: hidden">
         <el-aside width="200px">
-            <el-menu default-active="/"
+            <el-menu :default-active="activeIndex"
                      background-color="#303543"
                      text-color="#fff"
                      active-text-color="#409EFF"
@@ -21,7 +21,6 @@
                 </el-menu-item>
             </el-menu>
         </el-aside>
-<!--        background-color: #F3F4F4;-->
         <el-main style="overflow-y: auto;">
             <router-view></router-view>
         </el-main>
@@ -31,7 +30,12 @@
 <script>
 
     export default {
-        name: 'index'
+        name: 'index',
+        data() {
+            return {
+                activeIndex: this.$route.path
+            }
+        }
     }
 
 </script>

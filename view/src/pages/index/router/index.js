@@ -8,6 +8,7 @@ import ProjectDetail from "../components/ProjectDetail";
 import ProjectDashboard from "../components/project/detail/ProjectDashboard";
 import ProjectMember from "../components/project/member/ProjectMember";
 import ProjectCode from "../components/project/code/ProjectCode";
+import ProjectDatatable from "../components/project/datatable/ProjectDatatable";
 
 Vue.use(VueRouter);
 
@@ -43,6 +44,11 @@ const routes = [
                 path: 'code',
                 name: 'project-code',
                 component: ProjectCode
+            },
+            {
+                path: 'datatable',
+                name: 'project-datatable',
+                component: ProjectDatatable
             }
         ]
     }

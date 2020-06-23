@@ -1,7 +1,7 @@
 <template>
     <el-container style="position: relative;bottom: 0;overflow-y: hidden">
         <el-aside width="200px">
-            <el-menu :default-active="`/project/${$route.params.id}`"
+            <el-menu :default-active="activeIndex"
                      background-color="#303543"
                      text-color="#fff"
                      active-text-color="#409EFF"
@@ -31,6 +31,12 @@
                         <span>状态码</span>
                     </template>
                 </el-menu-item>
+                <el-menu-item :index="`/project/${$route.params.id}/datatable`">
+                    <template slot="title">
+                        <i class="el-icon-s-grid"></i>
+                        <span>数据库表</span>
+                    </template>
+                </el-menu-item>
             </el-menu>
         </el-aside>
         <!--        background-color: #F3F4F4;-->
@@ -48,14 +54,8 @@
         name: 'project-detail',
         data() {
             return {
-
+                activeIndex: this.$route.path
             }
-        },
-        beforeMount() {
-            this.projectDetail();
-        },
-        mounted() {
-            console.log('root mounted');
         },
         methods: {
             projectDetail() {

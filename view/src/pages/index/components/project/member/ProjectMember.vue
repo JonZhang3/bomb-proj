@@ -21,12 +21,12 @@
             </el-col>
         </el-row>
         <el-row style="margin-top: 10px;">
-            <el-table stripe style="width: 100%;" :data="tableData">
-                <el-table-column prop="nickName" label="成员"></el-table-column>
-                <el-table-column prop="email" label="成员邮箱"></el-table-column>
-                <el-table-column prop="phone" label="成员手机号"></el-table-column>
-                <el-table-column prop="createTime" label="加入时间"></el-table-column>
-                <el-table-column width="500" label="成员权限">
+            <el-table stripe style="width: 100%;" :data="tableData" border>
+                <el-table-column prop="nickName" label="成员" :show-overflow-tooltip="true"></el-table-column>
+                <el-table-column min-width="150" prop="email" label="成员邮箱"></el-table-column>
+                <el-table-column min-width="90" prop="phone" label="成员手机号"></el-table-column>
+                <el-table-column min-width="120" prop="createTime" label="加入时间"></el-table-column>
+                <el-table-column min-width="440" label="成员权限">
                     <template slot-scope="scope">
                         <div v-if="scope.row.permission" class="project-member-permiss-tags">
                             <el-tag effect="dark"
@@ -39,7 +39,7 @@
                         <div v-else>-</div>
                     </template>
                 </el-table-column>
-                <el-table-column label="操作">
+                <el-table-column width="100" label="操作">
                     <template slot-scope="scope">
                         <el-tooltip effect="dark" content="编辑" placement="top">
                             <el-button @click=""

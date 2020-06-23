@@ -43,5 +43,17 @@ export default {
     },
     listProjectPermissions() {
         return get(urls.listProjectPermissions);
+    },
+    listProjectCode(projectId, params) {
+        return get(urls.listProjectCode(projectId), params);
+    },
+    addProjectCode(projectId, params) {
+        return post(urls.addProjectCode(projectId), params);
+    },
+    updateProjectCode(projectId, codeId, params) {
+        return put(urls.updateProjectCode(projectId, codeId), params);
+    },
+    deleteProjectCode(projectId, codeId) {
+        return del(urls.deleteProjectCode(projectId, codeId));
     }
 }

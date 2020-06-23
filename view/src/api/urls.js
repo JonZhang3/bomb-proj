@@ -18,5 +18,16 @@ export default {
         return `/project/${projectId}/member`;
     },
     listProjectPermissions: '/project/permission',
-
+    listProjectCode(projectId) {
+        return `/project/${projectId}/code`;
+    },
+    addProjectCode(projectId) {
+        return `/project/${projectId}/code`;
+    },
+    updateProjectCode(projectId, codeId) {
+        return `/project/${projectId}/code/${codeId}`;
+    },
+    deleteProjectCode(projectId, codeId) {
+        return `/project/${projectId}/code/${codeId}`;
+    }
 }

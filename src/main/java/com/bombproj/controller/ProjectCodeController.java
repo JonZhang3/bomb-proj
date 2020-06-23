@@ -33,10 +33,24 @@ public class ProjectCodeController {
     }
 
     @AuthPassport
-    @PutMapping("/{projectId}/code")
+    @PutMapping("/{projectId}/code/{codeId}")
     public JsonResult updateProjectCode(@PathVariable("projectId") String projectId,
+                                        @PathVariable("codeId") String codeId,
                                         @ModelAttribute ProjectCodeDto dto) {
         dto.setProjectId(projectId);
+        dto.setId(codeId);
+        this.projectCodeService.updateProjectCode(dto);
+        return JsonResult.success();
+    }
+
+    @AuthPassport
+    @DeleteMapping("/{projectId}/code/{codeId}")
+    public JsonResult deleteProjectCode(@PathVariable("projectId") String projectId,
+                                        @PathVariable("codeId") String codeId) {
+        ProjectCodeDto dto = new ProjectCodeDto();
+        dto.setProjectId(projectId);
+        dto.setId(codeId);
+        this.projectCodeService.deleteProjectCode(dto);
         return JsonResult.success();
     }
 
