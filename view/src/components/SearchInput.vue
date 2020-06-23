@@ -1,5 +1,5 @@
 <template>
-    <el-input :size="size" v-bind="$attrs" class="scoped-search-input" v-model="searchText">
+    <el-input :size="size" v-bind="$attrs" class="scoped-search-input" @input="handleInput" v-model="searchText">
         <el-button slot="suffix" type="primary"
                    @click="handleClick"
                    size="small" :style="buttonStyle">{{buttonText}}</el-button>
@@ -11,6 +11,7 @@
     export default {
         name: 'search-input',
         props: {
+            value: String,
             buttonText: String,
             size: {
                 type: String,
@@ -29,6 +30,14 @@
         methods: {
             handleClick(evt) {
                 this.$emit('search', this.searchText);
+            },
+            handleInput(text) {
+                this.$emit('input', text);
+            }
+        },
+        watch: {
+            'value'(val) {
+                this.searchText = val;
             }
         }
     }

@@ -1,33 +1,33 @@
 export default {
-    login: '/user/login',
-    register: '/user/register',
-    captcha: '/common/captcha',
-    checkCaptcha: '/common/checkCaptcha',
-    newProject: '/project',
-    listProject: '/project',
-    deleteProject: '/project/',
-    updateProject: '/project/',
-    projectDetail: '/project/',
+    login: '/api/user/login',
+    register: '/api/user/register',
+    captcha: '/api/common/captcha',
+    checkCaptcha: '/api/common/checkCaptcha',
+    newProject: '/api/project',
+    listProject: '/api/project',
+    deleteProject: '/api/project/',
+    updateProject: '/api/project/',
+    projectDetail: '/api/project/',
     listProjectMembers: function(projectId) {
-        return `/project/${projectId}/member`
+        return `/api/project/${projectId}/member`
     },
     queryProjectNotExistsUsers: function(projectId) {
-        return `/project/${projectId}/not-exists-users`;
+        return `/api/project/${projectId}/not-exists-users`;
     },
     addProjectMembers: function(projectId) {
-        return `/project/${projectId}/member`;
+        return `/api/project/${projectId}/member`;
     },
-    listProjectPermissions: '/project/permission',
+    listProjectPermissions: '/api/project/permission',
     listProjectCode(projectId) {
-        return `/project/${projectId}/code`;
+        return `/api/project/${projectId}/code`;
     },
     addProjectCode(projectId) {
-        return `/project/${projectId}/code`;
+        return `/api/project/${projectId}/code`;
     },
     updateProjectCode(projectId, codeId) {
-        return `/project/${projectId}/code/${codeId}`;
+        return `/api/project/${projectId}/code/${codeId}`;
     },
     deleteProjectCode(projectId, codeId) {
-        return `/project/${projectId}/code/${codeId}`;
+        return `/api/project/${projectId}/code/${codeId}`;
     }
 }

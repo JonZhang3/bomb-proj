@@ -7,7 +7,7 @@
         <el-row style="margin-top: 10px;">
             <el-col :span="12">
                 <el-button-group>
-                    <el-button @click="listProjectMemebers(null, 1)"
+                    <el-button @click="memberSearchText = '';listProjectMemebers(1)"
                                icon="el-icon-refresh" size="mini" round>刷新</el-button>
                     <el-button type="primary"
                                @click="addProjectMemberDialogVisible = true"
@@ -17,6 +17,7 @@
             <el-col :span="12" style="text-align: right">
                 <search-input
                     style="width: 40%;"
+                    v-model="memberSearchText"
                     placeholder="成员昵称" button-text="搜索" @search="handleSearch"></search-input>
             </el-col>
         </el-row>
@@ -86,11 +87,12 @@
                     page: 1,
                     total: 0
                 },
-                tableData: []
+                tableData: [],
+                memberSearchText: '',
             }
         },
         mounted() {
-            this.listProjectMemebers(null, 1);
+            this.listProjectMemebers(1);
         },
         computed: {
             projectName() {
@@ -101,10 +103,10 @@
             }
         },
         methods: {
-            listProjectMemebers(name, page) {
+            listProjectMemebers(page) {
                 const params = {};
-                if(name) {
-                    params['userName'] = name;
+                if(this.memberSearchText) {
+                    params['userName'] = this.memberSearchText;
                 }
                 params['page'] = page;
                 apis.queryProjectMembers(this.projectId, params).then(data => {
@@ -118,12 +120,13 @@
                     }
                 });
             },
-            handleSearch(searchText) {
-                this.listProjectMemebers(searchText, 1);
+            handleSearch() {
+                this.listProjectMemebers(1);
             },
             handleMemberAdded() {
                 this.addProjectMemberDialogVisible = false;
-                this.listProjectMemebers(null, 1);
+                this.memberSearchText = '';
+                this.listProjectMemebers(1);
             },
             getPermissionName(key) {
                 return permission.getName(key);

@@ -5,9 +5,9 @@ import urls from './urls';
 const baseUrl = settings.baseUrl;
 
 export default {
-    captchaUrl: baseUrl + '/common/captcha',
+    captchaUrl: baseUrl + '/api/common/captcha',
     coverBaseUrl: baseUrl + '/static/',
-    coverUploadUrl: baseUrl + '/upload/cover',
+    coverUploadUrl: baseUrl + '/api/upload/cover',
     checkCaptcha(code) {
         return get(urls.checkCaptcha, {verificationCode: code}, {useLoading: false});
     },
