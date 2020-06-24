@@ -1,5 +1,5 @@
 <template>
-    <el-table :data="data" v-bind="$attrs" border stripe style="width: 100%;">
+    <el-table :data="data" v-bind="$attrs" border stripe :row-key="handleRowKey" style="width: 100%;">
         <slot></slot>
         <div slot="append" v-if="showAddRow" style="text-align: center;">
             <el-button @click="handleAddRow" icon="el-icon-plus" type="text">添加一行</el-button>
@@ -8,6 +8,8 @@
 </template>
 
 <script>
+
+    import settings from '../common/settings';
 
     import Sortable from 'sortablejs';
 
@@ -18,11 +20,17 @@
             showAddRow: {
                 type: Boolean,
                 default: true
+            },
+            draggableElement: String,
+            defaultData: {
+                type: Object,
+                default: {}
             }
         },
         data() {
             return {
-                data: this.value
+                data: this.value,
+                index: 0
             }
         },
         mounted() {
@@ -30,8 +38,18 @@
         },
         methods: {
             handleAddRow() {
-                this.data.push( {fieldName: '5', type: '6'});
+                if(this.data.length >= settings.maxDataTableFieldsLenght) {
+                    this.$message.warning('添加了太多行，最多添加 200 行哦');
+                    return;
+                }
+                const newObj = {};
+                Object.assign(this.defaultData, newObj);
+                newObj.index = ++this.index;
+                this.data.push(newObj);
                 this.$emit('input', this.data);
+            },
+            handleRowKey(row) {
+                return row.index;
             },
             drag() {
                 const that = this;
@@ -40,6 +58,7 @@
                     disabled: false,
                     ghostClass: 'sortable-ghost',
                     animation: 150,
+                    handle: that.draggableElement,
                     group: {
                         pull: false,
                         put: false
@@ -48,13 +67,8 @@
                         if(e.newIndex !== e.oldIndex) {
                             const targetObj = that.data.splice(e.oldIndex, 1)[0];
                             that.data.splice(e.newIndex, 0, targetObj);
-                            // console.log(that.data);
                             that.$emit('input', that.data);
                         }
-                    },
-                    onMove(evt, originalEvent) {
-                        console.log(evt);
-                        console.log(originalEvent);
                     }
                 });
             }
