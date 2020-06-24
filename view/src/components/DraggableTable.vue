@@ -1,10 +1,12 @@
 <template>
-    <el-table :data="data" v-bind="$attrs" border stripe :row-key="handleRowKey" style="width: 100%;">
-        <slot></slot>
-        <div slot="append" v-if="showAddRow" style="text-align: center;">
-            <el-button @click="handleAddRow" icon="el-icon-plus" type="text">添加一行</el-button>
-        </div>
-    </el-table>
+    <el-form :status-icon="false" :model="formData">
+        <el-table :data="data" v-bind="$attrs" border stripe :row-key="handleRowKey" style="width: 100%;">
+            <slot></slot>
+            <div slot="append" v-if="showAddRow" style="text-align: center;">
+                <el-button @click="handleAddRow" icon="el-icon-plus" type="text">添加一行</el-button>
+            </div>
+        </el-table>
+    </el-form>
 </template>
 
 <script>
@@ -25,7 +27,9 @@
             defaultData: {
                 type: Object,
                 default: {}
-            }
+            },
+            rules: Object,
+            formData: Object
         },
         data() {
             return {
