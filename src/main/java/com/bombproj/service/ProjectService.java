@@ -7,7 +7,7 @@ import com.bombproj.dao.PermissionDao;
 import com.bombproj.dao.ProjectDao;
 import com.bombproj.dto.ProjectDto;
 import com.bombproj.dto.ProjectMemberDto;
-import com.bombproj.framework.BusinessException;
+import com.bombproj.framework.exception.BusinessException;
 import com.bombproj.model.Permission;
 import com.bombproj.model.Project;
 import com.bombproj.utils.Utils;

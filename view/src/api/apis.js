@@ -1,6 +1,5 @@
 import {get, post, del, put} from '../common/http';
 import settings from '../common/settings';
-import urls from './urls';
 
 const baseUrl = settings.baseUrl;
 
@@ -9,51 +8,63 @@ export default {
     coverBaseUrl: baseUrl + '/static/',
     coverUploadUrl: baseUrl + '/api/upload/cover',
     checkCaptcha(code) {
-        return get(urls.checkCaptcha, {verificationCode: code}, {useLoading: false});
+        return get('/api/common/checkCaptcha', {verificationCode: code}, {useLoading: false});
     },
     login(params) {
-        return post(urls.login, params);
+        return post('/api/user/login', params);
     },
     register(params) {
-        return post(urls.register, params);
+        return post('/api/user/register', params);
     },
     newProject(params) {
-        return post(urls.newProject, params);
+        return post('/api/project', params);
     },
     queryProjects(params) {
-        return get(urls.listProject, params);
+        return get('/api/project', params);
     },
     deleteProject(projectId) {
-        return del(`${urls.deleteProject}${projectId}`);
+        return del(`/api/project/${projectId}`);
     },
     updateProject(projectId, params) {
-        return put(`${urls.updateProject}${projectId}`, params);
+        return put(`/api/project/${projectId}`, params);
     },
     getProjectDetail(projectId, params) {
-        return get(`${urls.projectDetail}${projectId}`, params);
+        return get(`/api/project/${projectId}`, params);
     },
     queryProjectMembers(projectId, params) {
-        return get(urls.listProjectMembers(projectId), params);
+        return get(`/api/project/${projectId}/member`, params);
     },
     queryProjectNotExistsUsers(projectId, params, configs) {
-        return get(urls.queryProjectNotExistsUsers(projectId), params, configs);
+        return get(`/api/project/${projectId}/not-exists-users`, params, configs);
     },
     addProjectMembers(projectId, userIds, permissions) {
-        return post(urls.addProjectMembers(projectId), {userIds: userIds, permissions: permissions});
+        return post(`/api/project/${projectId}/member`, {userIds: userIds, permissions: permissions});
     },
     listProjectPermissions() {
-        return get(urls.listProjectPermissions);
+        return get('/api/project/permission');
     },
     listProjectCode(projectId, params) {
-        return get(urls.listProjectCode(projectId), params);
+        return get(`/api/project/${projectId}/code`, params);
     },
     addProjectCode(projectId, params) {
-        return post(urls.addProjectCode(projectId), params);
+        return post(`/api/project/${projectId}/code`, params);
     },
     updateProjectCode(projectId, codeId, params) {
-        return put(urls.updateProjectCode(projectId, codeId), params);
+        return put(`/api/project/${projectId}/code/${codeId}`, params);
     },
     deleteProjectCode(projectId, codeId) {
-        return del(urls.deleteProjectCode(projectId, codeId));
+        return del(`/api/project/${projectId}/code/${codeId}`);
+    },
+    listProjectDataTables(projectId, params) {
+        return get(`/api/project/${projectId}/datatable`, params);
+    },
+    addProjectDataTable(projectId, params) {
+        return post(`/api/project/${projectId}/datatable`, params);
+    },
+    deleteProjectDataTable(projectId, tableId) {
+        return del(`/api/project/${projectId}/datatable/${tableId}`);
+    },
+    updateProjectDataTable(projectId, tableId, params) {
+        return put(`/api/project/${projectId}/datatable/${tableId}`, params);
     }
 }

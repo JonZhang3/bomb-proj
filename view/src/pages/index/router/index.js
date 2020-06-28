@@ -10,6 +10,8 @@ import ProjectMember from "../components/project/member/ProjectMember";
 import ProjectCode from "../components/project/code/ProjectCode";
 import ProjectDatatable from "../components/project/datatable/ProjectDatatable";
 
+import NotFound from "../components/NotFound";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -51,6 +53,11 @@ const routes = [
                 component: ProjectDatatable
             }
         ]
+    },
+    {
+        path: '/404',
+        name: '404',
+        component: NotFound
     }
 ];
 

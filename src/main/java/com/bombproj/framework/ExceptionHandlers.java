@@ -1,5 +1,7 @@
 package com.bombproj.framework;
 
+import com.bombproj.framework.exception.BusinessException;
+import com.bombproj.framework.exception.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,10 +21,15 @@ public class ExceptionHandlers {
             .message(e.getMessage());
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public void handleNotFoundException(NotFoundException e) {
+        throw e;
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public JsonResult handleException(Exception e) {
-        LOGGER.error("", e);
+        LOGGER.error("系统异常", e);
         return JsonResult.error("系统异常");
     }
 

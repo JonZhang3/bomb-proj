@@ -6,7 +6,9 @@ import com.bombproj.dto.ProjectDto;
 import com.bombproj.dto.ProjectMemberDto;
 import com.bombproj.framework.JsonResult;
 import com.bombproj.framework.SessionConfig;
+import com.bombproj.framework.exception.NotFoundException;
 import com.bombproj.framework.interceptor.AuthPassport;
+import com.bombproj.model.Project;
 import com.bombproj.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -75,8 +77,12 @@ public class ProjectController {
     public JsonResult projectDetail(@PathVariable("projectId") String projectId) {
         SessionConfig sessionConfig = SessionConfig.current();
         // TODO check permission
-
-        return JsonResult.success(this.projectService.projectDetail(projectId, sessionConfig.getUserId()));
+        Project project = this.projectService.projectDetail(projectId, sessionConfig.getUserId());
+        if(project == null) {
+            throw new NotFoundException();
+        } else {
+            return JsonResult.success(project);
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-package com.bombproj.framework;
+package com.bombproj.framework.exception;
 
 public class BusinessException extends RuntimeException {
 

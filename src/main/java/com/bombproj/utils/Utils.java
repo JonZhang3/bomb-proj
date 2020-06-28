@@ -1,5 +1,8 @@
 package com.bombproj.utils;
 
+import com.google.gson.Gson;
+
+import java.lang.reflect.Type;
 import java.util.Random;
 import java.util.regex.Pattern;
 
@@ -12,6 +15,16 @@ public final class Utils {
     private static final Pattern PATTERN_EMAIL =
         Pattern.compile("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
     private static final Pattern PATTERN_PHONE = Pattern.compile("1[3456789]\\d{9}");
+
+    public static final Gson GSON = new Gson();
+
+    public static <T> T fromJson(String json, Type type) {
+        return GSON.fromJson(json, type);
+    }
+
+    public static String toJson(Object src) {
+        return GSON.toJson(src);
+    }
 
     public static boolean isEmpty(String src) {
         return src == null || src.isEmpty();

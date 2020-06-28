@@ -4,135 +4,89 @@
             <el-breadcrumb-item>项目【{{projectName}}】</el-breadcrumb-item>
             <el-breadcrumb-item>数据库表</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-row>
-            <el-col :span="6">
-                <list-menu></list-menu>
-            </el-col>
+        <el-row style="margin-top: 10px;">
+            <el-row style="margin-top: 10px;">
+                <el-col :span="12">
+                    <el-button-group>
+                        <el-button @click="listProjectDataTables(1)"
+                                   icon="el-icon-refresh" size="mini" round>刷新</el-button>
+                        <el-button @click="handleAddTable"
+                                   type="primary"
+                                   icon="el-icon-plus" size="mini" round>新增数据库表</el-button>
+                    </el-button-group>
+                </el-col>
+                <el-col :span="12" style="text-align: right">
+                    <search-input style="width: 40%;"
+                        v-model="tableSearchText"
+                        placeholder="表名" button-text="搜索" @search="handleSearch"></search-input>
+                </el-col>
+            </el-row>
         </el-row>
         <el-row style="margin-top: 10px;">
-            <draggable-table v-model="formData.fields" draggable-element=".drag-ele"
-                             :form-data="formData"
-                             :row-style="(data) => {return data.row.marker ? {backgroundColor: data.row.marker} : {}}"
-                             :default-data="defaultFieldData">
-                <el-table-column label="字段名">
-                    <template slot-scope="scope">
-                        <el-form-item :prop="'fields.' + scope.$index + '.fieldName'" :rules="formData.rules.fieldName">
-                            <el-input placeholder="必填" size="small" v-model="scope.row.fieldName"></el-input>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column label="类型">
-                    <template slot-scope="scope">
-                        <el-form-item :prop="'fields.' + scope.$index + '.type'" :rules="formData.rules.type">
-                            <el-input placeholder="必填" size="small" v-model="scope.row.type"></el-input>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column label="长度" width="160">
-                    <template slot-scope="scope">
-                        <el-form-item :prop="'fields.' + scope.$index + '.length'" :rules="formData.rules.length">
-                            <el-input-number v-model="scope.row.length" :precision="0"
-                                             size="small" @blur="handleTableRowLengthBlur(scope.row)"
-                                             controls-position="right" :min="0" :max="65532"></el-input-number>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column width="50" label="非空">
-                    <template slot-scope="scope">
-                        <el-form-item>
-                            <el-checkbox v-model="scope.row.notNull" size="small"></el-checkbox>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column label="默认值">
-                    <template slot-scope="scope">
-                        <el-form-item>
-                            <el-input size="small" v-model="scope.row.defaultValue"></el-input>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column label="索引（Type/Method）">
-                    <template slot-scope="scope">
-                        <el-form-item>
-                            <el-cascader size="small" v-model="scope.row.indexes" :options="indexesOptions"></el-cascader>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column label="索引名称">
-                    <template slot-scope="scope">
-                        <el-form-item>
-                            <el-input size="small" v-model="scope.row.notes"></el-input>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column label="注释">
-                    <template slot-scope="scope">
-                        <el-form-item>
-                            <el-input size="small" v-model="scope.row.notes"></el-input>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
+            <el-table stripe style="width: 100%;" :data="tables">
+                <el-table-column prop="tableName" label="表名"></el-table-column>
+                <el-table-column prop="tableDesc" label="描述"></el-table-column>
+                <el-table-column prop="type" label="数据库类型"></el-table-column>
+                <el-table-column prop="createUser" label="创建者"></el-table-column>
+                <el-table-column prop="updateTime" label="更新时间"></el-table-column>
                 <el-table-column width="100" label="操作">
                     <template slot-scope="scope">
-                        <el-button class="drag-ele" icon="el-icon-rank" circle size="mini" style="cursor: move"></el-button>
-<!--                        <el-color-picker v-model="scope.row.marker"></el-color-picker>-->
-                        <el-button @click="handleTableRowDelete(scope)" type="danger" icon="el-icon-delete" circle size="mini"></el-button>
+                        <el-tooltip effect="dark" content="编辑" placement="top">
+                            <el-button @click="handleTableRowEdit(scope.row)"
+                                       icon="el-icon-edit" circle size="small"></el-button>
+                        </el-tooltip>
+                        <el-tooltip effect="dark" content="删除" placement="top">
+                            <el-button type="danger"
+                                       @click="handleTableRowDelete(scope.row)"
+                                       icon="el-icon-delete" circle size="small"></el-button>
+                        </el-tooltip>
                     </template>
                 </el-table-column>
-            </draggable-table>
+            </el-table>
         </el-row>
+<!--        <el-row style="text-align: right;margin-top: 10px;">-->
+<!--            <el-pagination background layout="prev,pager,next"-->
+<!--                           :page-size="pager.pageSize"-->
+<!--                           :current-page="pager.page" :total="pager.total"></el-pagination>-->
+<!--        </el-row>-->
+        <add-or-edit-project-datatable-dialog :visible.sync="addProjectDatatableDialogVisible"
+                                      :project-id="projectId"
+                                      :table-data="editTableData"
+                                      :edit="editTableData != null"
+                                      @success="handleTableAddOrUpdateSuccess"
+                                      @cancel="handleTableAddOrEditDialogCancle"></add-or-edit-project-datatable-dialog>
     </el-row>
 </template>
 
 <script>
     // #E5F2FF
-    import DraggableTable from "../../../../../components/DraggableTable";
-    import ListMenu from "../../../../../components/ListMenu";
+
+    import apis from "../../../../../api/apis";
+
+    import SearchInput from "../../../../../components/SearchInput";
+    import AddOrEditProjectDatatableDialog from "./AddOrEditProjectDatatableDialog";
 
     export default {
         name: 'project-datatable',
         components: {
-            DraggableTable,
-            ListMenu
+           SearchInput,
+            AddOrEditProjectDatatableDialog
         },
         data() {
             return {
-                formData: {
-                    fields: [
-                        {index: 0, fieldName: '', type: '', length: 0, notNull: false, defaultValue: '', notes: '', indexes: '', indexesName: '', marker: ''}
-                    ],
-                    rules: {
-                        fieldName: [
-                            {required: true, message: '请输入字段名', trigger: 'blur'},
-                        ],
-                        type: [
-                            {required: true, message: '请选择字段类型', trigger: 'blur'},
-                        ],
-                        length: [
-
-                        ]
-                    }
+                addProjectDatatableDialogVisible: false,
+                tableSearchText: '',
+                tables: [],
+                pager: {
+                    pageSize: 0,
+                    page: 1,
+                    total: 0
                 },
-
-                defaultFieldData: {
-                    fieldName: '',
-                    type: '',
-                    length: 0,
-                    notNull: false,
-                    defaultValue: '',
-                    notes: '',
-                    indexes: '',
-                    indexesName: '',
-                    marker: ''
-                },
-                indexesOptions: [
-                    {value: 'PRIMARY', label: 'PRIMARY KEY'},
-                    {value: 'FULLTEXT', label: 'FULLTEXT', children: [{value: 'BTREE', label: 'BTREE'}, {value: 'HASH', label: 'HASH'}]},
-                    {value: 'NORMAL', label: 'NORMAL', children: [{value: 'BTREE', label: 'BTREE'}, {value: 'HASH', label: 'HASH'}]},
-                    {value: 'SPATIAL', label: 'SPATIAL', children: [{value: 'BTREE', label: 'BTREE'}, {value: 'HASH', label: 'HASH'}]},
-                    {value: 'UNIQUE', label: 'UNIQUE', children: [{value: 'BTREE', label: 'BTREE'}, {value: 'HASH', label: 'HASH'}]}
-                ]
+                editTableData: null
             }
+        },
+        mounted() {
+            this.listProjectDataTables(1);
         },
         computed: {
             projectName() {
@@ -143,15 +97,63 @@
             }
         },
         methods: {
-            handleTableRowDelete(scope) {
-                this.fields.splice(scope.$index, 1);
+            handleSearch() {
+                this.listProjectDataTables(1);
             },
-            handleTableRowLengthBlur(row) {
-                if(!row.length) {
-                    row.length = 0;
+            listProjectDataTables(page) {
+                const params = {};
+                if(this.tableSearchText) {
+                    params['tableName'] = this.tableSearchText;
                 }
+                // params['page'] = page;
+                apis.listProjectDataTables(this.projectId, params).then(data => {
+                    if(data.code === 1) {
+                        this.tables = data.data;
+                    } else {
+                        this.$message.error(data.message);
+                    }
+                });
+            },
+            handleTableAddOrUpdateSuccess() {
+                this.addProjectDatatableDialogVisible = false;
+                this.tableSearchText = '';
+                this.listProjectDataTables(1);
+            },
+            handleTableRowDelete(row) {
+                this.$confirm(`<span>确定删除 [<strong style="color: #f56c6c;">${row.tableName}</strong>] 表吗</span>`, "提示", {
+                    dangerouslyUseHTMLString: true,
+                    confirmButtonText: '删除',
+                    type: 'warning'
+                }).then(() => {
+                    apis.deleteProjectDataTable(this.projectId, row.id).then(data => {
+                        if(data.code === 1) {
+                            this.$message.success('删除成功');
+                            this.listProjectDataTables(1);
+                        } else {
+                            this.$message.error(data.message);
+                        }
+                    });
+                }).catch(() => {});
+            },
+            handleTableRowEdit(row) {
+                this.editTableData = {
+                    id: row.id,
+                    tableName: row.tableName,
+                    tableDesc: row.tableDesc,
+                    type: row.type
+                };
+                this.addProjectDatatableDialogVisible = true;
+            },
+            handleAddTable() {
+                this.editTableData = null;
+                this.addProjectDatatableDialogVisible = true;
+            },
+            handleTableAddOrEditDialogCancle() {
+                this.editTableData = null;
+                this.addProjectDatatableDialogVisible = false;
             }
         }
+
     }
 
 </script>

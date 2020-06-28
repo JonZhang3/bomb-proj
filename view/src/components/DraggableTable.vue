@@ -47,9 +47,10 @@
                     return;
                 }
                 const newObj = {};
-                Object.assign(this.defaultData, newObj);
+                Object.assign(newObj, this.defaultData);
                 newObj.index = ++this.index;
                 this.data.push(newObj);
+                console.log(this.data);
                 this.$emit('input', this.data);
             },
             handleRowKey(row) {

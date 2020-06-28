@@ -34,7 +34,7 @@
                 <el-table-column prop="projectName" label="项目名称"></el-table-column>
                 <el-table-column prop="userName" label="创建者"></el-table-column>
                 <el-table-column prop="createTime" label="创建时间"></el-table-column>
-                <el-table-column label="操作">
+                <el-table-column label="操作" width="100">
                     <template slot-scope="scope">
                         <el-tooltip effect="dark" content="编辑" placement="top">
                             <el-button @click="handleProjectTableRowEditClick(scope.row, $event)"

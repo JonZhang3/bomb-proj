@@ -52,10 +52,17 @@
 
     export default {
         name: 'project-detail',
+        props: {
+            projectName: String
+        },
         data() {
             return {
-                activeIndex: this.$route.path
+                activeIndex: this.$route.path,
             }
+        },
+        beforeMount() {
+            this.$store.commit('setProjectId', this.$route.params.id);
+            this.projectDetail();
         },
         methods: {
             projectDetail() {
@@ -63,9 +70,12 @@
                 apis.getProjectDetail(projectId).then(data => {
                     if(data.code === 1) {
                         this.$store.commit('setProjectName', data.data.projectName);
-                        this.$store.commit('setProjectId', data.data.id);
                     } else {
                         this.$message.error(data.message);
+                    }
+                }).catch(err => {
+                    if(err.response.status === 404) {
+                        this.$router.replace('/404');
                     }
                 });
             }

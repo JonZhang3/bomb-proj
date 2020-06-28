@@ -3,7 +3,7 @@ package com.bombproj.service;
 import com.bombproj.adapter.ProjectCodeAdapter;
 import com.bombproj.dao.ProjectCodeDao;
 import com.bombproj.dto.ProjectCodeDto;
-import com.bombproj.framework.BusinessException;
+import com.bombproj.framework.exception.BusinessException;
 import com.bombproj.utils.Utils;
 import com.bombproj.vo.ProjectCodeVO;
 import com.queryflow.page.Pager;

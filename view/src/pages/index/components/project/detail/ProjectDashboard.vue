@@ -94,6 +94,9 @@
         computed: {
             projectName() {
                 return this.$store.state.projectName;
+            },
+            projectId() {
+                return this.$store.state.projectId;
             }
         },
         methods: {
@@ -105,13 +108,10 @@
                 this.projectDetail();
             },
             projectDetail() {
-                const projectId = this.$route.params.id;
-                apis.getProjectDetail(projectId).then(data => {
+                apis.getProjectDetail(this.projectId).then(data => {
                     if(data.code === 1) {
                         this.projectData.id = data.data.id;
-                        this.$store.commit('setProjectId', data.data.id);
                         this.projectData.name = data.data.projectName;
-                        this.$store.commit('setProjectName', data.data.projectName);
                         this.projectData.desc = data.data.projectDesc;
                         this.projectData.type = data.data.type;
                         this.projectData.cover = data.data.cover;

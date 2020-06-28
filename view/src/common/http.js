@@ -21,7 +21,7 @@ export const get = (url, params, config = {useLoading: true}) => {
             resolve(res.data);
         }).catch(err => {
             loading && loading.close();
-            reject(err.data);
+            reject(err);
         });
     });
 }
@@ -38,7 +38,7 @@ export const post = (url, params, configs = {useLoading: true}) => {
                 resolve(res.data);
             }).catch(err => {
                 loading && loading.close();
-                reject(err.data);
+                reject(err);
             });
     });
 }
@@ -56,7 +56,7 @@ export const del = (url, params, configs = {useLoading: true}) => {
             resolve(res.data);
         }).catch(err => {
             loading && loading.close();
-            reject(err.data);
+            reject(err);
         });
     });
 }
@@ -72,7 +72,7 @@ export const put = (url, params, configs = {useLoading: true}) => {
             resolve(res.data);
         }).catch(err => {
             loading && loading.close();
-            reject(err.data);
+            reject(err);
         });
     });
 }
