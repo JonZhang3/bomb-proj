@@ -79,6 +79,13 @@
                     }
                 });
             }
+        },
+        watch: {
+            '$route.path'(val) {
+                if(!this.$route.meta.hasParent) {
+                    this.activeIndex = val;
+                }
+            }
         }
     }
 

@@ -9,6 +9,8 @@ import ProjectDashboard from "../components/project/detail/ProjectDashboard";
 import ProjectMember from "../components/project/member/ProjectMember";
 import ProjectCode from "../components/project/code/ProjectCode";
 import ProjectDatatable from "../components/project/datatable/ProjectDatatable";
+import ViewDatatableFields from "../components/project/datatable/ViewDatatableFields";
+import EditDatatableFields from "../components/project/datatable/EditDatatableFields";
 
 import NotFound from "../components/NotFound";
 
@@ -51,6 +53,22 @@ const routes = [
                 path: 'datatable',
                 name: 'project-datatable',
                 component: ProjectDatatable
+            },
+            {
+                path: 'datatable/:tableId/fields/view',
+                name: 'project-datatable-fields-view',
+                component: ViewDatatableFields,
+                meta: {
+                    hasParent: true
+                }
+            },
+            {
+                path: 'datatable/:tableId/fields/edit',
+                name: 'project-datatable-fields-edit',
+                component: EditDatatableFields,
+                meta: {
+                    hasParent: true
+                }
             }
         ]
     },

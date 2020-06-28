@@ -23,21 +23,27 @@
             </el-row>
         </el-row>
         <el-row style="margin-top: 10px;">
-            <el-table stripe style="width: 100%;" :data="tables">
+            <span style="font-size: 12px;color: #909399">Tip：点击每行去编辑表中的字段</span>
+            <el-table stripe style="width: 100%;" :data="tables" @row-click="handleRowClick">
                 <el-table-column prop="tableName" label="表名"></el-table-column>
                 <el-table-column prop="tableDesc" label="描述"></el-table-column>
                 <el-table-column prop="type" label="数据库类型"></el-table-column>
                 <el-table-column prop="createUser" label="创建者"></el-table-column>
                 <el-table-column prop="updateTime" label="更新时间"></el-table-column>
-                <el-table-column width="100" label="操作">
+                <el-table-column width="140" label="操作">
                     <template slot-scope="scope">
-                        <el-tooltip effect="dark" content="编辑" placement="top">
-                            <el-button @click="handleTableRowEdit(scope.row)"
+                        <el-tooltip effect="dark" content="修改" placement="top">
+                            <el-button @click="handleTableRowEdit(scope.row, $event)"
                                        icon="el-icon-edit" circle size="small"></el-button>
+                        </el-tooltip>
+                        <el-tooltip effect="dark" content="查看" placement="top">
+                            <el-button type="primary"
+                                       @click="handleTableRowView(scope.row, $event)"
+                                       icon="el-icon-view" circle size="small"></el-button>
                         </el-tooltip>
                         <el-tooltip effect="dark" content="删除" placement="top">
                             <el-button type="danger"
-                                       @click="handleTableRowDelete(scope.row)"
+                                       @click="handleTableRowDelete(scope.row, $event)"
                                        icon="el-icon-delete" circle size="small"></el-button>
                         </el-tooltip>
                     </template>
@@ -119,7 +125,9 @@
                 this.tableSearchText = '';
                 this.listProjectDataTables(1);
             },
-            handleTableRowDelete(row) {
+            handleTableRowDelete(row, e) {
+                e.preventDefault();
+                e.stopPropagation();
                 this.$confirm(`<span>确定删除 [<strong style="color: #f56c6c;">${row.tableName}</strong>] 表吗</span>`, "提示", {
                     dangerouslyUseHTMLString: true,
                     confirmButtonText: '删除',
@@ -135,7 +143,9 @@
                     });
                 }).catch(() => {});
             },
-            handleTableRowEdit(row) {
+            handleTableRowEdit(row, e) {
+                e.preventDefault();
+                e.stopPropagation();
                 this.editTableData = {
                     id: row.id,
                     tableName: row.tableName,
@@ -143,6 +153,21 @@
                     type: row.type
                 };
                 this.addProjectDatatableDialogVisible = true;
+            },
+            handleRowClick(row, column, e) {
+                this.$router.push({
+                    name: 'project-datatable-fields-edit',
+                    params: {id: this.projectId, tableId: row.id, tableName: row.tableName}
+                });
+                // this.$router.push({path: `/project/${this.projectId}/datatable/${row.id}/fields`});
+            },
+            handleTableRowView(row, e) {
+                e.preventDefault();
+                e.stopPropagation();
+                this.$router.push({
+                    name: 'project-datatable-fields-view',
+                    params: {id: this.projectId, tableId: row.id, tableName: row.tableName}
+                });
             },
             handleAddTable() {
                 this.editTableData = null;
