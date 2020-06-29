@@ -39,10 +39,12 @@ public class DatabaseAspect {
                 accessor.commit(false);
             }
             return result;
-        } finally {
+        } catch (Throwable t) {
             if(transaction != null) {
                 accessor.rollback(false);
             }
+            throw t;
+        } finally {
             accessor.close();
         }
     }

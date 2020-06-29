@@ -10,7 +10,9 @@
                 <el-col :span="12">
                     <el-button-group>
                         <el-button @click="handleBack" icon="el-icon-arrow-left" size="mini" round>返回</el-button>
-                        <el-button icon="el-icon-receiving" type="primary" size="mini" round>保存</el-button>
+                        <el-button icon="el-icon-receiving"
+                                   @click="saveDataTableFields"
+                                   type="primary" size="mini" round>保存</el-button>
                     </el-button-group>
                 </el-col>
                 <el-col :span="12" style="text-align: right">
@@ -21,7 +23,7 @@
         </el-row>
         <el-row style="margin-top: 10px;">
             <draggable-table v-model="formData.fields" draggable-element=".drag-ele"
-                             :form-data="formData"
+                             :form-data="formData" ref="fieldsTable"
                              :row-style="(data) => {return data.row.marker ? {backgroundColor: data.row.marker} : {}}"
                              :default-data="defaultFieldData">
                 <el-table-column label="字段名">
@@ -82,14 +84,14 @@
                 <el-table-column label="索引" min-width="120">
                     <template slot-scope="scope">
                         <el-form-item>
-                            <el-cascader size="small" v-model="scope.row.indexes" :options="indexesOptions"></el-cascader>
+                            <el-cascader size="small" v-model="scope.row.indexes" :clearable="true" :options="indexesOptions"></el-cascader>
                         </el-form-item>
                     </template>
                 </el-table-column>
                 <el-table-column label="索引名称">
                     <template slot-scope="scope">
                         <el-form-item>
-                            <el-input size="small" v-model="scope.row.notes"></el-input>
+                            <el-input size="small" v-model="scope.row.indexesName"></el-input>
                         </el-form-item>
                     </template>
                 </el-table-column>
@@ -118,6 +120,7 @@
 
     import DraggableTable from "../../../../../components/DraggableTable";
     import SearchInput from "../../../../../components/SearchInput";
+    import utils from "../../../../../common/utils";
 
     export default {
         name: 'edit-datatable-fields',
@@ -184,10 +187,13 @@
                 return;
             }
             this.init(() => {
-
+                this.getDataTableFields();
             });
         },
         methods: {
+            isArray(src) {
+                return utils.isArray(src);
+            },
             handleBack() {
                 this.$router.replace({path: `/project/${this.projectId}/datatable`})
             },
@@ -230,6 +236,37 @@
                         this.$message.error("获取初始化信息失败");
                     }
                 });
+            },
+            getDataTableFields() {
+                apis.getDataTableFields(this.projectId, this.tableId).then(data => {
+                    if(data.code === 1) {
+                        this.formData.fields = data.data.fields;
+                    } else {
+                        this.$message.error(data.message);
+                    }
+                });
+            },
+            saveDataTableFields() {
+                if(this.formData.fields.length <= 0) {
+                    this.$message.warning('请添加至少一个字段');
+                } else {
+                    this.$refs['fieldsTable'].valid(() => {
+                        apis.saveDataTableFields(this.projectId, this.tableId, {
+                            fields: JSON.stringify(this.formData.fields, (key, value) => {
+                                if(key === 'indexes' && utils.isArray(value)) {
+                                    return value.join(',');
+                                }
+                                return value;
+                            })
+                        }).then(data => {
+                            if(data.code === 1) {
+                                this.$message.success('保存成功');
+                            } else {
+                                this.$message.error(data.message);
+                            }
+                        });
+                    });
+                }
             }
         }
     }

@@ -18,7 +18,9 @@ public class DataTableField {
     private String fieldName;
     private String type;
     private String length;
-    private Integer notNull;
+    private String notNull;
+    private String pk;
+    private String autoIncrement;
     private String defaultValue;
     private String notes;
     private String indexes;

@@ -1,18 +1,22 @@
 package com.bombproj.dao;
 
-import com.bombproj.constants.DataTableFieldState;
+import com.bombproj.adapter.DataTableAdapter;
 import com.bombproj.constants.ProjectDataTableState;
 import com.bombproj.constants.ProjectState;
 import com.bombproj.dto.ProjectDataTableDto;
+import com.bombproj.model.DataTableField;
 import com.bombproj.model.DataTableIndexes;
 import com.bombproj.model.ProjectDataTable;
 import com.bombproj.utils.Utils;
+import com.bombproj.vo.DataTableFieldVO;
 import com.bombproj.vo.ProjectDataTableVO;
 import com.queryflow.accessor.A;
-import com.queryflow.page.Pager;
+import com.queryflow.accessor.handler.ResultSetHandler;
 import com.queryflow.sql.SqlBox;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -96,14 +100,14 @@ public class ProjectDataTableDao {
 
     public List<String> queryTableFieldVersions(String tableId, String projectId) {
         String sql = "SELECT version FROM datatable_field WHERE projectId = ? AND datatableId = ? GROUP BY version" +
-            "ORDER BY version DESC";
+            " ORDER BY version DESC";
         return A.query(sql, projectId, tableId).list(String.class);
     }
 
-    public List<Object> queryTableFields(String tableId, String projectId, String version) {
+    public List<DataTableFieldVO> queryTableFields(String tableId, String projectId, String version) {
         StringBuilder sql = new StringBuilder();
         List<Object> values = new LinkedList<>();
-        sql.append(" SELECT f.id, f.fieldName, f.type, f.length, f.notNull, ");
+        sql.append(" SELECT f.id, f.fieldName, f.type, f.length, f.notNull, f.pk, f.autoIncrement, ");
         sql.append(" f.defaultValue, f.notes, f.indexes, f.indexesName, f.state, f.marker, f.version, u.nickName createUserName ");
         sql.append(" FROM datatable_field f LEFT JOIN users u ON f.userId = u.id ");
         sql.append(" WHERE f.projectId = ? AND f.datatableId = ? ");
@@ -118,16 +122,45 @@ public class ProjectDataTableDao {
             values.add(version);
         }
         sql.append(" ORDER BY f.id ");
-        return A.query(sql.toString(), values).list(null);
+        return A.query(sql.toString(), values).result(rs -> {
+            List<DataTableFieldVO> result = new LinkedList<>();
+            while (rs.next()) {
+                DataTableFieldVO vo = new DataTableFieldVO();
+                vo.setId(rs.getString("id"));
+                vo.setFieldName(rs.getString("fieldName"));
+                vo.setType(rs.getString("type"));
+                vo.setLength(rs.getString("length"));
+                vo.setNotNull(rs.getString("notNull"));
+                vo.setPk(rs.getString("pk"));
+                vo.setAutoIncrement(rs.getString("autoIncrement"));
+                vo.setDefaultValue(rs.getString("defaultValue"));
+                vo.setNotes(rs.getString("notes"));
+                String indexes = rs.getString("indexes");
+                String[] indexesArr = null;
+                if(Utils.isNotEmpty(indexes)) {
+                    indexesArr = indexes.split(",");
+                }
+                vo.setIndexes(indexesArr);
+                vo.setIndexesName(rs.getString("indexesName"));
+                vo.setState(rs.getInt("state"));
+                vo.setMarker(rs.getString("marker"));
+                vo.setVersion(rs.getString("version"));
+                vo.setCreateUserName(rs.getString("createUserName"));
+                result.add(vo);
+            }
+            return result;
+        });
     }
 
-    public void batchInsertTableFields(List<List<Object>> fields) {
+    public void batchInsertTableFields(List<DataTableField> fields, String projectId, String datatableId, String version, String userId) {
         String sql = "INSERT INTO datatable_field (id, fieldName, type, length, " +
-            "notNull, defaultValue, notes, indexes, indexesName, state, marker, " +
-            "version, datatableId, projectId, userId, createTime, updateTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        A.batch(sql, fields);
+            "notNull, pk, autoIncrement, defaultValue, notes, indexes, indexesName, state, marker, " +
+            "version, datatableId, projectId, userId, createTime, updateTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        A.batch(sql, DataTableAdapter.getInsertListValues(fields, projectId, datatableId, version, userId));
     }
 
+    public void batchUpdateTableFields() {
 
+    }
 
 }

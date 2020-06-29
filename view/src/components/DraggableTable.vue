@@ -1,5 +1,5 @@
 <template>
-    <el-form :status-icon="false" :model="formData">
+    <el-form :status-icon="false" :model="formData" ref="form">
         <el-table :data="data" v-bind="$attrs" border stripe :row-key="handleRowKey" style="width: 100%;">
             <slot></slot>
             <div slot="append" v-if="showAddRow" style="text-align: center;">
@@ -41,6 +41,15 @@
             this.drag();
         },
         methods: {
+            valid(callback) {
+                this.$refs['form'].validate(valid => {
+                    if(valid) {
+                        callback && callback();
+                    } else {
+                        return false;
+                    }
+                });
+            },
             handleAddRow() {
                 if(this.data.length >= settings.maxDataTableFieldsLenght) {
                     this.$message.warning('添加了太多行，最多添加 200 行哦');

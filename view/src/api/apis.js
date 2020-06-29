@@ -72,5 +72,11 @@ export default {
     },
     getDataTableFieldTypes(dbType, configs) {
         return get('/api/project/field-types', {dbType}, configs);
+    },
+    getDataTableFields(projectId, tableId, params) {
+        return get(`/api/project/${projectId}/datatable/${tableId}/fields`, params);
+    },
+    saveDataTableFields(projectId, tableId, params) {
+        return post(`/api/project/${projectId}/datatable/${tableId}/fields`, params);
     }
 }

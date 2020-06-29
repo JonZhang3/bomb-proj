@@ -11,6 +11,7 @@ import com.bombproj.model.DataTableIndexes;
 import com.bombproj.model.ProjectDataTable;
 import com.bombproj.utils.Utils;
 import com.bombproj.vo.DataTableFieldIndexesVO;
+import com.bombproj.vo.DataTableFieldVO;
 import com.bombproj.vo.ProjectDataTableVO;
 import com.google.gson.reflect.TypeToken;
 import com.queryflow.key.KeyGenerateUtil;
@@ -32,33 +33,33 @@ public class ProjectDataTableService {
     private ProjectDataTableDao projectDataTableDao;
 
     public List<String> getFieldTypes(String dbType) {
-        if(Utils.isEmpty(dbType)) {
+        if (Utils.isEmpty(dbType)) {
             throw new BusinessException("数据库类型未知");
         }
         dbType = dbType.toLowerCase();
-        if(!DbType.isOneOf(dbType)) {
+        if (!DbType.isOneOf(dbType)) {
             throw new BusinessException("未知数据库类型");
         }
         return this.projectDataTableDao.queryFieldTypesByDbType(dbType);
     }
 
     public List<DataTableFieldIndexesVO> getFieldIndexes(String dbType) {
-        if(Utils.isEmpty(dbType)) {
+        if (Utils.isEmpty(dbType)) {
             throw new BusinessException("数据库类型未知");
         }
         dbType = dbType.toLowerCase();
-        if(!DbType.isOneOf(dbType)) {
+        if (!DbType.isOneOf(dbType)) {
             throw new BusinessException("未知数据库类型");
         }
         List<DataTableIndexes> indexes = this.projectDataTableDao.queryFieldIndexesByDbType(dbType);
         List<DataTableFieldIndexesVO> result = new LinkedList<>();
-        if(indexes != null && !indexes.isEmpty()) {
+        if (indexes != null && !indexes.isEmpty()) {
             for (DataTableIndexes index : indexes) {
                 DataTableFieldIndexesVO type = new DataTableFieldIndexesVO();
                 type.setValue(index.getType());
                 type.setLabel(index.getType());
                 List<DataTableFieldIndexesVO> sorts = null;
-                if(Utils.isNotEmpty(index.getSort())) {
+                if (Utils.isNotEmpty(index.getSort())) {
                     String[] sortArr = index.getSort().split(",");
                     sorts = new ArrayList<>(sortArr.length);
                     for (String str : sortArr) {
@@ -69,7 +70,7 @@ public class ProjectDataTableService {
                     }
                 }
                 List<DataTableFieldIndexesVO> methods = null;
-                if(Utils.isNotEmpty(index.getMethod())) {
+                if (Utils.isNotEmpty(index.getMethod())) {
                     String[] methodArr = index.getMethod().split(",");
                     methods = new ArrayList<>(methodArr.length);
                     for (String str : methodArr) {
@@ -80,7 +81,7 @@ public class ProjectDataTableService {
                         methods.add(method);
                     }
                 }
-                if(methods == null) {
+                if (methods == null) {
                     type.setChildren(sorts);
                 } else {
                     type.setChildren(methods);
@@ -92,14 +93,14 @@ public class ProjectDataTableService {
     }
 
     public List<ProjectDataTableVO> pageListTables(String tableName, String projectId, Integer page) {
-        if(page == null || page <= 0) {
+        if (page == null || page <= 0) {
             page = 1;
         }
         return this.projectDataTableDao.pageQueryTables(tableName, projectId, page);
     }
 
     public void addTable(ProjectDataTableDto dto) {
-        if(this.projectDataTableDao.countTableByTableName(dto.getTableName(), null, dto.getProjectId()) > 0) {
+        if (this.projectDataTableDao.countTableByTableName(dto.getTableName(), null, dto.getProjectId()) > 0) {
             throw new BusinessException("表名重复");
         }
         ProjectDataTable table = new ProjectDataTable();
@@ -117,7 +118,7 @@ public class ProjectDataTableService {
     }
 
     public void updateTable(ProjectDataTableDto dto) {
-        if(this.projectDataTableDao.countTableByTableName(dto.getTableName(),
+        if (this.projectDataTableDao.countTableByTableName(dto.getTableName(),
             dto.getTableId(), dto.getProjectId()) > 0) {
             throw new BusinessException("表名重复");
         }
@@ -133,7 +134,7 @@ public class ProjectDataTableService {
 
     public Map<String, Object> getTableFields(String tableId, String projectId, String version) {
         List<String> versions = this.projectDataTableDao.queryTableFieldVersions(tableId, projectId);
-        List<Object> fields = this.projectDataTableDao.queryTableFields(tableId, projectId, version);
+        List<DataTableFieldVO> fields = this.projectDataTableDao.queryTableFields(tableId, projectId, version);
         Map<String, Object> result = new HashMap<>();
         result.put("fields", fields);
         result.put("versions", versions);
@@ -141,15 +142,17 @@ public class ProjectDataTableService {
     }
 
     @Transaction
-    public void addOrUpdateTableFields(String tableId, String projectId, String fieldJson) {
-        List<DataTableField> fields = Utils.fromJson(fieldJson, new TypeToken<List<DataTableField>>(){}.getType());
+    public void addOrUpdateTableFields(String tableId, String projectId, String userId, String fieldJson) {
+        List<DataTableField> fields = Utils.fromJson(fieldJson, new TypeToken<List<DataTableField>>() {}.getType());
         String nowMaxVersion = this.projectDataTableDao.queryTableFieldMaxVersion(tableId, projectId);
-        if(Utils.isEmpty(nowMaxVersion) && fields.size() > 0) {
-            String version = "1";
-            List<List<Object>> result = new LinkedList<>();
-            for (DataTableField field : fields) {
-                
-            }
+        String version;
+        if (Utils.isEmpty(nowMaxVersion)) {
+            version = "1";
+        } else {
+            version = Integer.parseInt(nowMaxVersion) + 1 + "";
+        }
+        if (fields != null && fields.size() > 0) {
+            this.projectDataTableDao.batchInsertTableFields(fields, projectId, tableId, version, userId);
         }
     }
 

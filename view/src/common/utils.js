@@ -1,9 +1,10 @@
 const jsmd5 = require('js-md5');
 
-function md5(message) {
-    return jsmd5(message);
-}
-
 export default {
-    md5
+    md5(message) {
+        return jsmd5(message);
+    },
+    isArray(src) {
+        return Object.prototype.toString.call(src) === '[object Array]';
+    }
 }

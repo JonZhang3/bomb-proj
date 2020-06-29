@@ -85,7 +85,7 @@ public class ProjectDataTableController {
     @GetMapping("/{projectId}/datatable/{tableId}/fields")
     public JsonResult getTableFields(@PathVariable("projectId") String projectId,
                                      @PathVariable("tableId") String tableId,
-                                     @RequestParam("version") String version) {
+                                     @RequestParam(value = "version", required = false) String version) {
         SessionConfig sessionConfig = SessionConfig.current();
         // TODO check permission
         return JsonResult.success(this.projectDataTableService.getTableFields(tableId, projectId, version));
@@ -96,8 +96,9 @@ public class ProjectDataTableController {
     public JsonResult addTableFields(@PathVariable("projectId") String projectId,
                                      @PathVariable("tableId") String tableId,
                                      @RequestParam("fields") String fields) {
-
-        return null;
+        SessionConfig sessionConfig = SessionConfig.current();
+        this.projectDataTableService.addOrUpdateTableFields(tableId, projectId, sessionConfig.getUserId(), fields);
+        return JsonResult.success();
     }
 
 }

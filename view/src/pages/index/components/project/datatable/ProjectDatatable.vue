@@ -30,7 +30,7 @@
                 <el-table-column prop="type" label="数据库类型"></el-table-column>
                 <el-table-column prop="createUser" label="创建者"></el-table-column>
                 <el-table-column prop="updateTime" label="更新时间"></el-table-column>
-                <el-table-column width="140" label="操作">
+                <el-table-column width="180" label="操作">
                     <template slot-scope="scope">
                         <el-tooltip effect="dark" content="修改" placement="top">
                             <el-button @click="handleTableRowEdit(scope.row, $event)"
@@ -40,6 +40,11 @@
                             <el-button type="primary"
                                        @click="handleTableRowView(scope.row, $event)"
                                        icon="el-icon-view" circle size="small"></el-button>
+                        </el-tooltip>
+                        <el-tooltip effect="dark" content="操作日志" placement="top">
+                            <el-button type="primary"
+                                       @click="handleTableRowView(scope.row, $event)"
+                                       icon="el-icon-tickets" circle size="small"></el-button>
                         </el-tooltip>
                         <el-tooltip effect="dark" content="删除" placement="top">
                             <el-button type="danger"
