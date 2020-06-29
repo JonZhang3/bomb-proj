@@ -56,6 +56,9 @@
             },
             tableName() {
                 return this.$route.params.tableName
+            },
+            dbType() {
+                return this.$route.params.type;
             }
         },
         mounted() {

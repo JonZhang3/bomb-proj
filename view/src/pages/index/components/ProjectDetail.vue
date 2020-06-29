@@ -1,45 +1,39 @@
 <template>
     <el-container style="position: relative;bottom: 0;overflow-y: hidden">
-        <el-aside width="200px">
+        <el-aside width="auto" style="display: flex;flex-direction: column;">
             <el-menu :default-active="activeIndex"
                      background-color="#303543"
                      text-color="#fff"
                      active-text-color="#409EFF"
                      :router="true"
-                     style="height: 100%;">
+                     class="menu-can-collapse"
+                     :collapse="menuCollapse"
+                     style="position: relative; flex: 1;overflow-y: auto">
                 <el-menu-item index="/">
-                    <template slot="title">
-                        <i class="el-icon-arrow-left"></i>
-                        <span>返回</span>
-                    </template>
+                    <i class="el-icon-arrow-left"></i>
+                    <span slot="title">返回</span>
                 </el-menu-item>
                 <el-menu-item :index="`/project/${$route.params.id}`">
-                    <template slot="title">
-                        <i class="el-icon-s-home"></i>
-                        <span>项目详情</span>
-                    </template>
+                    <i class="el-icon-s-home"></i>
+                    <span slot="title">项目详情</span>
                 </el-menu-item>
                 <el-menu-item :index="`/project/${$route.params.id}/member`">
-                    <template slot="title">
-                        <i class="el-icon-user-solid"></i>
-                        <span>项目成员</span>
-                    </template>
+                    <i class="el-icon-user-solid"></i>
+                    <span slot="title">项目成员</span>
                 </el-menu-item>
                 <el-menu-item :index="`/project/${$route.params.id}/code`">
-                    <template slot="title">
-                        <i class="el-icon-error"></i>
-                        <span>状态码</span>
-                    </template>
+                    <i class="el-icon-error"></i>
+                    <span slot="title">状态码</span>
                 </el-menu-item>
                 <el-menu-item :index="`/project/${$route.params.id}/datatable`">
-                    <template slot="title">
-                        <i class="el-icon-s-grid"></i>
-                        <span>数据库表</span>
-                    </template>
+                    <i class="el-icon-s-grid"></i>
+                    <span slot="title">数据库表</span>
                 </el-menu-item>
             </el-menu>
+            <div class="menu-collapse-root" @click="menuCollapse = !menuCollapse">
+                <i :class="menuCollapse ? 'el-icon-arrow-right' : 'el-icon-arrow-left'"></i>
+            </div>
         </el-aside>
-        <!--        background-color: #F3F4F4;-->
         <el-main style="overflow-y: auto;">
             <router-view></router-view>
         </el-main>
@@ -58,6 +52,7 @@
         data() {
             return {
                 activeIndex: this.$route.path,
+                menuCollapse: false
             }
         },
         beforeMount() {
@@ -90,3 +85,23 @@
     }
 
 </script>
+
+<style>
+
+    .menu-can-collapse:not(.el-menu--collapse) {
+        width: 200px;
+    }
+
+    .menu-collapse-root {
+        /*position: fixed;*/
+        /*bottom: 0;*/
+        /*left: 0;*/
+        /*right: 0;*/
+        background-color: #1c1e26;
+        color: #fff;
+        text-align: center;
+        padding: 6px 0;
+        cursor: pointer;
+        border-right: 1px solid #303543;
+    }
+</style>

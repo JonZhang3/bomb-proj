@@ -56,7 +56,7 @@ public class ProjectDataTableService {
             for (DataTableIndexes index : indexes) {
                 DataTableFieldIndexesVO type = new DataTableFieldIndexesVO();
                 type.setValue(index.getType());
-                type.setValue(index.getType());
+                type.setLabel(index.getType());
                 List<DataTableFieldIndexesVO> sorts = null;
                 if(Utils.isNotEmpty(index.getSort())) {
                     String[] sortArr = index.getSort().split(",");

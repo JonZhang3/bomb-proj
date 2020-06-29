@@ -10,7 +10,7 @@
                 <el-col :span="12">
                     <el-button-group>
                         <el-button @click="handleBack" icon="el-icon-arrow-left" size="mini" round>返回</el-button>
-<!--                        <el-button icon="el-icon-refresh" size="mini" round>刷新</el-button>-->
+                        <el-button icon="el-icon-receiving" type="primary" size="mini" round>保存</el-button>
                     </el-button-group>
                 </el-col>
                 <el-col :span="12" style="text-align: right">
@@ -34,7 +34,11 @@
                 <el-table-column label="类型">
                     <template slot-scope="scope">
                         <el-form-item :prop="'fields.' + scope.$index + '.type'" :rules="formData.rules.type">
-                            <el-input placeholder="必填" size="small" v-model="scope.row.type"></el-input>
+<!--                            <el-input placeholder="必填" size="small" v-model="scope.row.type"></el-input>-->
+                            <el-select placeholder="请选择字段类型"
+                                       filterable size="small" v-model="scope.row.type">
+                                <el-option v-for="item in fieldTypeOptions" :key="item" :value="item" :label="item"></el-option>
+                            </el-select>
                         </el-form-item>
                     </template>
                 </el-table-column>
@@ -42,15 +46,29 @@
                     <template slot-scope="scope">
                         <el-form-item :prop="'fields.' + scope.$index + '.length'" :rules="formData.rules.length">
                             <el-input-number v-model="scope.row.length" :precision="0"
-                                             size="small" @blur="handleTableRowLengthBlur(scope.row)"
+                                             size="mini" @blur="handleTableRowLengthBlur(scope.row)"
                                              controls-position="right" :min="0" :max="65532"></el-input-number>
                         </el-form-item>
                     </template>
                 </el-table-column>
                 <el-table-column width="50" label="非空">
                     <template slot-scope="scope">
-                        <el-form-item>
-                            <el-checkbox v-model="scope.row.notNull" size="small"></el-checkbox>
+                        <el-form-item style="text-align: center;">
+                            <el-checkbox v-model="scope.row.notNull" size="small" true-label="1" false-label="0"></el-checkbox>
+                        </el-form-item>
+                    </template>
+                </el-table-column>
+                <el-table-column width="50" label="主键">
+                    <template slot-scope="scope">
+                        <el-form-item style="text-align: center;">
+                            <el-checkbox v-model="scope.row.pk" size="small" true-label="1" false-label="0"></el-checkbox>
+                        </el-form-item>
+                    </template>
+                </el-table-column>
+                <el-table-column width="50" label="自增">
+                    <template slot-scope="scope">
+                        <el-form-item style="text-align: center;">
+                            <el-checkbox v-model="scope.row.autoIncrement" size="small" true-label="1" false-label="0"></el-checkbox>
                         </el-form-item>
                     </template>
                 </el-table-column>
@@ -61,7 +79,7 @@
                         </el-form-item>
                     </template>
                 </el-table-column>
-                <el-table-column label="索引">
+                <el-table-column label="索引" min-width="120">
                     <template slot-scope="scope">
                         <el-form-item>
                             <el-cascader size="small" v-model="scope.row.indexes" :options="indexesOptions"></el-cascader>
@@ -96,6 +114,8 @@
 
 <script>
 
+    import apis from "../../../../../api/apis";
+
     import DraggableTable from "../../../../../components/DraggableTable";
     import SearchInput from "../../../../../components/SearchInput";
 
@@ -110,7 +130,7 @@
                 searchText: '',
                 formData: {
                     fields: [
-                        {index: 0, fieldName: '', type: '', length: 0, notNull: false, defaultValue: '', notes: '', indexes: '', indexesName: '', marker: ''}
+                        {index: 0, fieldName: '', type: '', length: 0, notNull: '0', pk: '0', autoIncrement: '0', defaultValue: '', notes: '', indexes: '', indexesName: '', marker: ''}
                     ],
                     rules: {
                         fieldName: [
@@ -128,20 +148,17 @@
                     fieldName: '',
                     type: '',
                     length: 0,
-                    notNull: false,
+                    notNull: '0',
+                    pk: '0',
+                    autoIncrement: '0',
                     defaultValue: '',
                     notes: '',
                     indexes: '',
                     indexesName: '',
                     marker: ''
                 },
-                indexesOptions: [
-                    {value: 'PRIMARY', label: 'PRIMARY KEY'},
-                    {value: 'FULLTEXT', label: 'FULLTEXT', children: [{value: 'BTREE', label: 'BTREE'}, {value: 'HASH', label: 'HASH'}]},
-                    {value: 'NORMAL', label: 'NORMAL', children: [{value: 'BTREE', label: 'BTREE'}, {value: 'HASH', label: 'HASH'}]},
-                    {value: 'SPATIAL', label: 'SPATIAL', children: [{value: 'BTREE', label: 'BTREE'}, {value: 'HASH', label: 'HASH'}]},
-                    {value: 'UNIQUE', label: 'UNIQUE', children: [{value: 'BTREE', label: 'BTREE'}, {value: 'HASH', label: 'HASH'}]}
-                ]
+                indexesOptions: [],
+                fieldTypeOptions: []
             }
         },
         computed: {
@@ -156,12 +173,19 @@
             },
             tableName() {
                 return this.$route.params.tableName
+            },
+            dbType() {
+                return this.$route.params.type;
             }
         },
         mounted() {
             if(!this.tableName) {
                 this.handleBack();
+                return;
             }
+            this.init(() => {
+
+            });
         },
         methods: {
             handleBack() {
@@ -171,12 +195,41 @@
 
             },
             handleTableRowDelete(scope) {
-                this.fields.splice(scope.$index, 1);
+                this.formData.fields.splice(scope.$index, 1);
             },
             handleTableRowLengthBlur(row) {
                 if(!row.length) {
                     row.length = 0;
                 }
+            },
+            init(callback) {
+                const loading = this.$loading({fullscreen: true});
+                Promise.all([
+                    apis.getDataTableIndexes(this.dbType, {useLoading: false}),
+                    apis.getDataTableFieldTypes(this.dbType, {useLoading: false})
+                ]).then(datas => {
+                    loading.close();
+                    if(datas && datas.length === 2) {
+                        let initSuccess = true;
+                        if(datas[0].code === 1) {
+                            this.indexesOptions = datas[0].data;
+                        } else {
+                            initSuccess = false;
+                            this.$message.error(datas[0].message);
+                        }
+                        if(datas[1].code === 1) {
+                            this.fieldTypeOptions = datas[1].data;
+                        } else {
+                            initSuccess = false;
+                            this.$message.error(datas[1].message);
+                        }
+                        if(initSuccess) {
+                            callback && callback();
+                        }
+                    } else {
+                        this.$message.error("获取初始化信息失败");
+                    }
+                });
             }
         }
     }

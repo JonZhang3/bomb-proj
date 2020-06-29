@@ -157,7 +157,12 @@
             handleRowClick(row, column, e) {
                 this.$router.push({
                     name: 'project-datatable-fields-edit',
-                    params: {id: this.projectId, tableId: row.id, tableName: row.tableName}
+                    params: {
+                        id: this.projectId,
+                        tableId: row.id,
+                        tableName: row.tableName,
+                        type: row.type
+                    }
                 });
                 // this.$router.push({path: `/project/${this.projectId}/datatable/${row.id}/fields`});
             },
@@ -166,7 +171,12 @@
                 e.stopPropagation();
                 this.$router.push({
                     name: 'project-datatable-fields-view',
-                    params: {id: this.projectId, tableId: row.id, tableName: row.tableName}
+                    params: {
+                        id: this.projectId,
+                        tableId: row.id,
+                        tableName: row.tableName,
+                        type: row.type
+                    }
                 });
             },
             handleAddTable() {
