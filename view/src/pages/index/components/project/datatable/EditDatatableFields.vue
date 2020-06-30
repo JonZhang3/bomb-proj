@@ -22,7 +22,8 @@
             </el-row>
         </el-row>
         <el-row style="margin-top: 10px;">
-            <draggable-table v-model="formData.fields" draggable-element=".drag-ele"
+            <draggable-table v-model="formData.fields"
+                             draggable-element=".drag-ele"
                              :form-data="formData" ref="fieldsTable"
                              :row-style="(data) => {return data.row.marker ? {backgroundColor: data.row.marker} : {}}"
                              :default-data="defaultFieldData">
