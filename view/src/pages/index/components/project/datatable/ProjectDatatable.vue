@@ -8,7 +8,7 @@
             <el-row style="margin-top: 10px;">
                 <el-col :span="12">
                     <el-button-group>
-                        <el-button @click="listProjectDataTables(1)"
+                        <el-button @click="tableSearchText = ''; listProjectDataTables()"
                                    icon="el-icon-refresh" size="mini" round>刷新</el-button>
                         <el-button @click="handleAddTable"
                                    type="primary"
@@ -18,13 +18,15 @@
                 <el-col :span="12" style="text-align: right">
                     <search-input style="width: 40%;"
                         v-model="tableSearchText"
-                        placeholder="表名" button-text="搜索" @search="handleSearch"></search-input>
+                        placeholder="表名" button-text="搜索"></search-input>
                 </el-col>
             </el-row>
         </el-row>
         <el-row style="margin-top: 10px;">
             <span style="font-size: 12px;color: #909399">Tip：点击每行去编辑表中的字段</span>
-            <el-table stripe style="width: 100%;" :data="tables" @row-click="handleRowClick">
+            <el-table stripe style="width: 100%;"
+                      :data="tables.filter(data => !tableSearchText || data.tableName.toLowerCase().includes(tableSearchText.toLowerCase()))"
+                      @row-click="handleRowClick">
                 <el-table-column prop="tableName" label="表名"></el-table-column>
                 <el-table-column prop="tableDesc" label="描述"></el-table-column>
                 <el-table-column prop="type" label="数据库类型"></el-table-column>
@@ -92,7 +94,7 @@
             }
         },
         mounted() {
-            this.listProjectDataTables(1);
+            this.listProjectDataTables();
         },
         computed: {
             projectName() {
@@ -103,15 +105,8 @@
             }
         },
         methods: {
-            handleSearch() {
-                this.listProjectDataTables(1);
-            },
-            listProjectDataTables(page) {
-                const params = {};
-                if(this.tableSearchText) {
-                    params['tableName'] = this.tableSearchText;
-                }
-                apis.listProjectDataTables(this.projectId, params).then(data => {
+            listProjectDataTables() {
+                apis.listProjectDataTables(this.projectId).then(data => {
                     if(data.code === 1) {
                         this.tables = data.data;
                     } else {
@@ -122,7 +117,7 @@
             handleTableAddOrUpdateSuccess() {
                 this.addProjectDatatableDialogVisible = false;
                 this.tableSearchText = '';
-                this.listProjectDataTables(1);
+                this.listProjectDataTables();
             },
             handleTableRowDelete(row, e) {
                 e.preventDefault();
@@ -135,7 +130,7 @@
                     apis.deleteProjectDataTable(this.projectId, row.id).then(data => {
                         if(data.code === 1) {
                             this.$message.success('删除成功');
-                            this.listProjectDataTables(1);
+                            this.listProjectDataTables();
                         } else {
                             this.$message.error(data.message);
                         }

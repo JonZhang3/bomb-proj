@@ -13,14 +13,12 @@
                         <el-button @click="getDataTableFields" icon="el-icon-refresh" size="mini" round>刷新</el-button>
                     </el-button-group>
                     <span style="margin-left: 10px;font-size: 14px;color: #606266;">版本：</span>
-                    <el-select v-model="currentVersion"
-                               @change="handleFieldVersionChange" size="mini">
+                    <el-select v-model="currentVersion" @change="handleFieldVersionChange" size="mini">
                         <el-option v-for="item in fieldVersions" :key="item" :value="item" :label="item"></el-option>
                     </el-select>
                 </el-col>
                 <el-col :span="12" style="text-align: right">
-                    <search-input style="width: 40%;" v-model="searchText"
-                                  placeholder="字段名" button-text="搜索" @search="handleSearch"></search-input>
+                    <search-input style="width: 40%;" v-model="searchText" placeholder="字段名" button-text="搜索"></search-input>
                 </el-col>
             </el-row>
         </el-row>
@@ -57,13 +55,18 @@
                 <el-table-column label="其他">
                     <template slot-scope="scope">
                         <el-popover placement="top-start" trigger="click">
-                            <el-table :data="scope.row.indexes ? [{indexes: scope.row.indexes, indexesName: scope.row.indexesName}] : []">
+                            <el-table :data="[{indexes: scope.row.indexes, indexesName: scope.row.indexesName, createUserName: scope.row.createUserName}]">
                                 <el-table-column label="索引" min-width="140">
-                                    <template slot-scope="iscope">
-                                        <span>{{isArray(iscope.row.indexes) ? iscope.row.indexes.join('/') : ''}}</span>
+                                    <template slot-scope="scope">
+                                        <span>{{isArray(scope.row.indexes) ? scope.row.indexes.join('/') : '-'}}</span>
                                     </template>
                                 </el-table-column>
-                                <el-table-column label="索引名" prop="indexesName" min-width="120"></el-table-column>
+                                <el-table-column label="索引名" prop="indexesName" min-width="120">
+                                    <template slot-scope="scope">
+                                        <span>{{scope.row.indexesName ? scope.row.indexesName : '-'}}</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="创建者" prop="createUserName" min-width="120"></el-table-column>
                             </el-table>
                             <el-button size="mini" slot="reference">其 他</el-button>
                         </el-popover>
@@ -121,9 +124,6 @@
         methods: {
             isArray(src) {
                 return utils.isArray(src);
-            },
-            handleSearch() {
-
             },
             handleBack() {
                 this.$router.replace({path: `/project/${this.projectId}/datatable`})

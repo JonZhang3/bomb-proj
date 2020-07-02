@@ -121,7 +121,7 @@ public class ProjectDataTableDao {
             sql.append(" AND f.version = ? ");
             values.add(version);
         }
-        sql.append(" ORDER BY f.id ");
+        sql.append(" ORDER BY f.sequence ");
         return A.query(sql.toString(), values).result(rs -> {
             List<DataTableFieldVO> result = new LinkedList<>();
             while (rs.next()) {
@@ -155,7 +155,7 @@ public class ProjectDataTableDao {
     public void batchInsertTableFields(List<DataTableField> fields, String projectId, String datatableId, String version, String userId) {
         String sql = "INSERT INTO datatable_field (id, fieldName, type, length, " +
             "notNull, pk, autoIncrement, defaultValue, notes, indexes, indexesName, state, marker, " +
-            "version, datatableId, projectId, userId, createTime, updateTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            "version, datatableId, projectId, userId, createTime, updateTime, sequence) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         A.batch(sql, DataTableAdapter.getInsertListValues(fields, projectId, datatableId, version, userId));
     }
 

@@ -15,6 +15,7 @@ public class DataTableAdapter {
     public static List<List<Object>> getInsertListValues(List<DataTableField> fields, String projectId, String datatableId,
                                                          String version, String userId) {
         List<List<Object>> values = new LinkedList<>();
+        int i = 1;
         for (DataTableField field : fields) {
             if(Utils.isEmpty(field.getFieldName()) || Utils.isEmpty(field.getType())) {
                 continue;
@@ -44,6 +45,7 @@ public class DataTableAdapter {
             Date now = new Date();
             value.add(now);
             value.add(now);
+            value.add(i++);
             values.add(value);
         }
         return values;

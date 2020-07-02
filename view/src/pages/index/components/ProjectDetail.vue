@@ -29,6 +29,16 @@
                     <i class="el-icon-s-grid"></i>
                     <span slot="title">数据库表</span>
                 </el-menu-item>
+                <el-submenu index="1">
+                    <template slot="title">
+                        <i class="el-icon-location"></i>
+                        <span>文档管理</span>
+                    </template>
+                    <el-menu-item :index="`/project/${$route.params.id}/files`">
+                        <i class="el-icon-s-grid"></i>
+                        <span slot="title">文件网盘</span>
+                    </el-menu-item>
+                </el-submenu>
             </el-menu>
             <div class="menu-collapse-root" @click="menuCollapse = !menuCollapse">
                 <i :class="menuCollapse ? 'el-icon-arrow-right' : 'el-icon-arrow-left'"></i>

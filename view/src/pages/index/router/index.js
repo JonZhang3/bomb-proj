@@ -11,6 +11,7 @@ import ProjectCode from "../components/project/code/ProjectCode";
 import ProjectDatatable from "../components/project/datatable/ProjectDatatable";
 import ViewDatatableFields from "../components/project/datatable/ViewDatatableFields";
 import EditDatatableFields from "../components/project/datatable/EditDatatableFields";
+import ProjectFiles from "../components/project/files/ProjectFiles";
 
 import NotFound from "../components/NotFound";
 
@@ -69,6 +70,11 @@ const routes = [
                 meta: {
                     hasParent: true
                 }
+            },
+            {
+                path: 'files',
+                name: 'project-files',
+                component: ProjectFiles
             }
         ]
     },
