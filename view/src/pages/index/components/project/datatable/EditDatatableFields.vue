@@ -15,10 +15,10 @@
                                    type="primary" size="mini" round>保存</el-button>
                     </el-button-group>
                 </el-col>
-                <el-col :span="12" style="text-align: right">
-                    <search-input style="width: 40%;" v-model="searchText"
-                                  placeholder="字段名" button-text="搜索" @search="handleSearch"></search-input>
-                </el-col>
+<!--                <el-col :span="12" style="text-align: right">-->
+<!--                    <search-input style="width: 40%;" v-model="searchText"-->
+<!--                                  placeholder="字段名" button-text="搜索" @search="handleSearch"></search-input>-->
+<!--                </el-col>-->
             </el-row>
         </el-row>
         <el-row style="margin-top: 10px;">
@@ -198,9 +198,9 @@
             handleBack() {
                 this.$router.replace({path: `/project/${this.projectId}/datatable`})
             },
-            handleSearch() {
-
-            },
+            // handleSearch() {
+            //
+            // },
             handleTableRowDelete(scope) {
                 this.formData.fields.splice(scope.$index, 1);
             },

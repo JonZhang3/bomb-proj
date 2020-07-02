@@ -41,11 +41,11 @@
                                        @click="handleTableRowView(scope.row, $event)"
                                        icon="el-icon-view" circle size="small"></el-button>
                         </el-tooltip>
-                        <el-tooltip effect="dark" content="操作日志" placement="top">
-                            <el-button type="primary"
-                                       @click="handleTableRowView(scope.row, $event)"
-                                       icon="el-icon-tickets" circle size="small"></el-button>
-                        </el-tooltip>
+<!--                        <el-tooltip effect="dark" content="操作日志" placement="top">-->
+<!--                            <el-button type="primary"-->
+<!--                                       @click="handleTableRowView(scope.row, $event)"-->
+<!--                                       icon="el-icon-tickets" circle size="small"></el-button>-->
+<!--                        </el-tooltip>-->
                         <el-tooltip effect="dark" content="删除" placement="top">
                             <el-button type="danger"
                                        @click="handleTableRowDelete(scope.row, $event)"
@@ -55,11 +55,6 @@
                 </el-table-column>
             </el-table>
         </el-row>
-<!--        <el-row style="text-align: right;margin-top: 10px;">-->
-<!--            <el-pagination background layout="prev,pager,next"-->
-<!--                           :page-size="pager.pageSize"-->
-<!--                           :current-page="pager.page" :total="pager.total"></el-pagination>-->
-<!--        </el-row>-->
         <add-or-edit-project-datatable-dialog :visible.sync="addProjectDatatableDialogVisible"
                                       :project-id="projectId"
                                       :table-data="editTableData"
@@ -116,7 +111,6 @@
                 if(this.tableSearchText) {
                     params['tableName'] = this.tableSearchText;
                 }
-                // params['page'] = page;
                 apis.listProjectDataTables(this.projectId, params).then(data => {
                     if(data.code === 1) {
                         this.tables = data.data;

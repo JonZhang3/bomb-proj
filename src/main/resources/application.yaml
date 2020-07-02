@@ -3,3 +3,6 @@ app:
     coverImagePath: /Users/jon/Desktop/files/cover/
 server:
     port: 8081
+logging:
+    level:
+        root: info

@@ -12,6 +12,11 @@
                         <el-button @click="handleBack" icon="el-icon-arrow-left" size="mini" round>返回</el-button>
                         <el-button @click="getDataTableFields" icon="el-icon-refresh" size="mini" round>刷新</el-button>
                     </el-button-group>
+                    <span style="margin-left: 10px;font-size: 14px;color: #606266;">版本：</span>
+                    <el-select v-model="currentVersion"
+                               @change="handleFieldVersionChange" size="mini">
+                        <el-option v-for="item in fieldVersions" :key="item" :value="item" :label="item"></el-option>
+                    </el-select>
                 </el-col>
                 <el-col :span="12" style="text-align: right">
                     <search-input style="width: 40%;" v-model="searchText"
@@ -49,12 +54,21 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="默认值" prop="defaultValue"></el-table-column>
-                <el-table-column label="索引" prop="indexes" min-width="120">
+                <el-table-column label="其他">
                     <template slot-scope="scope">
-                        <span>{{isArray(scope.row.indexes) ? scope.row.indexes.join('/') : ''}}</span>
+                        <el-popover placement="top-start" trigger="click">
+                            <el-table :data="scope.row.indexes ? [{indexes: scope.row.indexes, indexesName: scope.row.indexesName}] : []">
+                                <el-table-column label="索引" min-width="140">
+                                    <template slot-scope="iscope">
+                                        <span>{{isArray(iscope.row.indexes) ? iscope.row.indexes.join('/') : ''}}</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="索引名" prop="indexesName" min-width="120"></el-table-column>
+                            </el-table>
+                            <el-button size="mini" slot="reference">其 他</el-button>
+                        </el-popover>
                     </template>
                 </el-table-column>
-                <el-table-column label="索引名" prop="indexesName" min-width="120"></el-table-column>
             </el-table>
         </el-row>
     </el-row>
@@ -75,7 +89,9 @@
         data() {
             return {
                 searchText: '',
-                fields: []
+                fields: [],
+                currentVersion: '',
+                fieldVersions: []
             }
         },
         computed: {
@@ -113,14 +129,29 @@
                 this.$router.replace({path: `/project/${this.projectId}/datatable`})
             },
             getDataTableFields() {
-                apis.getDataTableFields(this.projectId, this.tableId).then(data => {
+                apis.getDataTableFields(this.projectId, this.tableId)
+                .then(data => {
                     if(data.code === 1) {
                         this.fields = data.data.fields;
+                        this.fieldVersions = data.data.versions;
+                        this.currentVersion = this.fieldVersions && this.fieldVersions.length > 0
+                            ? this.fieldVersions[0] : '';
                     } else {
                         this.$message.error(data.message);
                     }
                 });
             },
+            handleFieldVersionChange(val) {
+                apis.getDataTableFields(this.projectId, this.tableId, {version: val})
+                    .then(data => {
+                        if(data.code === 1) {
+                            this.fields = data.data.fields;
+                            this.fieldVersions = data.data.versions;
+                        } else {
+                            this.$message.error(data.message);
+                        }
+                    });
+            }
         }
     }
 

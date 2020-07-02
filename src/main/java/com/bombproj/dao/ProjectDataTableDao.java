@@ -94,7 +94,7 @@ public class ProjectDataTableDao {
     }
 
     public String queryTableFieldMaxVersion(String tableId, String projectId) {
-        String sql = "SELECT MAX(version) FROM datatable_field WHERE projectId = ? AND datatableId = ? GROUP BY version";
+        String sql = "SELECT MAX(version) FROM datatable_field WHERE projectId = ? AND datatableId = ?";
         return A.query(sql, projectId, tableId).one(String.class);
     }
 
