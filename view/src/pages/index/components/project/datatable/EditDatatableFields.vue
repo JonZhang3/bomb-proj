@@ -1,5 +1,5 @@
 <template>
-    <el-row>
+    <el-row class="main-content-root">
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item>项目【{{projectName}}】</el-breadcrumb-item>
             <el-breadcrumb-item>数据库表</el-breadcrumb-item>
@@ -24,7 +24,7 @@
         <el-row style="margin-top: 10px;">
             <draggable-table v-model="formData.fields"
                              draggable-element=".drag-ele"
-                             :form-data="formData" ref="fieldsTable"
+                             :form-data="formData" ref="fieldsTable" size="small"
                              :row-style="(data) => {return data.row.marker ? {backgroundColor: data.row.marker} : {}}"
                              :default-data="defaultFieldData">
                 <el-table-column label="字段名">

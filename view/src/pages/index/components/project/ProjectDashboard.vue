@@ -1,5 +1,5 @@
 <template>
-    <el-row>
+    <el-row class="main-content-root">
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item>项目【{{projectName}}】</el-breadcrumb-item>
             <el-breadcrumb-item>项目详情</el-breadcrumb-item>
@@ -64,9 +64,9 @@
 
 <script>
 
-    import apis from "../../../../../api/apis";
+    import apis from "../../../../api/apis";
 
-    import EditProjectDialog from "../EditProjectDialog";
+    import EditProjectDialog from "./EditProjectDialog";
 
     export default {
         name: 'project-dashboard',

@@ -65,3 +65,7 @@
     height: 100%;
     display: inline-block;
 }
+
+.main-content-root {
+    padding: 20px;
+}

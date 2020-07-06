@@ -1,5 +1,5 @@
 <template>
-    <el-row>
+    <el-row class="main-content-root">
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item>项目【{{projectName}}】</el-breadcrumb-item>
             <el-breadcrumb-item>状态码</el-breadcrumb-item>

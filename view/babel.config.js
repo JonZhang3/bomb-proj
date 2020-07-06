@@ -1,5 +1,12 @@
 module.exports = {
-  presets: [
-    '@vue/cli-plugin-babel/preset'
-  ]
+    presets: [
+        [
+            "@vue/babel-preset-jsx",
+            {
+                "injectH": false
+            }
+        ],
+        '@vue/cli-plugin-babel/preset'
+    ],
+    // plugins: ["transform-vue-jsx"],
 }

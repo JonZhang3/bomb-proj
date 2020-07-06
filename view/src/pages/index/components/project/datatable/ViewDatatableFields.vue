@@ -1,5 +1,5 @@
 <template>
-    <el-row>
+    <el-row class="main-content-root">
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item>项目【{{projectName}}】</el-breadcrumb-item>
             <el-breadcrumb-item>数据库表</el-breadcrumb-item>
@@ -25,6 +25,7 @@
         <el-row style="margin-top: 10px;">
             <el-table
                 :data="fields.filter(data => !searchText || data.fieldName.toLowerCase().includes(searchText.toLowerCase()))"
+                size="medium"
                 stripe>
                 <el-table-column label="字段名" prop="fieldName"></el-table-column>
                 <el-table-column label="类型" prop="type"></el-table-column>

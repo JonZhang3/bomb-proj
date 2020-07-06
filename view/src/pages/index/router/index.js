@@ -4,14 +4,19 @@ import VueRouter from 'vue-router';
 import Index from '../components/Index';
 import Projects from "../components/Projects";
 
-import ProjectDetail from "../components/ProjectDetail";
-import ProjectDashboard from "../components/project/detail/ProjectDashboard";
+import ProjectDetail from "../components/project/ProjectDetail";
+import ProjectDashboard from "../components/project/ProjectDashboard";
 import ProjectMember from "../components/project/member/ProjectMember";
 import ProjectCode from "../components/project/code/ProjectCode";
 import ProjectDatatable from "../components/project/datatable/ProjectDatatable";
 import ViewDatatableFields from "../components/project/datatable/ViewDatatableFields";
 import EditDatatableFields from "../components/project/datatable/EditDatatableFields";
 import ProjectFiles from "../components/project/files/ProjectFiles";
+import ProjectAllFiles from "../components/project/files/ProjectAllFiles";
+import ProjectRecentFiles from "../components/project/files/ProjectRecentFiles";
+import ProjectStarredFiles from "../components/project/files/ProjectStarredFiles";
+import ProjectSharedFiles from "../components/project/files/ProjectSharedFiles";
+import ProjectFileRecycleBin from "../components/project/files/ProjectFileRecycleBin";
 
 import NotFound from "../components/NotFound";
 
@@ -74,7 +79,58 @@ const routes = [
             {
                 path: 'files',
                 name: 'project-files',
-                component: ProjectFiles
+                component: ProjectFiles,
+                children: [
+                    {
+                        path: '/',
+                        name: 'project-all-files',
+                        component: ProjectAllFiles
+                    },
+                    {
+                        path: 'recent',
+                        name: 'project-recent-files',
+                        component: ProjectRecentFiles,
+                        meta: {
+                            hasParent: true,
+                            rootMenu: function(id) {
+                                return `/project/${id}/files`;
+                            }
+                        }
+                    },
+                    {
+                        path: 'starred',
+                        name: 'project-starred-files',
+                        component: ProjectStarredFiles,
+                        meta: {
+                            hasParent: true,
+                            rootMenu: function(id) {
+                                return `/project/${id}/files`;
+                            }
+                        }
+                    },
+                    {
+                        path: 'shared',
+                        name: 'project-shared-files',
+                        component: ProjectSharedFiles,
+                        meta: {
+                            hasParent: true,
+                            rootMenu: function(id) {
+                                return `/project/${id}/files`;
+                            }
+                        }
+                    },
+                    {
+                        path: 'recycle-bin',
+                        name: 'project-files-recycle-bin',
+                        component: ProjectFileRecycleBin,
+                        meta: {
+                            hasParent: true,
+                            rootMenu: function(id) {
+                                return `/project/${id}/files`;
+                            }
+                        }
+                    }
+                ]
             }
         ]
     },

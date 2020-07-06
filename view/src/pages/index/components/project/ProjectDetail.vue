@@ -8,7 +8,7 @@
                      :router="true"
                      class="menu-can-collapse"
                      :collapse="menuCollapse"
-                     style="position: relative; flex: 1;overflow-y: auto">
+                     style="position: relative; flex: 1;overflow-y: auto;overflow-x: hidden;">
                 <el-menu-item index="/">
                     <i class="el-icon-arrow-left"></i>
                     <span slot="title">返回</span>
@@ -44,7 +44,7 @@
                 <i :class="menuCollapse ? 'el-icon-arrow-right' : 'el-icon-arrow-left'"></i>
             </div>
         </el-aside>
-        <el-main style="overflow-y: auto;">
+        <el-main style="overflow-y: auto;padding: 0;">
             <router-view></router-view>
         </el-main>
     </el-container>
@@ -52,7 +52,7 @@
 
 <script>
 
-    import apis from "../../../api/apis";
+    import apis from "../../../../api/apis";
 
     export default {
         name: 'project-detail',
@@ -61,13 +61,22 @@
         },
         data() {
             return {
-                activeIndex: this.$route.path,
+                activeIndex: '',
                 menuCollapse: false
             }
+        },
+        computed: {
         },
         beforeMount() {
             this.$store.commit('setProjectId', this.$route.params.id);
             this.projectDetail();
+        },
+        mounted() {
+            if(this.$route.meta.rootMenu) {
+                this.activeIndex = this.$route.meta.rootMenu(this.$route.params.id);
+            } else {
+                this.activeIndex = this.$route.path;
+            }
         },
         methods: {
             projectDetail() {
@@ -89,6 +98,8 @@
             '$route.path'(val) {
                 if(!this.$route.meta.hasParent) {
                     this.activeIndex = val;
+                } else if(this.$route.meta.rootMenu) {
+                    this.activeIndex = this.$route.meta.rootMenu(this.$route.params.id);
                 }
             }
         }
