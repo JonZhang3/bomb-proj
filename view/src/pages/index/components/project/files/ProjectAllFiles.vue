@@ -1,44 +1,32 @@
 <template>
     <el-row style="height: 100%;display: flex;">
-        <el-table :data="files"
-                  style="flex: 1;border-top: 1px solid #DCDFE6;"
-                  size="medium"
-                  row-class-name="project-file-item"
-                  highlight-current-row
-                  ref="filesTable"
-                  @cell-mouse-enter="handleFilesCellMouseEnter"
-                  @row-click="handleFilesRowCLick">
-            <el-table-column type="selection" width="50"></el-table-column>
-            <el-table-column sortable label="文件名" min-width="240">
-                <template slot-scope="scope">
-                    <div style="display: flex;align-items: center;">
-                        <div style="width: 24px;height: 24px;margin-right: 5px;line-height: 24px;text-align: center;">
-                            <i class="file-item-type-icon icon css3-icon medium-blue"></i>
-                        </div>
-                        <div style="display: inline-block;flex: 1;">
-                            <span>{{scope.row.fileName}}</span>
-                            <i class="file-item-icon el-icon-star-off"></i>
-                        </div>
-                        <i v-show="false" class="file-item-icon el-icon-more"></i>
-                        <i v-show="false" class="file-item-icon el-icon-share"></i>
+        <Table :data="files"
+               :columns="columns"
+               highlight-row
+               @row-mouse-enter="handleRowMouseEnter"
+               @row-mouse-leave="handleRowMouseLeave"
+               style="flex: 1;border-top: 1px solid #DCDFE6;">
+            <template slot-scope="scope" slot="fileName">
+                <div style="display: flex;align-items: center;">
+                    <div style="width: 24px;height: 24px;margin-right: 5px;line-height: 24px;text-align: center;">
+                        <i class="file-item-type-icon icon css3-icon medium-blue"></i>
                     </div>
-                </template>
-            </el-table-column>
-            <el-table-column prop="creator" sortable label="创建者"></el-table-column>
-            <el-table-column prop="updateTime" sortable label="最后更新"></el-table-column>
-            <el-table-column prop="fileSize" sortable label="文件大小"></el-table-column>
-            <el-table-column prop="fileId" label="文件 ID">
-                <template slot-scope="scope">
-                    <span>{{scope.row.fileId ? scope.row.fileId : '-'}}</span>
-                </template>
-            </el-table-column>
-        </el-table>
+                    <div style="display: inline-block;flex: 1;">
+                        <span>{{scope.row.fileName}}</span>
+                        <el-tooltip effect="dark" :content="scope.row.starred ? '取消星标' : '添加星标'" placement="top">
+                            <i :class="['file-item-icon', scope.row.starred ? 'el-icon-star-on' : 'el-icon-star-off']"></i>
+                        </el-tooltip>
+                    </div>
+                    <i v-show="scope.row._show" class="file-item-icon el-icon-more"></i>
+                    <i v-show="scope.row.shared || scope.row._show"
+                       :class="['file-item-icon', 'el-icon-share', {'shared': scope.row.shared}]"></i>
+                </div>
+            </template>
+            <template slot-scope="scope" slot="fileId">
+                <span>{{scope.row.fileId ? scope.row.fileId : '-'}}</span>
+            </template>
+        </Table>
         <project-file-detail-side></project-file-detail-side>
-        <el-drawer title="标题"
-                   :append-to-body="true"
-                   :visible.sync="fileDetailDrawerVisible" direction="rtl">
-            <span>文件详细</span>
-        </el-drawer>
     </el-row>
 </template>
 
@@ -54,8 +42,16 @@
         data() {
             return {
                 fileDetailDrawerVisible: false,
+                columns: [
+                    {type: 'selection', width: 60, align: 'center'},
+                    {title: '文件名', slot: 'fileName', minWidth: 240},
+                    {title: '创建者', key: 'creator'},
+                    {title: '最后更新', key: 'updateTime'},
+                    {title: '文件大小', key: 'fileSize'},
+                    {title: '文件 ID', slot: 'fileId'}
+                ],
                 files: [
-                    {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '10M'},
+                    {fileName: 'Cloud Studio.pdf', starred: true, shared: true, creator: '张三', updateTime: '123', fileSize: '10M'},
                     {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
                 ]
             }
@@ -73,8 +69,13 @@
             handleFilesRowCLick(row, column, e) {
                 this.fileDetailDrawerVisible = true;
             },
-            handleFilesCellMouseEnter(row, column, cell, e) {
-                console.log(e.target.parentElement);
+            handleRowMouseEnter(row, e) {
+                console.log(row);
+                row._show = true;
+            },
+            handleRowMouseLeave(row, e) {
+                console.log(row);
+                delete row._show;
             }
         },
         watch: {
@@ -97,10 +98,36 @@
         width: 24px;
         height: 24px;
         line-height: 24px;
+        vertical-align: middle;
     }
     .file-item-icon:hover {
         cursor: pointer;
         background-color: #e2e4e6;
         border-radius: 5px;
+    }
+    .file-item-icon.el-icon-star-off:hover {
+        background-color: transparent;
+        border-radius: 0;
+        color: #606266;
+    }
+    .file-item-icon.el-icon-star-on {
+        font-size: 20px;
+        color: #F8C540;
+    }
+    .file-item-icon.el-icon-star-on:hover {
+        background-color: transparent;
+        border-radius: 0;
+        color: #F8C540;
+    }
+
+    .file-item-icon.el-icon-share.shared {
+        color: #409EFF;
+    }
+
+    .ivu-table-row-highlight .el-icon-more,
+    .ivu-table-row-highlight .el-icon-share,
+    .ivu-table-row-hover .el-icon-more,
+    .ivu-table-row-hover .el-icon-share {
+        display: inline-block !important;
     }
 </style>

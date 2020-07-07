@@ -3,7 +3,7 @@
         <template v-if="renderType === 'index'"><span>{{ column.indexMethod ? column.indexMethod(row) : (naturalIndex + 1) }}</span>
         </template>
         <template v-if="renderType === 'selection'">
-            <el-checkbox :value="checked" @click.native.stop="handleClick" @on-change="toggleSelect"
+            <el-checkbox :value="checked" @click.native.stop="handleClick" @change="toggleSelect"
                          :disabled="disabled"></el-checkbox>
         </template>
         <div class="ivu-table-cell-tree-level" v-if="showLevel" :style="treeLevelStyle"></div>

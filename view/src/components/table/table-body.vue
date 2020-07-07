@@ -101,11 +101,11 @@
             },
             handleMouseIn (_index, event, rowKey) {
                 event.stopPropagation();
-                this.$parent.handleMouseIn(_index, rowKey);
+                this.$parent.handleMouseIn(_index, rowKey, event);
             },
-            handleMouseOut (_index, event, rowKey) {
+            handleMouseOut (_index, event, rowKey,) {
                 event.stopPropagation();
-                this.$parent.handleMouseOut(_index, rowKey);
+                this.$parent.handleMouseOut(_index, rowKey, event);
             },
             clickCurrentRow (_index, event, rowKey) {
                 this.$parent.clickCurrentRow(_index, rowKey);

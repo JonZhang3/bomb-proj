@@ -18,7 +18,7 @@
                                        :index="index"></render-header>
                     </template>
                     <template v-else-if="column.type === 'selection'">
-                        <el-checkbox :value="isSelectAll" :disabled="isSelectDisabled" @on-change="selectAll"></el-checkbox>
+                        <el-checkbox :value="isSelectAll" :disabled="isSelectDisabled" @change="selectAll"></el-checkbox>
                     </template>
                     <template v-else>
                         <span v-if="!column.renderHeader" :class="{[prefixCls + '-cell-sort']: column.sortable}"
@@ -26,10 +26,10 @@
                         <render-header v-else :render="column.renderHeader" :column="column"
                                        :index="index"></render-header>
                         <span :class="[prefixCls + '-sort']" v-if="column.sortable">
-                                <i class="ivu-icon ivu-icon-md-arrow-dropup"
+                                <i class="sort-caret ascending"
                                    :class="{on: getColumn(rowIndex, index)._sortType === 'asc'}"
                                    @click="handleSort(getColumn(rowIndex, index)._index, 'asc')"></i>
-                                <i class="ivu-icon ivu-icon-md-arrow-dropdown"
+                                <i class="sort-caret descending"
                                    :class="{on: getColumn(rowIndex, index)._sortType === 'desc'}"
                                    @click="handleSort(getColumn(rowIndex, index)._index, 'desc')"></i>
                             </span>

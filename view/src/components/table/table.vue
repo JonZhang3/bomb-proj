@@ -154,7 +154,7 @@
     export default {
         name: 'Table',
         mixins: [ Locale ],
-        components: { tableHead, tableBody, tableSummary, Spin },
+        components: { tableHead, tableBody, tableSummary },
         provide () {
             return {
                 tableRoot: this
@@ -637,16 +637,18 @@
                 this.columnsWidth = columnsWidth;
                 this.fixedHeader();
             },
-            handleMouseIn (_index, rowKey) {
+            handleMouseIn (_index, rowKey, event) {
                 if (this.disabledHover) return;
                 const objData = rowKey ? this.getDataByRowKey(rowKey) : this.objData[_index];
                 if (objData._isHover) return;
                 objData._isHover = true;
+                this.$emit('row-mouse-enter', objData, event);
             },
-            handleMouseOut (_index, rowKey) {
+            handleMouseOut (_index, rowKey, event) {
                 if (this.disabledHover) return;
                 const objData = rowKey ? this.getDataByRowKey(rowKey) : this.objData[_index];
                 objData._isHover = false;
+                this.$emit('row-mouse-leave', objData, event);
             },
             // 通用处理 highlightCurrentRow 和 clearCurrentRow
             handleCurrentRow (type, _index, rowKey) {
