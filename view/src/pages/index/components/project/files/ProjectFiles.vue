@@ -1,6 +1,6 @@
 <template>
     <el-row class="main-content-root"
-            style="display: flex;flex-direction: column;height: 100%;padding:20px 0;">
+            style="display: flex;flex-direction: column;height: 100%;padding:20px 0 0 0;">
         <el-breadcrumb separator-class="el-icon-arrow-right" style="padding-left: 20px;">
             <el-breadcrumb-item>项目【{{projectName}}】</el-breadcrumb-item>
             <el-breadcrumb-item>文档管理</el-breadcrumb-item>

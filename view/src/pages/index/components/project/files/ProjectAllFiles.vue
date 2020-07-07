@@ -1,31 +1,20 @@
 <template>
     <el-row style="height: 100%;display: flex;">
-        <Table :data="files"
-               :columns="columns"
-               highlight-row
-               @row-mouse-enter="handleRowMouseEnter"
-               @row-mouse-leave="handleRowMouseLeave"
-               style="flex: 1;border-top: 1px solid #DCDFE6;">
-            <template slot-scope="scope" slot="fileName">
-                <div style="display: flex;align-items: center;">
-                    <div style="width: 24px;height: 24px;margin-right: 5px;line-height: 24px;text-align: center;">
-                        <i class="file-item-type-icon icon css3-icon medium-blue"></i>
-                    </div>
-                    <div style="display: inline-block;flex: 1;">
-                        <span>{{scope.row.fileName}}</span>
-                        <el-tooltip effect="dark" :content="scope.row.starred ? '取消星标' : '添加星标'" placement="top">
-                            <i :class="['file-item-icon', scope.row.starred ? 'el-icon-star-on' : 'el-icon-star-off']"></i>
-                        </el-tooltip>
-                    </div>
-                    <i v-show="scope.row._show" class="file-item-icon el-icon-more"></i>
-                    <i v-show="scope.row.shared || scope.row._show"
-                       :class="['file-item-icon', 'el-icon-share', {'shared': scope.row.shared}]"></i>
-                </div>
-            </template>
-            <template slot-scope="scope" slot="fileId">
-                <span>{{scope.row.fileId ? scope.row.fileId : '-'}}</span>
-            </template>
-        </Table>
+        <el-row style="flex: 1;border-top: 1px solid #DCDFE6;position: relative;">
+            <Table :data="files"
+                   :columns="columns"
+                   highlight-row>
+                <template slot-scope="scope" slot="fileName">
+                    <file-name-cell :data="scope.row"></file-name-cell>
+                </template>
+                <template slot-scope="scope" slot="fileId">
+                    <span>{{scope.row.fileId ? scope.row.fileId : '-'}}</span>
+                </template>
+            </Table>
+            <div style="height: 44px;background-color: #ffffff;position: absolute;bottom: 0;width: 100%;padding: 10px">
+                <span>已选 2 项</span>
+            </div>
+        </el-row>
         <project-file-detail-side></project-file-detail-side>
     </el-row>
 </template>
@@ -33,11 +22,13 @@
 <script>
 
     import ProjectFileDetailSide from "./ProjectFileDetailSide";
+    import FileNameCell from "./FileNameCell";
 
     export default {
         name: 'project-all-files',
         components: {
-            ProjectFileDetailSide
+            ProjectFileDetailSide,
+            FileNameCell
         },
         data() {
             return {
@@ -68,14 +59,6 @@
         methods: {
             handleFilesRowCLick(row, column, e) {
                 this.fileDetailDrawerVisible = true;
-            },
-            handleRowMouseEnter(row, e) {
-                console.log(row);
-                row._show = true;
-            },
-            handleRowMouseLeave(row, e) {
-                console.log(row);
-                delete row._show;
             }
         },
         watch: {
@@ -86,48 +69,3 @@
     }
 
 </script>
-
-<style>
-    .file-item-type-icon:before {
-        font-size: 16px;
-    }
-    .file-item-icon {
-        text-align: center;
-        font-size: 16px;
-        display: inline-block;
-        width: 24px;
-        height: 24px;
-        line-height: 24px;
-        vertical-align: middle;
-    }
-    .file-item-icon:hover {
-        cursor: pointer;
-        background-color: #e2e4e6;
-        border-radius: 5px;
-    }
-    .file-item-icon.el-icon-star-off:hover {
-        background-color: transparent;
-        border-radius: 0;
-        color: #606266;
-    }
-    .file-item-icon.el-icon-star-on {
-        font-size: 20px;
-        color: #F8C540;
-    }
-    .file-item-icon.el-icon-star-on:hover {
-        background-color: transparent;
-        border-radius: 0;
-        color: #F8C540;
-    }
-
-    .file-item-icon.el-icon-share.shared {
-        color: #409EFF;
-    }
-
-    .ivu-table-row-highlight .el-icon-more,
-    .ivu-table-row-highlight .el-icon-share,
-    .ivu-table-row-hover .el-icon-more,
-    .ivu-table-row-hover .el-icon-share {
-        display: inline-block !important;
-    }
-</style>
