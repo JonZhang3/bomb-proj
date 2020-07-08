@@ -3,6 +3,7 @@
         <el-row style="flex: 1;border-top: 1px solid #DCDFE6;position: relative;">
             <Table :data="files"
                    :columns="columns"
+                   @on-select="handleTableSelect"
                    highlight-row>
                 <template slot-scope="scope" slot="fileName">
                     <file-name-cell :data="scope.row"></file-name-cell>
@@ -11,8 +12,8 @@
                     <span>{{scope.row.fileId ? scope.row.fileId : '-'}}</span>
                 </template>
             </Table>
-            <div style="height: 44px;background-color: #ffffff;position: absolute;bottom: 0;width: 100%;padding: 10px">
-                <span>已选 2 项</span>
+            <div style="height: 44px;background-color: #ffffff;position: absolute;bottom: 0;width: 100%;padding: 10px;font-size: 13px;color:#303133;">
+                <span style="font-size: 13px;">已选 2 项</span>
             </div>
         </el-row>
         <project-file-detail-side></project-file-detail-side>
@@ -44,7 +45,8 @@
                 files: [
                     {fileName: 'Cloud Studio.pdf', starred: true, shared: true, creator: '张三', updateTime: '123', fileSize: '10M'},
                     {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
-                ]
+                ],
+                selection: []
             }
         },
         mounted() {
@@ -59,6 +61,10 @@
         methods: {
             handleFilesRowCLick(row, column, e) {
                 this.fileDetailDrawerVisible = true;
+            },
+            handleTableSelect(selection, row) {
+                console.log(selection);
+                console.log(row);
             }
         },
         watch: {
