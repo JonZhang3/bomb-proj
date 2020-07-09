@@ -5,7 +5,7 @@
             <div :class="[prefixCls + '-header']" v-if="showHeader" ref="header" @mousewheel="handleMouseWheel">
                 <table-head
                     :prefix-cls="prefixCls"
-                    :styleObject="tableHeaderStyle"
+                    :styleObject="{width: '100%'}"
                     :columns="cloneColumns"
                     :column-rows="columnRows"
                     :obj-data="objData"
@@ -18,7 +18,7 @@
                     ref="tbody"
                     :draggable="draggable"
                     :prefix-cls="prefixCls"
-                    :styleObject="tableStyle"
+                    :styleObject="{width: '100%'}"
                     :columns="cloneColumns"
                     :data="rebuildData"
                     :row-key="rowKey"
@@ -29,7 +29,7 @@
                 v-if="showSummary && (data && data.length)"
                 ref="summary"
                 :prefix-cls="prefixCls"
-                :styleObject="tableStyle"
+                :styleObject="{width: '100%'}"
                 :columns="cloneColumns"
                 :data="summaryData"
                 :columns-width="columnsWidth"
@@ -40,7 +40,7 @@
                 <table cellspacing="0" cellpadding="0" border="0">
                     <tbody>
                         <tr>
-                            <td :style="{'height':bodyStyle.height,'width':`${this.headerWidth}px`}">
+                            <td :style="{'height':bodyStyle.height,'width':`100%`}">
                                 <span v-html="localeNoDataText" v-if="!data || data.length === 0"></span>
                                 <span v-html="localeNoFilteredDataText" v-else></span>
                             </td>
@@ -124,16 +124,6 @@
             <div :class="[prefixCls + '-footer']" v-if="showSlotFooter" ref="footer"><slot name="footer"></slot></div>
         </div>
         <div class="ivu-table-resize-line" v-show="showResizeLine" ref="resizeLine"></div>
-<!--        <div class="ivu-table-context-menu" :style="contextMenuStyles" v-if="showContextMenu">-->
-<!--            <el-dropdown trigger="custom" :visible="contextMenuVisible" transfer @on-clickoutside="handleClickContextMenuOutside">-->
-<!--                <el-dropdown-menu slot="dropdown">-->
-<!--                    <slot name="contextMenu"></slot>-->
-<!--                </el-dropdown-menu>-->
-<!--            </el-dropdown>-->
-<!--        </div>-->
-<!--        <Spin fix size="large" v-if="loading">-->
-<!--            <slot name="loading"></slot>-->
-<!--        </Spin>-->
     </div>
 </template>
 <script>
@@ -532,110 +522,110 @@
             },
             handleResize () {
                     //let tableWidth = parseInt(getStyle(this.$el, 'width')) - 1;
-                let tableWidth = this.$el.offsetWidth - 1;
-                let columnsWidth = {};
-                let sumMinWidth = 0;
-                let hasWidthColumns = [];
-                let noWidthColumns = [];
-                let maxWidthColumns = [];
-                let noMaxWidthColumns = [];
-                this.cloneColumns.forEach((col) => {
-                    if (col.width) {
-                        hasWidthColumns.push(col);
-                    }
-                    else{
-                        noWidthColumns.push(col);
-                        if (col.minWidth) {
-                            sumMinWidth += col.minWidth;
-                        }
-                        if (col.maxWidth) {
-                            maxWidthColumns.push(col);
-                        }
-                        else {
-                            noMaxWidthColumns.push(col);
-                        }
-                    }
-                    col._width = null;
-                });
-
-
-                let unUsableWidth = hasWidthColumns.map(cell => cell.width).reduce((a, b) => a + b, 0);
-                let usableWidth = tableWidth - unUsableWidth - sumMinWidth - (this.showVerticalScrollBar?this.scrollBarWidth:0) - 1;
-                let usableLength = noWidthColumns.length;
-                let columnWidth = 0;
-                if(usableWidth > 0 && usableLength > 0){
-                    columnWidth = parseInt(usableWidth / usableLength);
-                }
-
-
-                for (let i = 0; i < this.cloneColumns.length; i++) {
-                    const column = this.cloneColumns[i];
-                    let width = columnWidth + (column.minWidth?column.minWidth:0);
-                    if(column.width){
-                        width = column.width;
-                    }
-                    else{
-                        if (column._width) {
-                            width = column._width;
-                        }
-                        else {
-                            if (column.minWidth > width){
-                                width = column.minWidth;
-                            }
-                            else if (column.maxWidth < width){
-                                width = column.maxWidth;
-                            }
-
-                            if (usableWidth>0) {
-                                usableWidth -= width - (column.minWidth?column.minWidth:0);
-                                usableLength--;
-                                if (usableLength > 0) {
-                                    columnWidth = parseInt(usableWidth / usableLength);
-                                }
-                                else {
-                                    columnWidth = 0;
-                                }
-                            }
-                            else{
-                                columnWidth = 0;
-                            }
-                        }
-                    }
-
-                    column._width = width;
-
-                    columnsWidth[column._index] = {
-                        width: width
-                    };
-
-                }
-                if(usableWidth>0) {
-                    usableLength = noMaxWidthColumns.length;
-                    columnWidth = parseInt(usableWidth / usableLength);
-                    for (let i = 0; i < noMaxWidthColumns.length; i++) {
-                        const column = noMaxWidthColumns[i];
-                        let width = column._width + columnWidth;
-                        if (usableLength > 1) {
-                            usableLength--;
-                            usableWidth -= columnWidth;
-                            columnWidth = parseInt(usableWidth / usableLength);
-                        }
-                        else {
-                            columnWidth = 0;
-                        }
-
-                        column._width = width;
-
-                        columnsWidth[column._index] = {
-                            width: width
-                        };
-
-                    }
-                }
-
-                this.tableWidth = this.cloneColumns.map(cell => cell._width).reduce((a, b) => a + b, 0) + (this.showVerticalScrollBar?this.scrollBarWidth:0) + 1;
-                this.columnsWidth = columnsWidth;
-                this.fixedHeader();
+                // let tableWidth = this.$el.offsetWidth - 1;
+                // let columnsWidth = {};
+                // let sumMinWidth = 0;
+                // let hasWidthColumns = [];
+                // let noWidthColumns = [];
+                // let maxWidthColumns = [];
+                // let noMaxWidthColumns = [];
+                // this.cloneColumns.forEach((col) => {
+                //     if (col.width) {
+                //         hasWidthColumns.push(col);
+                //     }
+                //     else{
+                //         noWidthColumns.push(col);
+                //         if (col.minWidth) {
+                //             sumMinWidth += col.minWidth;
+                //         }
+                //         if (col.maxWidth) {
+                //             maxWidthColumns.push(col);
+                //         }
+                //         else {
+                //             noMaxWidthColumns.push(col);
+                //         }
+                //     }
+                //     col._width = null;
+                // });
+                //
+                //
+                // let unUsableWidth = hasWidthColumns.map(cell => cell.width).reduce((a, b) => a + b, 0);
+                // let usableWidth = tableWidth - unUsableWidth - sumMinWidth - (this.showVerticalScrollBar?this.scrollBarWidth:0) - 1;
+                // let usableLength = noWidthColumns.length;
+                // let columnWidth = 0;
+                // if(usableWidth > 0 && usableLength > 0){
+                //     columnWidth = parseInt(usableWidth / usableLength);
+                // }
+                //
+                //
+                // for (let i = 0; i < this.cloneColumns.length; i++) {
+                //     const column = this.cloneColumns[i];
+                //     let width = columnWidth + (column.minWidth?column.minWidth:0);
+                //     if(column.width){
+                //         width = column.width;
+                //     }
+                //     else{
+                //         if (column._width) {
+                //             width = column._width;
+                //         }
+                //         else {
+                //             if (column.minWidth > width){
+                //                 width = column.minWidth;
+                //             }
+                //             else if (column.maxWidth < width){
+                //                 width = column.maxWidth;
+                //             }
+                //
+                //             if (usableWidth>0) {
+                //                 usableWidth -= width - (column.minWidth?column.minWidth:0);
+                //                 usableLength--;
+                //                 if (usableLength > 0) {
+                //                     columnWidth = parseInt(usableWidth / usableLength);
+                //                 }
+                //                 else {
+                //                     columnWidth = 0;
+                //                 }
+                //             }
+                //             else{
+                //                 columnWidth = 0;
+                //             }
+                //         }
+                //     }
+                //
+                //     column._width = width;
+                //
+                //     columnsWidth[column._index] = {
+                //         width: width
+                //     };
+                //
+                // }
+                // if(usableWidth>0) {
+                //     usableLength = noMaxWidthColumns.length;
+                //     columnWidth = parseInt(usableWidth / usableLength);
+                //     for (let i = 0; i < noMaxWidthColumns.length; i++) {
+                //         const column = noMaxWidthColumns[i];
+                //         let width = column._width + columnWidth;
+                //         if (usableLength > 1) {
+                //             usableLength--;
+                //             usableWidth -= columnWidth;
+                //             columnWidth = parseInt(usableWidth / usableLength);
+                //         }
+                //         else {
+                //             columnWidth = 0;
+                //         }
+                //
+                //         column._width = width;
+                //
+                //         columnsWidth[column._index] = {
+                //             width: width
+                //         };
+                //
+                //     }
+                // }
+                //
+                // this.tableWidth = this.cloneColumns.map(cell => cell._width).reduce((a, b) => a + b, 0) + (this.showVerticalScrollBar?this.scrollBarWidth:0) + 1;
+                // this.columnsWidth = columnsWidth;
+                // this.fixedHeader();
             },
             handleMouseIn (_index, rowKey, event) {
                 if (this.disabledHover) return;
@@ -984,7 +974,7 @@
             },
             fixedBody (){
                 if (this.$refs.header) {
-                    this.headerWidth = this.$refs.header.children[0].offsetWidth;
+                    // this.headerWidth = this.$refs.header.children[0].offsetWidth;
                     this.headerHeight = this.$refs.header.children[0].offsetHeight;
                     //this.showHorizontalScrollBar = this.headerWidth>this.$refs.header.offsetWidth;
                 }

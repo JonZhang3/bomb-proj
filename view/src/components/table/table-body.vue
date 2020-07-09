@@ -330,10 +330,19 @@
                             },
                             key: column._columnKey,
                         });
+                        const styles = {};
+                        if(column.width) {
+                            styles.width = column.width;
+                        }
+                        if(column.minWidth) {
+                            styles['min-width'] = column.minWidth;
+                        }
+                        console.log(column);
 
                         const $td = h('td', {
                             class: this.alignCls(column, row),
-                            attrs: this.getSpan(row, column, index, colIndex)
+                            attrs: this.getSpan(row, column, index, colIndex),
+                            style: styles
                         }, [$tableCell]);
                         $tds.push($td);
                     }

@@ -133,8 +133,7 @@
         computed: {
             styles() {
                 const style = Object.assign({}, this.styleObject);
-                const width = parseInt(this.styleObject.width);
-                style.width = `${width}px`;
+                style.width = this.styleObject.width;
                 return style;
             },
             isSelectAll() {

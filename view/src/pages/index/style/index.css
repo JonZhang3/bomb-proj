@@ -69,3 +69,22 @@
 .main-content-root {
     padding: 20px;
 }
+
+.side-trigger {
+    display: inline-block;
+    background: rgba(226, 228, 230, .4) url("../../../assets/sidebar-right.svg") 50% no-repeat;
+    width: 32px;
+    height: 32px;
+    background-size: 16px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.side-trigger.is-active {
+    background-color: #eaf4ff;
+    background-image: url("../../../assets/sidebar-right-active.svg");
+}
+
+.side-trigger:hover {
+    background-image: url("../../../assets/sidebar-right-active.svg");
+}

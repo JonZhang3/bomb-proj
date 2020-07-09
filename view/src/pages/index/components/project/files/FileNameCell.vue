@@ -48,7 +48,7 @@
     }
     .file-item-icon:hover {
         cursor: pointer;
-        background-color: #e2e4e6;
+        background-color: rgba(226, 228, 230, .4);
         border-radius: 5px;
     }
     .file-item-icon.el-icon-star-off:hover {
