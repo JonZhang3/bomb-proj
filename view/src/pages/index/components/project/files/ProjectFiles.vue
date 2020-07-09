@@ -6,7 +6,7 @@
             <el-breadcrumb-item>文档管理</el-breadcrumb-item>
             <el-breadcrumb-item>文件网盘</el-breadcrumb-item>
         </el-breadcrumb>
-        <el-row style="margin-top: 10px;flex: 1;display: flex">
+        <el-row style="margin-top: 10px;flex: 1;display: flex;height: 100%;overflow: hidden;">
             <div style="min-width: 200px;border-right: 1px solid #DCDFE6;height: 100%">
                 <list-menu :default-active="activeIndex" router>
                     <list-menu-item :index="`/project/${$route.params.id}/files`">
