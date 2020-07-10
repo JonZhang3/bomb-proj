@@ -21,19 +21,28 @@
         </div>
         <el-row ref="tableRoot" style="display: flex;flex: 1;overflow: hidden;">
             <el-row ref="tableWrapper" style="display: flex;flex-direction: column; flex: 1;border-top: 1px solid #DCDFE6;position: relative;">
-                <Table :data="files"
-                       :columns="columns"
-                       :height="fileTableHeight"
-                       ref="fileTable" style="flex: 1;"
-                       @on-selection-change="handleTableSelectChange"
-                       highlight-row>
-                    <template slot-scope="scope" slot="fileName">
-                        <file-name-cell :data="scope.row"></file-name-cell>
-                    </template>
-                    <template slot-scope="scope" slot="fileId">
-                        <span>{{scope.row.fileId ? scope.row.fileId : '-'}}</span>
-                    </template>
-                </Table>
+                <div style="width: 100%;height: 100%;overflow: hidden;">
+                    <div style="padding: 20px;background-color: #0d76ef"></div>
+                    <div style="height: 100%;">
+                        <div style="display: flex;padding: 10px">
+                            <div style="flex: 1 1 240px;background-color: #00b481">A</div>
+                            <div style="flex: 0 1 80px;background-color: #5daf34">B</div>
+                        </div>
+                    </div>
+                </div>
+<!--                <Table :data="files"-->
+<!--                       :columns="columns"-->
+<!--                       :height="fileTableHeight"-->
+<!--                       ref="fileTable" style="flex: 1;"-->
+<!--                       @on-selection-change="handleTableSelectChange"-->
+<!--                       highlight-row>-->
+<!--                    <template slot-scope="scope" slot="fileName">-->
+<!--                        <file-name-cell :data="scope.row"></file-name-cell>-->
+<!--                    </template>-->
+<!--                    <template slot-scope="scope" slot="fileId">-->
+<!--                        <span>{{scope.row.fileId ? scope.row.fileId : '-'}}</span>-->
+<!--                    </template>-->
+<!--                </Table>-->
                 <file-table-footer-operation :show="customOperationFooterShow"
                                              ref="tableFooter"
                                              @on-transition-end="resizeTableHeight"
@@ -96,9 +105,8 @@
             }
         },
         mounted() {
-            this.fileTableHeight = this.$refs['tableWrapper'].$el.offsetHeight - this.$refs['tableFooter'].$el.offsetHeight;
-            this.fileTableWidth = this.$refs['tableRoot'].$el.offsetWidth - this.$refs['detailSide'].$el.offsetWidth;
-            console.log(this.fileTableWidth);
+            // this.fileTableHeight = this.$refs['tableWrapper'].$el.offsetHeight - this.$refs['tableFooter'].$el.offsetHeight;
+            // this.fileTableWidth = this.$refs['tableRoot'].$el.offsetWidth - this.$refs['detailSide'].$el.offsetWidth;
         },
         computed: {
             projectName() {
