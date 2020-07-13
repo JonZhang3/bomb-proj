@@ -22,4 +22,7 @@ public class AppProperties {
     @NotEmpty
     private String coverImagePath;
 
+    @NotNull
+    private Integer maxPageSize;
+
 }

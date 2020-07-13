@@ -8,4 +8,6 @@ public interface Constants {
 
     int PASSWORD_SALT_LENGTH = 20;
 
+    String projectFilesRootPath = "全部文件";
+
 }
