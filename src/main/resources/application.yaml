@@ -1,6 +1,7 @@
 app:
     aesKey: 123,
     coverImagePath: /Users/jon/Desktop/files/cover/
+    maxPageSize: 10000
 server:
     port: 8081
 logging:
