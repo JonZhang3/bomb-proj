@@ -21,15 +21,16 @@
         </div>
         <el-row ref="tableRoot" style="display: flex;flex: 1;overflow: hidden;">
             <el-row ref="tableWrapper" style="display: flex;flex-direction: column; flex: 1;border-top: 1px solid #DCDFE6;position: relative;">
-                <div style="width: 100%;height: 100%;overflow: hidden;">
-                    <div style="padding: 20px;background-color: #0d76ef"></div>
-                    <div style="height: 100%;">
-                        <div style="display: flex;padding: 10px">
-                            <div style="flex: 1 1 240px;background-color: #00b481">A</div>
-                            <div style="flex: 0 1 80px;background-color: #5daf34">B</div>
-                        </div>
-                    </div>
-                </div>
+                <bom-table :columns="columns" :data="files"></bom-table>
+<!--                <div style="width: 100%;height: 100%;overflow: hidden;">-->
+<!--                    <div style="padding: 20px;background-color: #0d76ef"></div>-->
+<!--                    <div style="height: 100%;">-->
+<!--                        <div style="display: flex;padding: 10px">-->
+<!--                            <div style="flex: 1 1 240px;background-color: #00b481">A</div>-->
+<!--                            <div style="flex: 0 1 80px;background-color: #5daf34">B</div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
 <!--                <Table :data="files"-->
 <!--                       :columns="columns"-->
 <!--                       :height="fileTableHeight"-->
@@ -58,13 +59,15 @@
     import ProjectFileDetailSide from "./ProjectFileDetailSide";
     import FileNameCell from "./FileNameCell";
     import FileTableFooterOperation from "./FileTableFooterOperation";
+    import BomTable from "../../../../../components/simpletable/table";
 
     export default {
         name: 'project-all-files',
         components: {
             ProjectFileDetailSide,
             FileNameCell,
-            FileTableFooterOperation
+            FileTableFooterOperation,
+            BomTable
         },
         data() {
             return {

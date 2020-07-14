@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex';
 import ElementUI from 'element-ui';
-import Table from '../../components/table/table';
 import '../../common/common-style';
 import './style/index.css';
 import '@exuanbo/file-icons-js/dist/css/file-icons.min.css';
@@ -10,7 +9,6 @@ import App from './App.vue'
 import settings from '../../common/settings';
 
 Vue.use(ElementUI);
-Vue.component('Table', Table);
 Vue.use(Vuex);
 
 Vue.config.productionTip = false;

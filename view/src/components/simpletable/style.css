@@ -1,15 +1,163 @@
-.bo-table-wrapper {
+.at-table {
     position: relative;
+    color: #3F536E;
+    font-size: 12px;
+}
+
+.at-table table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
     overflow: hidden;
 }
 
-.bo-table {
+.at-table table th, .at-table table td {
+    height: 40px;
+    text-align: left;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    border-bottom: 1px solid #ECECEC;
+}
+
+.at-table table th.at-table__cell--nodata, .at-table table td.at-table__cell--nodata {
+    text-align: center;
+}
+
+.at-table__cell {
+    padding: 0 16px;
+    border-bottom: 1px solid #ECECEC;
+}
+
+.at-table__content {
+    border: 1px solid #ECECEC;
+    border-bottom-width: 0;
+}
+
+.at-table__thead > tr > th {
+    font-weight: bold;
+    text-align: left;
+    background-color: #F7F7F7;
+    white-space: nowrap;
+}
+
+.at-table__thead .at-table__column-sorter {
+    display: inline-block;
+    vertical-align: middle;
+    height: 18px;
+    width: 9px;
+}
+
+.at-table__thead .at-table__column-sorter-up, .at-table__thead .at-table__column-sorter-down {
+    display: block;
+    color: #C9C9C9;
+    font-size: 9px;
+    line-height: 1;
+    -webkit-transition: color .3s;
+    transition: color .3s;
+}
+
+.at-table__thead .at-table__column-sorter-up:hover, .at-table__thead .at-table__column-sorter-down:hover {
+    color: #3F536E;
+}
+
+.at-table__thead .at-table__column-sorter.sort-desc .at-table__column-sorter-down {
+    color: #3F536E;
+}
+
+.at-table__thead .at-table__column-sorter.sort-asc .at-table__column-sorter-up {
+    color: #3F536E;
+}
+
+.at-table__tbody > tr {
+    -webkit-transition: all .3s;
+    transition: all .3s;
+}
+
+.at-table__tbody > tr:hover {
+    background-color: #f6fafe;
+}
+
+.at-table__footer {
+    position: relative;
+    margin: 16px 0;
+    height: 28px;
+}
+
+.at-table__footer .at-pagination {
+    float: right;
+}
+
+.at-table__footer .at-pagination__total {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin-left: 16px;
+}
+
+.at-table--fixHeight .at-table__content {
+    border-bottom-width: 1px;
+}
+
+.at-table--fixHeight .at-table__header {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    height: 100%;
-    max-width: 100%;
-    color: #515a6e;
-    overflow: hidden;
-    font-size: 14px;
-    background-color: #fff;
-    box-sizing: border-box;
+}
+
+.at-table--fixHeight .at-table__header table {
+    border: 1px solid #ECECEC;
+    border-bottom: none;
+}
+
+.at-table--fixHeight .at-table__body {
+    overflow: scroll;
+}
+
+.at-table--fixHeight .at-table__tbody > tr:last-child td {
+    border-bottom: none;
+}
+
+.at-table--stripe .at-table__tbody > tr:nth-child(2n) {
+    background-color: #fbfbfb;
+}
+
+.at-table--stripe .at-table__tbody > tr:hover {
+    background-color: #f6fafe;
+}
+
+.at-table--border .at-table__content {
+    border-right: none;
+}
+
+.at-table--border .at-table__thead th, .at-table--border .at-table__thead td,
+.at-table--border .at-table__tbody th,
+.at-table--border .at-table__tbody td {
+    border-right: 1px solid #ECECEC;
+}
+
+.at-table--large {
+    font-size: 13px;
+}
+
+.at-table--large table th, .at-table--large table td {
+    height: 56px;
+}
+
+.at-table--small {
+    font-size: 11px;
+}
+
+.at-table--small table th, .at-table--small table td {
+    height: 32px;
+}
+
+.at-table--small .at-table__thead .at-table__column-sorter {
+    width: 7px;
+    height: 14px;
+}
+
+.at-table--small .at-table__thead .at-table__column-sorter-up, .at-table--small .at-table__thead .at-table__column-sorter-down {
+    font-size: 7px;
 }

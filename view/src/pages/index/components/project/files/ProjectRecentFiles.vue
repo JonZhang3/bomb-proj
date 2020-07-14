@@ -1,21 +1,19 @@
 <template>
-    <Table :columns="columns" :data="data" highlight-row></Table>
+    <bom-table :columns="columns" :data="data"></bom-table>
 </template>
 
 <script>
 
-
-
+    import BomTable from "../../../../../components/simpletable/table";
     export default {
         name: 'project-recent-files',
         components: {
-
+            BomTable
         },
         data() {
             return {
                 columns: [
                     {
-                        type: 'selection',
                         width: 60,
                         align: 'center'
                     },
