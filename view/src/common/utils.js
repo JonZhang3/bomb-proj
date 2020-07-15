@@ -42,7 +42,7 @@ export function deepCopy(data) {
     return o;
 }
 
-export function oneOf (value, validList) {
+export function oneOf(value, validList) {
     for (let i = 0; i < validList.length; i++) {
         if (value === validList[i]) {
             return true;
@@ -115,7 +115,26 @@ export function getScrollBarSize (fresh) {
     return cached;
 }
 
+export function addClass(el, className) {
+    let oldClassName = el.className;
+    if(oldClassName) {
+        let classNameArr = oldClassName.split(' ');
+        let index = classNameArr.indexOf(className);
+        index < 0 ? el.className + ' ' + className : null;
+    } else {
+        el.className = className;
+    }
+}
 
+export function removeClass(el, className) {
+    let oldClassName = el.className;
+    if(oldClassName) {
+        let classNameArr = oldClassName.split(' ');
+        let index = classNameArr.indexOf(className);
+        index > -1 ? classNameArr.splice(index, 1) : null;
+        el.className = classNameArr.join(' ');
+    }
+}
 
 export default {
     md5(message) {

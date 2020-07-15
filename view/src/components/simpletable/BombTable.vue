@@ -40,8 +40,10 @@
                       'sort-asc': column._sortType === 'asc',
                       'sort-desc': column._sortType === 'desc'
                     }">
-                                    <span class="at-table__column-sorter-up" @click.stop="handleSort(index, 'asc')"><i class="icon icon-chevron-up"></i></span>
-                                    <span class="at-table__column-sorter-down" @click.stop="handleSort(index, 'desc')"><i class="icon icon-chevron-down"></i></span>
+                                    <span class="at-table__column-sorter-up" @click.stop="handleSort(index, 'asc')"><i
+                                        class="icon icon-chevron-up"></i></span>
+                                    <span class="at-table__column-sorter-down"
+                                          @click.stop="handleSort(index, 'desc')"><i class="icon icon-chevron-down"></i></span>
                                 </div>
                             </template>
                         </th>
@@ -81,8 +83,10 @@
                       'sort-asc': column._sortType === 'asc',
                       'sort-desc': column._sortType === 'desc'
                     }">
-                                    <span class="at-table__column-sorter-up" @click.stop="handleSort(index, 'asc')"><i class="icon icon-chevron-up"></i></span>
-                                    <span class="at-table__column-sorter-down" @click.stop="handleSort(index, 'desc')"><i class="icon icon-chevron-down"></i></span>
+                                    <span class="at-table__column-sorter-up" @click.stop="handleSort(index, 'asc')"><i
+                                        class="icon icon-chevron-up"></i></span>
+                                    <span class="at-table__column-sorter-down"
+                                          @click.stop="handleSort(index, 'desc')"><i class="icon icon-chevron-down"></i></span>
                                 </div>
                             </template>
                         </th>
@@ -92,9 +96,10 @@
 
                     <tbody class="at-table__tbody" v-if="sortData.length" ref="body">
                     <template v-for="(item, index) in sortData">
-                        <tr>
+                        <tr @mouseenter.stop="handleRowMouseenter(index, item, $event)" @mouseleave.stop="handleRowMouseleave(index, item, $event)">
                             <td v-if="optional" class="at-table__cell at-table__column-selection">
-                                <el-checkbox v-model="objData[index].isChecked" @change="changeRowSelection"></el-checkbox>
+                                <el-checkbox v-model="objData[index].isChecked"
+                                             @change="changeRowSelection"></el-checkbox>
                             </td>
                             <td v-for="(column, cindex) in columns" class="at-table__cell">
                                 <template v-if="column.render">
@@ -110,7 +115,8 @@
 
                     <tbody class="at-table__tbody" v-else>
                     <tr>
-                        <td class="at-table__cell at-table__cell--nodata" :colspan="optional ? columns.length + 1 : columns.length">
+                        <td class="at-table__cell at-table__cell--nodata"
+                            :colspan="optional ? columns.length + 1 : columns.length">
                             <slot name="emptyText">{{ t('at.table.emptyText') }}</slot>
                         </td>
                     </tr>
@@ -122,19 +128,19 @@
         <!-- E Content -->
 
         <!-- S Pagination -->
-<!--        <div v-if="pagination && total" class="at-table__footer" ref="footer">-->
-<!--            <el-pagination-->
-<!--                background-->
-<!--                layout="total, prev, pager, next"-->
-<!--                :current-page="currentPage"-->
-<!--                small-->
-<!--                :total="total"-->
-<!--                :page-size="pageSize"-->
-<!--                :show-sizer="showPageSizer"-->
-<!--                :show-quickjump="showPageQuickjump"-->
-<!--                @page-change="pageChange"-->
-<!--                @pagesize-change="pageSizeChange"></el-pagination>-->
-<!--        </div>-->
+        <!--        <div v-if="pagination && total" class="at-table__footer" ref="footer">-->
+        <!--            <el-pagination-->
+        <!--                background-->
+        <!--                layout="total, prev, pager, next"-->
+        <!--                :current-page="currentPage"-->
+        <!--                small-->
+        <!--                :total="total"-->
+        <!--                :page-size="pageSize"-->
+        <!--                :show-sizer="showPageSizer"-->
+        <!--                :show-quickjump="showPageQuickjump"-->
+        <!--                @page-change="pageChange"-->
+        <!--                @pagesize-change="pageSizeChange"></el-pagination>-->
+        <!--        </div>-->
         <!-- E Pagination -->
     </div>
 </template>
@@ -142,11 +148,12 @@
 <script>
 
     import Locale from 'element-ui/lib/mixins/locale';
-    import { getStyle, deepCopy } from '../../common/utils'
-    import Cell from './render'
+    import {getStyle, deepCopy} from '../../common/utils'
+    import Cell from './render';
+    import {addClass, removeClass} from '../../common/utils';
 
     export default {
-        name: 'BomTable',
+        name: 'BombTable',
         components: {
             Cell
         },
@@ -166,13 +173,13 @@
             },
             data: {
                 type: Array,
-                default () {
+                default() {
                     return []
                 }
             },
             columns: {
                 type: Array,
-                default () {
+                default() {
                     return []
                 }
             },
@@ -204,7 +211,7 @@
                 type: [Number, String]
             }
         },
-        data () {
+        data() {
             return {
                 objData: this.makeObjData(), // use for checkbox to select all
                 sortData: [], // use for sort or paginate
@@ -218,24 +225,24 @@
             }
         },
         watch: {
-            height () {
+            height() {
                 this.calculateBodyHeight()
             },
-            allData () {
+            allData() {
                 this.total = this.allData.length
             },
-            sortData () {
+            sortData() {
                 this.handleResize()
             },
-            pageCurSize () {
+            pageCurSize() {
                 this.sortData = this.makeDataWithPaginate()
             },
-            data () {
+            data() {
                 this.sortData = this.makeDataWithSortAndPage()
             }
         },
         computed: {
-            tableStyles () {
+            tableStyles() {
                 const styles = {}
 
                 if (this.height) {
@@ -247,7 +254,7 @@
 
                 return styles
             },
-            isSelectAll () {
+            isSelectAll() {
                 let isAll = true
                 if (!this.sortData.length) {
                     isAll = false
@@ -261,7 +268,7 @@
 
                 return isAll
             },
-            bodyStyle () {
+            bodyStyle() {
                 const styles = {}
                 if (this.bodyHeight !== 0) {
                     const headerHeight = parseInt(getStyle(this.$refs.header, 'height')) || 0
@@ -270,7 +277,7 @@
                 }
                 return styles
             },
-            contentStyle () {
+            contentStyle() {
                 const styles = {}
                 if (this.bodyHeight !== 0) {
                     const headerHeight = parseInt(getStyle(this.$refs.header, 'height')) || 0
@@ -280,7 +287,7 @@
             }
         },
         methods: {
-            calculateBodyHeight () {
+            calculateBodyHeight() {
                 if (this.height) {
                     this.$nextTick(() => {
                         const headerHeight = parseInt(getStyle(this.$refs.header, 'height')) || 0
@@ -292,7 +299,7 @@
                     this.bodyHeight = 0
                 }
             },
-            makeColumns () {
+            makeColumns() {
                 const columns = deepCopy(this.columns)
                 columns.forEach((column, idx) => {
                     column._index = idx
@@ -305,14 +312,14 @@
                 })
                 return columns
             },
-            makeData () {
+            makeData() {
                 const data = deepCopy(this.data)
                 data.forEach((row, idx) => {
                     row.index = idx
                 })
                 return data
             },
-            makeObjData () {
+            makeObjData() {
                 const rowData = {}
 
                 this.data.forEach((row, index) => {
@@ -325,7 +332,7 @@
 
                 return rowData
             },
-            makeDataWithSortAndPage (pageNum) {
+            makeDataWithSortAndPage(pageNum) {
                 let data = []
                 let allData = []
 
@@ -335,7 +342,7 @@
                 data = this.makeDataWithPaginate(pageNum)
                 return data
             },
-            makeDataWithPaginate (page) {
+            makeDataWithPaginate(page) {
                 page = page || 1
                 const pageStart = (page - 1) * this.pageCurSize
                 const pageEnd = pageStart + this.pageCurSize
@@ -348,7 +355,7 @@
                 }
                 return pageData
             },
-            makeDataWithSort () {
+            makeDataWithSort() {
                 let data = this.makeData()
                 let sortType = 'normal'
                 let sortIndex = -1
@@ -367,7 +374,7 @@
 
                 return data
             },
-            handleSelectAll () {
+            handleSelectAll() {
                 const status = !this.isSelectAll
 
                 for (const data of this.sortData) {
@@ -379,7 +386,7 @@
                 status && this.$emit('on-select-all', selection)
                 this.$emit('on-selection-change', selection)
             },
-            handleSort (index, type) {
+            handleSort(index, type) {
                 const key = this.columnsData[index].key
                 const sortType = this.columnsData[index]._sortType
                 const sortNameArr = ['normal', 'desc', 'asc']
@@ -405,7 +412,7 @@
                     key
                 })
             },
-            sort (data, type, index) {
+            sort(data, type, index) {
                 const key = this.columnsData[index].key
                 data.sort((a, b) => {
                     if (this.columnsData[index].sortMethod) {
@@ -417,7 +424,7 @@
                 })
                 return data
             },
-            getSelection () {
+            getSelection() {
                 const selectionIndexArray = []
                 for (const i in this.objData) {
                     if (this.objData[i].isChecked) {
@@ -426,20 +433,20 @@
                 }
                 return JSON.parse(JSON.stringify(this.data.filter((data, index) => selectionIndexArray.indexOf(index) > -1)))
             },
-            changeRowSelection () {
+            changeRowSelection() {
                 const selection = this.getSelection()
                 this.$emit('on-selection-change', selection)
             },
-            pageChange (page) {
+            pageChange(page) {
                 this.$emit('on-page-change', page)
                 this.currentPage = page
                 this.sortData = this.makeDataWithPaginate(page)
             },
-            pageSizeChange (size) {
+            pageSizeChange(size) {
                 this.$emit('on-page-size-change', size)
                 this.pageCurSize = size
             },
-            handleResize () {
+            handleResize() {
                 this.$nextTick(() => {
                     const columnsWidth = {}
 
@@ -454,7 +461,7 @@
                                 if (column.width) {
                                     width = column.width
                                 }
-                                columnsWidth[column._index] = { width }
+                                columnsWidth[column._index] = {width}
                             }
                         }
                     }
@@ -462,7 +469,7 @@
                     this.columnsWidth = columnsWidth
                 })
             },
-            setCellWidth (column, index) {
+            setCellWidth(column, index) {
                 let width = ''
 
                 if (column.width) {
@@ -473,16 +480,27 @@
 
                 width = width === '0' ? '' : width
                 return width
+            },
+            handleRowMouseenter(index, item, e) {
+                item._isHover = true;
+                addClass(e.target, 'at-table-row-hover');
+            },
+            handleRowMouseleave(index, item, e) {
+                removeClass(e.target, 'at-table-row-hover');
             }
         },
-        created () {
+        created() {
+            console.log(this.$children);
+            console.log(this.$slots);
             this.sortData = this.makeDataWithSortAndPage()
         },
-        mounted () {
-            this.calculateBodyHeight()
+        mounted() {
+            console.log(this.$children);
+            console.log(this.$slots);
+            this.calculateBodyHeight();
             window.addEventListener('resize', this.handleResize)
         },
-        beforeDestory () {
+        beforeDestory() {
             window.removeEventListener('resize', this.handleResize)
         }
     }

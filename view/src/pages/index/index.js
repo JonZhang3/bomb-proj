@@ -4,11 +4,13 @@ import ElementUI from 'element-ui';
 import '../../common/common-style';
 import './style/index.css';
 import '@exuanbo/file-icons-js/dist/css/file-icons.min.css';
+import BombTable from '../../components/simpletable/BombTable';
 import router from './router';
 import App from './App.vue'
 import settings from '../../common/settings';
 
 Vue.use(ElementUI);
+Vue.component('BombTable', BombTable);
 Vue.use(Vuex);
 
 Vue.config.productionTip = false;

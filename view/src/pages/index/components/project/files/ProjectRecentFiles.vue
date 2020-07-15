@@ -4,7 +4,7 @@
 
 <script>
 
-    import BomTable from "../../../../../components/simpletable/table";
+    import BomTable from "../../../../../components/simpletable/BombTable";
     export default {
         name: 'project-recent-files',
         components: {
