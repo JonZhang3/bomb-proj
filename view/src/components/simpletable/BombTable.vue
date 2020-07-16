@@ -21,7 +21,7 @@
                     <tr>
                         <!-- S Checkbox -->
                         <th v-if="optional" class="at-table__cell at-table__column-selection">
-                            <el-checkbox v-model="isSelectAll" @click.native="handleSelectAll"></el-checkbox>
+                            <el-checkbox :value="isSelectAll" @change="toggleSelect"></el-checkbox>
                         </th>
                         <!-- E Checkbox -->
                         <!-- S Column th -->
@@ -61,7 +61,7 @@
                     <tr>
                         <!-- S Checkbox -->
                         <th v-if="optional" class="at-table__cell at-table__column-selection">
-                            <el-checkbox v-model="isSelectAll" @click.native.prevent="handleSelectAll"></el-checkbox>
+                            <el-checkbox :value="isSelectAll" @change="toggleSelect"></el-checkbox>
                         </th>
                         <!-- E Checkbox -->
                         <!-- S Column th -->
@@ -94,8 +94,7 @@
                             @mouseenter.stop="handleRowMouseenter(index, item, $event)"
                             @mouseleave.stop="handleRowMouseleave(index, item, $event)">
                             <td v-if="optional" class="at-table__cell at-table__column-selection">
-                                <el-checkbox v-model="objData[index].isChecked"
-                                             @change="changeRowSelection"></el-checkbox>
+                                <el-checkbox v-model="objData[index].isChecked" @change="changeRowSelection"></el-checkbox>
                             </td>
                             <td v-for="(column, cindex) in columns" v-if="column.type !== 'selection'" class="at-table__cell">
                                 <template v-if="column.render">
@@ -497,6 +496,19 @@
             },
             handleRowClick(index, item, e) {
                 this.$emit('on-row-click', index, item, e);
+            },
+            toggleSelect(checked) {
+                for (const data of this.sortData) {
+                    this.objData[data.index].isChecked = checked;
+                }
+
+                const selection = this.getSelection();
+
+                checked && this.$emit('on-select-all', selection);
+                this.$emit('on-selection-change', selection);
+            },
+            selectAll(status) {
+                this.toggleSelect(!!status);
             }
         },
         created() {
