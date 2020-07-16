@@ -9,7 +9,6 @@
                         <el-option label="全部" value="1"></el-option>
                         <el-option label="当前" value="2"></el-option>
                     </el-select>
-<!--                    <el-button slot="append" type="primary" icon="el-icon-search"></el-button>-->
                 </el-input>
                 <el-tooltip effect="dark" placement="top" content="”当前“指在当前文件夹搜索，不包含子文件夹">
                     <i class="el-icon-warning" style="color: #909399;margin-left: 5px;cursor: pointer;"></i>
@@ -21,31 +20,11 @@
         </div>
         <el-row ref="tableRoot" style="display: flex;flex: 1;overflow: hidden;">
             <el-row ref="tableWrapper" style="display: flex;flex-direction: column; flex: 1;border-top: 1px solid #DCDFE6;position: relative;">
-                <bomb-table :columns="columns" :data="files">
-                    fdfdsfdsfdsfds
-                </bomb-table>
-<!--                <div style="width: 100%;height: 100%;overflow: hidden;">-->
-<!--                    <div style="padding: 20px;background-color: #0d76ef"></div>-->
-<!--                    <div style="height: 100%;">-->
-<!--                        <div style="display: flex;padding: 10px">-->
-<!--                            <div style="flex: 1 1 240px;background-color: #00b481">A</div>-->
-<!--                            <div style="flex: 0 1 80px;background-color: #5daf34">B</div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <Table :data="files"-->
-<!--                       :columns="columns"-->
-<!--                       :height="fileTableHeight"-->
-<!--                       ref="fileTable" style="flex: 1;"-->
-<!--                       @on-selection-change="handleTableSelectChange"-->
-<!--                       highlight-row>-->
-<!--                    <template slot-scope="scope" slot="fileName">-->
-<!--                        <file-name-cell :data="scope.row"></file-name-cell>-->
-<!--                    </template>-->
-<!--                    <template slot-scope="scope" slot="fileId">-->
-<!--                        <span>{{scope.row.fileId ? scope.row.fileId : '-'}}</span>-->
-<!--                    </template>-->
-<!--                </Table>-->
+                <bomb-table :columns="columns" :data="files"
+                            optional stripe ref="fileTable"
+                            :height="fileTableHeight" style="flex: 1;"
+                            @on-selection-change="handleTableSelectChange"
+                            @on-sort-change="handleTableSortChange"></bomb-table>
                 <file-table-footer-operation :show="customOperationFooterShow"
                                              ref="tableFooter"
                                              @on-transition-end="resizeTableHeight"
@@ -61,7 +40,6 @@
     import ProjectFileDetailSide from "./ProjectFileDetailSide";
     import FileNameCell from "./FileNameCell";
     import FileTableFooterOperation from "./FileTableFooterOperation";
-    // import BombTable from "../../../../../components/simpletable/BombTable";
 
     export default {
         name: 'project-all-files',
@@ -69,7 +47,6 @@
             ProjectFileDetailSide,
             FileNameCell,
             FileTableFooterOperation
-            // BombTable
         },
         data() {
             return {
@@ -79,12 +56,11 @@
                 searchType: '1',
                 fileDetailSideBarShow: true,
                 columns: [
-                    // {type: 'selection', width: '60px', align: 'center'},
-                    {title: '文件名', slot: 'fileName', minWidth: '40%', key: 'fileName'},
-                    {title: '创建者', key: 'creator'},
-                    {title: '最后更新', key: 'updateTime'},
-                    {title: '文件大小', key: 'fileSize'}
-                    // {title: '文件 ID', slot: 'fileId'}
+                    {type: 'selection', width: '60', align: 'center'},
+                    {title: '文件名', slot: 'fileName', key: 'fileName', sortType: 'normal'},
+                    {title: '创建者', key: 'creator', sortType: 'normal'},
+                    {title: '最后更新', key: 'updateTime', sortType: 'normal'},
+                    {title: '文件大小', key: 'fileSize', sortType: 'normal'}
                 ],
                 files: [
                     {fileName: 'Cloud Studio.pdf', starred: true, shared: true, creator: '张三', updateTime: '123', fileSize: '10M'},
@@ -110,8 +86,7 @@
             }
         },
         mounted() {
-            // this.fileTableHeight = this.$refs['tableWrapper'].$el.offsetHeight - this.$refs['tableFooter'].$el.offsetHeight;
-            // this.fileTableWidth = this.$refs['tableRoot'].$el.offsetWidth - this.$refs['detailSide'].$el.offsetWidth;
+            this.fileTableHeight = this.$refs['tableWrapper'].$el.offsetHeight - this.$refs['tableFooter'].$el.offsetHeight;
         },
         computed: {
             projectName() {
@@ -132,6 +107,9 @@
             resizeTableHeight() {
                 this.fileTableHeight =
                     this.$refs['tableWrapper'].$el.offsetHeight - this.$refs['tableFooter'].$el.offsetHeight;
+            },
+            handleTableSortChange(column, order, key) {
+
             }
         },
         watch: {

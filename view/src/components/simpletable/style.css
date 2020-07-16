@@ -1,9 +1,11 @@
 .at-table {
     position: relative;
     color: #3F536E;
-    font-size: 12px;
+    font-size: 14px;
 }
-
+.at-table .at-table-row-active{
+    background-color: #eaf4ff;
+}
 .at-table table {
     width: 100%;
     border-collapse: separate;
@@ -37,36 +39,8 @@
 .at-table__thead > tr > th {
     font-weight: bold;
     text-align: left;
-    background-color: #F7F7F7;
+    /*background-color: #F7F7F7;*/
     white-space: nowrap;
-}
-
-.at-table__thead .at-table__column-sorter {
-    display: inline-block;
-    vertical-align: middle;
-    height: 18px;
-    width: 9px;
-}
-
-.at-table__thead .at-table__column-sorter-up, .at-table__thead .at-table__column-sorter-down {
-    display: block;
-    color: #C9C9C9;
-    font-size: 9px;
-    line-height: 1;
-    -webkit-transition: color .3s;
-    transition: color .3s;
-}
-
-.at-table__thead .at-table__column-sorter-up:hover, .at-table__thead .at-table__column-sorter-down:hover {
-    color: #3F536E;
-}
-
-.at-table__thead .at-table__column-sorter.sort-desc .at-table__column-sorter-down {
-    color: #3F536E;
-}
-
-.at-table__thead .at-table__column-sorter.sort-asc .at-table__column-sorter-up {
-    color: #3F536E;
 }
 
 .at-table__tbody > tr {
@@ -124,7 +98,7 @@
 }
 
 .at-table--stripe .at-table__tbody > tr:hover {
-    background-color: #f6fafe;
+    background-color: #eaf4ff;
 }
 
 .at-table--border .at-table__content {
@@ -160,4 +134,42 @@
 
 .at-table--small .at-table__thead .at-table__column-sorter-up, .at-table--small .at-table__thead .at-table__column-sorter-down {
     font-size: 7px;
+}
+
+.at-table .caret-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    height: 34px;
+    width: 24px;
+    vertical-align: middle;
+    cursor: pointer;
+    overflow: initial;
+    position: relative;
+}
+
+.at-table .sort-caret {
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    position: absolute;
+    left: 7px;
+}
+
+.at-table .sort-caret.ascending {
+    border-bottom-color: #c0c4cc;
+    top: 5px;
+}
+
+.at-table .sort-caret.descending {
+    border-top-color: #c0c4cc;
+    bottom: 7px;
+}
+
+.at-table .sort-asc .sort-caret.ascending {
+    border-bottom-color: #409EFF;
+}
+
+.at-table .sort-desc .sort-caret.descending {
+    border-top-color: #409EFF;
 }

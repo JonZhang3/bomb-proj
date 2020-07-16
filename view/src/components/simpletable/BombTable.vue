@@ -1,13 +1,13 @@
 <template>
     <div
-        class="at-table"
-        :class="{
+            class="at-table"
+            :class="{
       'at-table--fixHeight': this.height,
       'at-table--stripe': this.stripe,
       [`at-table--${this.size}`]: this.size,
       [`at-table--border`]: this.border
     }"
-        :style="tableStyles">
+            :style="tableStyles">
 
         <!-- S Content -->
         <div class="at-table__content" :style="contentStyle">
@@ -26,24 +26,21 @@
                         <!-- E Checkbox -->
                         <!-- S Column th -->
                         <th
-                            v-for="(column, index) in columnsData"
-                            class="at-table__cell at-table__column"
-                            :class="column.className"
-                            :style="{
-                  cursor: column.sortType ? 'pointer' : 'text'
-                }"
-                            @click="column.sortType && handleSort(index)">
+                                v-for="(column, index) in columnsData"
+                                v-if="column.type !== 'selection'"
+                                class="at-table__cell at-table__column"
+                                :class="column.className"
+                                :style="{cursor: column.sortType ? 'pointer' : 'text'}"
+                                @click="column.sortType && handleSort(index)">
                             {{ column.title }}
                             <template v-if="column.sortType">
-                                <div class="at-table__column-sorter"
+                                <div class="caret-wrapper"
                                      :class="{
-                      'sort-asc': column._sortType === 'asc',
-                      'sort-desc': column._sortType === 'desc'
-                    }">
-                                    <span class="at-table__column-sorter-up" @click.stop="handleSort(index, 'asc')"><i
-                                        class="icon icon-chevron-up"></i></span>
-                                    <span class="at-table__column-sorter-down"
-                                          @click.stop="handleSort(index, 'desc')"><i class="icon icon-chevron-down"></i></span>
+                                    'sort-asc': sortActiveIndex === index && column._sortType === 'asc',
+                                    'sort-desc': sortActiveIndex === index && column._sortType === 'desc'
+                                }">
+                                    <span class="sort-caret ascending" @click.stop="handleSort(index, 'asc')"></span>
+                                    <span class="sort-caret descending" @click.stop="handleSort(index, 'desc')"></span>
                                 </div>
                             </template>
                         </th>
@@ -70,23 +67,20 @@
                         <!-- S Column th -->
                         <th
                             v-for="(column, index) in columnsData"
+                            v-if="column.type !== 'selection'"
                             class="at-table__cell at-table__column"
                             :class="column.className"
-                            :style="{
-                  cursor: column.sortType ? 'pointer' : 'text'
-                }"
+                            :style="{cursor: column.sortType ? 'pointer' : 'text'}"
                             @click="column.sortType && handleSort(index)">
                             {{ column.title }}
                             <template v-if="column.sortType">
-                                <div class="at-table__column-sorter"
+                                <div class="caret-wrapper"
                                      :class="{
-                      'sort-asc': column._sortType === 'asc',
-                      'sort-desc': column._sortType === 'desc'
-                    }">
-                                    <span class="at-table__column-sorter-up" @click.stop="handleSort(index, 'asc')"><i
-                                        class="icon icon-chevron-up"></i></span>
-                                    <span class="at-table__column-sorter-down"
-                                          @click.stop="handleSort(index, 'desc')"><i class="icon icon-chevron-down"></i></span>
+                                    'sort-asc': sortActiveIndex === index && column._sortType === 'asc',
+                                    'sort-desc': sortActiveIndex === index && column._sortType === 'desc'
+                                }">
+                                    <span class="sort-caret ascending" @click.stop="handleSort(index, 'asc')"></span>
+                                    <span class="sort-caret descending" @click.stop="handleSort(index, 'desc')"></span>
                                 </div>
                             </template>
                         </th>
@@ -96,12 +90,14 @@
 
                     <tbody class="at-table__tbody" v-if="sortData.length" ref="body">
                     <template v-for="(item, index) in sortData">
-                        <tr @mouseenter.stop="handleRowMouseenter(index, item, $event)" @mouseleave.stop="handleRowMouseleave(index, item, $event)">
+                        <tr @click.stop="handleRowClick(index, item, $event)"
+                            @mouseenter.stop="handleRowMouseenter(index, item, $event)"
+                            @mouseleave.stop="handleRowMouseleave(index, item, $event)">
                             <td v-if="optional" class="at-table__cell at-table__column-selection">
                                 <el-checkbox v-model="objData[index].isChecked"
                                              @change="changeRowSelection"></el-checkbox>
                             </td>
-                            <td v-for="(column, cindex) in columns" class="at-table__cell">
+                            <td v-for="(column, cindex) in columns" v-if="column.type !== 'selection'" class="at-table__cell">
                                 <template v-if="column.render">
                                     <Cell :item="item" :column="column" :index="index" :render="column.render"></Cell>
                                 </template>
@@ -209,6 +205,14 @@
             },
             height: {
                 type: [Number, String]
+            },
+            highlightCurrentRow: {
+                type: Boolean,
+                default: false
+            },
+            defaultHighlightRowIndex: {
+                type: Number,
+                default: -1
             }
         },
         data() {
@@ -221,7 +225,9 @@
                 bodyHeight: 0,
                 pageCurSize: this.pageSize,
                 columnsWidth: {},
-                currentPage: 1
+                currentPage: 1,
+                sortActiveIndex: 0,
+                rowActiveIndex: this.defaultHighlightRowIndex
             }
         },
         watch: {
@@ -387,6 +393,7 @@
                 this.$emit('on-selection-change', selection)
             },
             handleSort(index, type) {
+                this.sortActiveIndex = index;
                 const key = this.columnsData[index].key
                 const sortType = this.columnsData[index]._sortType
                 const sortNameArr = ['normal', 'desc', 'asc']
@@ -487,16 +494,15 @@
             },
             handleRowMouseleave(index, item, e) {
                 removeClass(e.target, 'at-table-row-hover');
+            },
+            handleRowClick(index, item, e) {
+                this.$emit('on-row-click', index, item, e);
             }
         },
         created() {
-            console.log(this.$children);
-            console.log(this.$slots);
             this.sortData = this.makeDataWithSortAndPage()
         },
         mounted() {
-            console.log(this.$children);
-            console.log(this.$slots);
             this.calculateBodyHeight();
             window.addEventListener('resize', this.handleResize)
         },
