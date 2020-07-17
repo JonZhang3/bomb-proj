@@ -22,95 +22,101 @@
             </el-row>
         </el-row>
         <el-row style="margin-top: 10px;">
-            <draggable-table v-model="formData.fields"
-                             draggable-element=".drag-ele"
-                             :form-data="formData" ref="fieldsTable" size="small"
-                             :row-style="(data) => {return data.row.marker ? {backgroundColor: data.row.marker} : {}}"
-                             :default-data="defaultFieldData">
-                <el-table-column label="字段名">
-                    <template slot-scope="scope">
-                        <el-form-item :prop="'fields.' + scope.$index + '.fieldName'" :rules="formData.rules.fieldName">
-                            <el-input placeholder="必填" size="small" v-model="scope.row.fieldName"></el-input>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column label="类型">
-                    <template slot-scope="scope">
-                        <el-form-item :prop="'fields.' + scope.$index + '.type'" :rules="formData.rules.type">
-<!--                            <el-input placeholder="必填" size="small" v-model="scope.row.type"></el-input>-->
-                            <el-select placeholder="请选择字段类型"
-                                       filterable size="small" v-model="scope.row.type">
-                                <el-option v-for="item in fieldTypeOptions" :key="item" :value="item" :label="item"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column label="长度" width="160">
-                    <template slot-scope="scope">
-                        <el-form-item :prop="'fields.' + scope.$index + '.length'" :rules="formData.rules.length">
-                            <el-input-number v-model="scope.row.length" :precision="0"
-                                             size="mini" @blur="handleTableRowLengthBlur(scope.row)"
-                                             controls-position="right" :min="0" :max="65532"></el-input-number>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column width="50" label="非空">
-                    <template slot-scope="scope">
-                        <el-form-item style="text-align: center;">
-                            <el-checkbox v-model="scope.row.notNull" size="small" true-label="1" false-label="0"></el-checkbox>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column width="50" label="主键">
-                    <template slot-scope="scope">
-                        <el-form-item style="text-align: center;">
-                            <el-checkbox v-model="scope.row.pk" size="small" true-label="1" false-label="0"></el-checkbox>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column width="50" label="自增">
-                    <template slot-scope="scope">
-                        <el-form-item style="text-align: center;">
-                            <el-checkbox v-model="scope.row.autoIncrement" size="small" true-label="1" false-label="0"></el-checkbox>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column label="默认值">
-                    <template slot-scope="scope">
-                        <el-form-item>
-                            <el-input size="small" v-model="scope.row.defaultValue"></el-input>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column label="索引" min-width="120">
-                    <template slot-scope="scope">
-                        <el-form-item>
-                            <el-cascader size="small" v-model="scope.row.indexes" :clearable="true" :options="indexesOptions"></el-cascader>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column label="索引名称">
-                    <template slot-scope="scope">
-                        <el-form-item>
-                            <el-input size="small" v-model="scope.row.indexesName"></el-input>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column label="注释">
-                    <template slot-scope="scope">
-                        <el-form-item>
-                            <el-input size="small" v-model="scope.row.notes"></el-input>
-                        </el-form-item>
-                    </template>
-                </el-table-column>
-                <el-table-column width="100" label="操作">
-                    <template slot-scope="scope">
-                        <el-button class="drag-ele" icon="el-icon-rank" circle size="mini" style="cursor: move"></el-button>
-                        <!--                        <el-color-picker v-model="scope.row.marker"></el-color-picker>-->
-                        <el-button @click="handleTableRowDelete(scope)" type="danger" icon="el-icon-delete" circle size="mini"></el-button>
-                    </template>
-                </el-table-column>
-            </draggable-table>
+            <el-tabs>
+                <el-tab-pane label="列信息" name="first">
+                    <draggable-table v-model="formData.fields"
+                                     draggable-element=".drag-ele"
+                                     :form-data="formData" ref="fieldsTable" size="small"
+                                     :row-style="(data) => {return data.row.marker ? {backgroundColor: data.row.marker} : {}}"
+                                     :default-data="defaultFieldData">
+                        <el-table-column label="列名">
+                            <template slot-scope="scope">
+                                <el-form-item :prop="'fields.' + scope.$index + '.fieldName'" :rules="formData.rules.fieldName">
+                                    <el-input placeholder="必填" size="small" v-model="scope.row.fieldName"></el-input>
+                                </el-form-item>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="类型">
+                            <template slot-scope="scope">
+                                <el-form-item :prop="'fields.' + scope.$index + '.type'" :rules="formData.rules.type">
+                                    <!--                            <el-input placeholder="必填" size="small" v-model="scope.row.type"></el-input>-->
+                                    <el-select placeholder="请选择字段类型"
+                                               filterable size="small" v-model="scope.row.type">
+                                        <el-option v-for="item in fieldTypeOptions" :key="item" :value="item" :label="item"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="长度" width="160">
+                            <template slot-scope="scope">
+                                <el-form-item :prop="'fields.' + scope.$index + '.length'" :rules="formData.rules.length">
+                                    <el-input-number v-model="scope.row.length" :precision="0"
+                                                     size="mini" @blur="handleTableRowLengthBlur(scope.row)"
+                                                     controls-position="right" :min="0" :max="65532"></el-input-number>
+                                </el-form-item>
+                            </template>
+                        </el-table-column>
+                        <el-table-column width="50" label="非空">
+                            <template slot-scope="scope">
+                                <el-form-item style="text-align: center;">
+                                    <el-checkbox v-model="scope.row.notNull" size="small" true-label="1" false-label="0"></el-checkbox>
+                                </el-form-item>
+                            </template>
+                        </el-table-column>
+                        <el-table-column width="50" label="主键">
+                            <template slot-scope="scope">
+                                <el-form-item style="text-align: center;">
+                                    <el-checkbox v-model="scope.row.pk" size="small" true-label="1" false-label="0"></el-checkbox>
+                                </el-form-item>
+                            </template>
+                        </el-table-column>
+                        <el-table-column width="50" label="自增">
+                            <template slot-scope="scope">
+                                <el-form-item style="text-align: center;">
+                                    <el-checkbox v-model="scope.row.autoIncrement" size="small" true-label="1" false-label="0"></el-checkbox>
+                                </el-form-item>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="默认值">
+                            <template slot-scope="scope">
+                                <el-form-item>
+                                    <el-input size="small" v-model="scope.row.defaultValue"></el-input>
+                                </el-form-item>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="索引" min-width="120">
+                            <template slot-scope="scope">
+                                <el-form-item>
+                                    <el-cascader size="small" v-model="scope.row.indexes" :clearable="true" :options="indexesOptions"></el-cascader>
+                                </el-form-item>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="索引名称">
+                            <template slot-scope="scope">
+                                <el-form-item>
+                                    <el-input size="small" v-model="scope.row.indexesName"></el-input>
+                                </el-form-item>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="注释">
+                            <template slot-scope="scope">
+                                <el-form-item>
+                                    <el-input size="small" v-model="scope.row.notes"></el-input>
+                                </el-form-item>
+                            </template>
+                        </el-table-column>
+                        <el-table-column width="100" label="操作">
+                            <template slot-scope="scope">
+                                <el-button class="drag-ele" icon="el-icon-rank" circle size="mini" style="cursor: move"></el-button>
+                                <!--                        <el-color-picker v-model="scope.row.marker"></el-color-picker>-->
+                                <el-button @click="handleTableRowDelete(scope)" type="danger" icon="el-icon-delete" circle size="mini"></el-button>
+                            </template>
+                        </el-table-column>
+                    </draggable-table>
+                </el-tab-pane>
+                <el-tab-pane label="索引" name="second">索引</el-tab-pane>
+                <el-tab-pane label="外键" name="third">外键</el-tab-pane>
+            </el-tabs>
         </el-row>
     </el-row>
 </template>

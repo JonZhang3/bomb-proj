@@ -90,18 +90,19 @@
 
                     <tbody class="at-table__tbody" v-if="sortData.length" ref="body">
                     <template v-for="(item, index) in sortData">
-                        <tr :class="{'at-table-row-active': rowActiveIndex === index}"
+                        <tr :class="{
+                            'at-table-row-active': rowActiveIndex === item.index,
+                            'at-table-row-hover': objData[item.index]._isHover
+                        }"
                             @click.stop="handleRowClick(index, item, $event)"
                             @mouseenter.stop="handleRowMouseenter(index, item, $event)"
                             @mouseleave.stop="handleRowMouseleave(index, item, $event)">
                             <td v-if="optional" class="at-table__cell at-table__column-selection">
-                                <el-checkbox v-model="objData[index].isChecked" @change="changeRowSelection"></el-checkbox>
+                                <el-checkbox v-model="objData[item.index].isChecked" @change="changeRowSelection"></el-checkbox>
                             </td>
                             <td v-for="(column, cindex) in columns" v-if="column.type !== 'selection'" class="at-table__cell">
-                                <template v-if="column.render">
-                                    <Cell :item="item" :column="column" :index="index" :render="column.render">
-                                        {{column.slot}}
-                                    </Cell>
+                                <template v-if="column.slot">
+                                    <TableSlot :item="item" :index="index" :column="column"></TableSlot>
                                 </template>
                                 <template v-else>
                                     {{ item[column.key] }}
@@ -147,15 +148,19 @@
 
     import Locale from 'element-ui/lib/mixins/locale';
     import {getStyle, deepCopy} from '../../common/utils'
-    import Cell from './render';
-    import {addClass, removeClass} from '../../common/utils';
+    import TableSlot from "./TableSlot";
 
     export default {
         name: 'BombTable',
         components: {
-            Cell
+            TableSlot
         },
         mixins: [Locale],
+        provide() {
+            return {
+                tableRoot: this
+            }
+        },
         props: {
             size: {
                 type: String,
@@ -334,6 +339,7 @@
                     const newRow = deepCopy(row)
 
                     newRow.isChecked = !!newRow.isChecked
+                    newRow._isHover = false;
 
                     rowData[index] = newRow
                 })
@@ -411,6 +417,8 @@
                         this.sortData = this.makeDataWithSortAndPage(this.currentPage)
                     } else {
                         this.sortData = this.sort(this.sortData, type, index)
+                        console.log('sortData', this.sortData);
+                        console.log('objData', this.objData);
                     }
                 }
                 this.columnsData[index]._sortType = type
@@ -491,14 +499,13 @@
                 return width
             },
             handleRowMouseenter(index, item, e) {
-                item._isHover = true;
-                addClass(e.target, 'at-table-row-hover');
+                this.objData[item.index]._isHover = true;
             },
             handleRowMouseleave(index, item, e) {
-                removeClass(e.target, 'at-table-row-hover');
+                this.objData[item.index]._isHover = false;
             },
             handleRowClick(index, item, e) {
-                this.rowActiveIndex = index;
+                this.rowActiveIndex = item.index;
                 this.$emit('on-row-click', index, item, e);
             },
             toggleSelect(checked) {

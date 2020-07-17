@@ -27,7 +27,7 @@
                 </el-menu-item>
                 <el-menu-item :index="`/project/${$route.params.id}/datatable`">
                     <i class="el-icon-s-grid"></i>
-                    <span slot="title">数据库表</span>
+                    <span slot="title">数据库</span>
                 </el-menu-item>
                 <el-submenu index="1">
                     <template slot="title">

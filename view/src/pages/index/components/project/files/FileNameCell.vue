@@ -70,12 +70,12 @@
         color: #409EFF;
     }
 
-    .ivu-table-row-highlight .el-icon-star-off,
-    .ivu-table-row-highlight .el-icon-more,
-    .ivu-table-row-highlight .el-icon-share,
-    .ivu-table-row-hover .el-icon-star-off,
-    .ivu-table-row-hover .el-icon-more,
-    .ivu-table-row-hover .el-icon-share {
+    .at-table-row-hover .el-icon-star-off,
+    .at-table-row-hover .el-icon-more,
+    .at-table-row-hover .el-icon-share,
+    .at-table-row-hover .el-icon-star-off,
+    .at-table-row-hover .el-icon-more,
+    .at-table-row-hover .el-icon-share {
         display: inline-block !important;
     }
 </style>

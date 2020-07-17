@@ -3,7 +3,7 @@
                class="add-project-member-dialog"
                :before-close="handleCancel" :close-on-click-modal="false">
         <el-form :model="tableForm" ref="tableForm" :rules="tableFormRules" label-width="100px">
-            <el-form-item prop="tableName" label="表名">
+            <el-form-item prop="tableName" label="数据库名">
                 <el-input v-model="tableForm.tableName"></el-input>
             </el-form-item>
             <el-form-item prop="tableDesc" label="描述">

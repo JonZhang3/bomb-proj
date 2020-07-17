@@ -2,7 +2,7 @@
     <el-row class="main-content-root">
         <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item>项目【{{projectName}}】</el-breadcrumb-item>
-            <el-breadcrumb-item>数据库表</el-breadcrumb-item>
+            <el-breadcrumb-item>数据库</el-breadcrumb-item>
         </el-breadcrumb>
         <el-row style="margin-top: 10px;">
             <el-row style="margin-top: 10px;">
@@ -12,7 +12,7 @@
                                    icon="el-icon-refresh" size="mini" round>刷新</el-button>
                         <el-button @click="handleAddTable"
                                    type="primary"
-                                   icon="el-icon-plus" size="mini" round>新增数据库表</el-button>
+                                   icon="el-icon-plus" size="mini" round>新建数据库</el-button>
                     </el-button-group>
                 </el-col>
                 <el-col :span="12" style="text-align: right">
@@ -23,11 +23,11 @@
             </el-row>
         </el-row>
         <el-row style="margin-top: 10px;">
-            <span style="font-size: 12px;color: #909399">Tip：点击每行去编辑表中的字段</span>
+            <span style="font-size: 12px;color: #909399">Tip：点击每行去编辑数据库中的表</span>
             <el-table stripe style="width: 100%;"
                       :data="tables.filter(data => !tableSearchText || data.tableName.toLowerCase().includes(tableSearchText.toLowerCase()))"
                       @row-click="handleRowClick">
-                <el-table-column prop="tableName" label="表名"></el-table-column>
+                <el-table-column prop="tableName" label="数据库"></el-table-column>
                 <el-table-column prop="tableDesc" label="描述"></el-table-column>
                 <el-table-column prop="type" label="数据库类型"></el-table-column>
                 <el-table-column prop="createUser" label="创建者"></el-table-column>
