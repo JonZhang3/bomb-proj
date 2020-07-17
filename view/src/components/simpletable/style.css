@@ -3,7 +3,7 @@
     color: #3F536E;
     font-size: 14px;
 }
-.at-table .at-table-row-active{
+.at-table .at-table__tbody .at-table-row-active{
     background-color: #eaf4ff;
 }
 .at-table table {
@@ -32,7 +32,7 @@
 }
 
 .at-table__content {
-    border: 1px solid #ECECEC;
+    /*border: 1px solid #ECECEC;*/
     border-bottom-width: 0;
 }
 

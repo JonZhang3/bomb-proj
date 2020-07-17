@@ -90,7 +90,8 @@
 
                     <tbody class="at-table__tbody" v-if="sortData.length" ref="body">
                     <template v-for="(item, index) in sortData">
-                        <tr @click.stop="handleRowClick(index, item, $event)"
+                        <tr :class="{'at-table-row-active': rowActiveIndex === index}"
+                            @click.stop="handleRowClick(index, item, $event)"
                             @mouseenter.stop="handleRowMouseenter(index, item, $event)"
                             @mouseleave.stop="handleRowMouseleave(index, item, $event)">
                             <td v-if="optional" class="at-table__cell at-table__column-selection">
@@ -98,7 +99,9 @@
                             </td>
                             <td v-for="(column, cindex) in columns" v-if="column.type !== 'selection'" class="at-table__cell">
                                 <template v-if="column.render">
-                                    <Cell :item="item" :column="column" :index="index" :render="column.render"></Cell>
+                                    <Cell :item="item" :column="column" :index="index" :render="column.render">
+                                        {{column.slot}}
+                                    </Cell>
                                 </template>
                                 <template v-else>
                                     {{ item[column.key] }}
@@ -495,6 +498,7 @@
                 removeClass(e.target, 'at-table-row-hover');
             },
             handleRowClick(index, item, e) {
+                this.rowActiveIndex = index;
                 this.$emit('on-row-click', index, item, e);
             },
             toggleSelect(checked) {

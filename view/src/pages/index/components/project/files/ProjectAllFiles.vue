@@ -19,12 +19,16 @@
             </div>
         </div>
         <el-row ref="tableRoot" style="display: flex;flex: 1;overflow: hidden;">
-            <el-row ref="tableWrapper" style="display: flex;flex-direction: column; flex: 1;border-top: 1px solid #DCDFE6;position: relative;">
+            <el-row ref="tableWrapper" style="display: flex;flex-direction: column; flex: 1;position: relative;">
                 <bomb-table :columns="columns" :data="files"
-                            optional stripe ref="fileTable"
+                            optional ref="fileTable"
                             :height="fileTableHeight" style="flex: 1;"
                             @on-selection-change="handleTableSelectChange"
-                            @on-sort-change="handleTableSortChange"></bomb-table>
+                            @on-sort-change="handleTableSortChange">
+<!--                    <template slot-scope="scope" slot="emptyText">-->
+<!--                        <file-name-cell :data="scope"></file-name-cell>-->
+<!--                    </template>-->
+                </bomb-table>
                 <file-table-footer-operation :show="customOperationFooterShow"
                                              ref="tableFooter"
                                              @on-transition-end="resizeTableHeight"
