@@ -204,9 +204,6 @@
             handleBack() {
                 this.$router.replace({path: `/project/${this.projectId}/datatable`})
             },
-            // handleSearch() {
-            //
-            // },
             handleTableRowDelete(scope) {
                 this.formData.fields.splice(scope.$index, 1);
             },

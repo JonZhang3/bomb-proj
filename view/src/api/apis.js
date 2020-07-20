@@ -55,17 +55,29 @@ export default {
     deleteProjectCode(projectId, codeId) {
         return del(`/api/project/${projectId}/code/${codeId}`);
     },
-    listProjectDataTables(projectId, params, configs) {
-        return get(`/api/project/${projectId}/datatable`, params, configs);
+    listProjectDatabase(projectId, params, configs) {
+        return get(`/api/project/${projectId}/db`, params, configs);
     },
-    addProjectDataTable(projectId, params) {
-        return post(`/api/project/${projectId}/datatable`, params);
+    addProjectDatabase(projectId, params) {
+        return post(`/api/project/${projectId}/db`, params);
     },
-    deleteProjectDataTable(projectId, tableId) {
-        return del(`/api/project/${projectId}/datatable/${tableId}`);
+    deleteProjectDatabase(projectId, dbId) {
+        return del(`/api/project/${projectId}/db/${dbId}`);
     },
-    updateProjectDataTable(projectId, tableId, params) {
-        return put(`/api/project/${projectId}/datatable/${tableId}`, params);
+    updateProjectDatabase(projectId, dbId, params) {
+        return put(`/api/project/${projectId}/db/${dbId}`, params);
+    },
+    listProjectDataTables(projectId, dbId, params, configs) {
+        return get(`/api/project/${projectId}/db/${dbId}/table`, params, configs);
+    },
+    addProjectDataTable(projectId, dbId, params) {
+        return post(`/api/project/${projectId}/db/${dbId}/table`, params);
+    },
+    deleteProjectDataTable(projectId, dbId, tableId) {
+        return del(`/api/project/${projectId}/db/${dbId}/table/${tableId}`);
+    },
+    updateProjectDataTable(projectId, dbId, tableId, params) {
+        return put(`/api/project/${projectId}/db/${dbId}/table/${tableId}`, params);
     },
     getDataTableIndexes(dbType, configs) {
         return get('/api/project/field-indexes', {dbType}, configs);
@@ -73,10 +85,10 @@ export default {
     getDataTableFieldTypes(dbType, configs) {
         return get('/api/project/field-types', {dbType}, configs);
     },
-    getDataTableFields(projectId, tableId, params) {
-        return get(`/api/project/${projectId}/datatable/${tableId}/fields`, params);
+    getDataTableFields(projectId, dbId, tableId, params) {
+        return get(`/api/project/${projectId}/db/${dbId}/table/${tableId}/fields`, params);
     },
-    saveDataTableFields(projectId, tableId, params) {
-        return post(`/api/project/${projectId}/datatable/${tableId}/fields`, params);
+    saveDataTableFields(projectId, dbId, tableId, params) {
+        return post(`/api/project/${projectId}/db/${dbId}/table/${tableId}/fields`, params);
     }
 }

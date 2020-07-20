@@ -18,5 +18,6 @@ public class ProjectDataTable {
     private Integer state;
     private String projectId;
     private String userId;
+    private Long databaseId;
 
 }

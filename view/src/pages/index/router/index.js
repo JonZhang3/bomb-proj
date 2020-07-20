@@ -8,9 +8,11 @@ import ProjectDetail from "../components/project/ProjectDetail";
 import ProjectDashboard from "../components/project/ProjectDashboard";
 import ProjectMember from "../components/project/member/ProjectMember";
 import ProjectCode from "../components/project/code/ProjectCode";
-import ProjectDatatable from "../components/project/datatable/ProjectDatatable";
+import ProjectDatabase from "../components/project/datatable/ProjectDatabase";
 import ViewDatatableFields from "../components/project/datatable/ViewDatatableFields";
 import EditDatatableFields from "../components/project/datatable/EditDatatableFields";
+import ViewDatabase from "../components/project/datatable/ViewDatabase";
+import ViewDataTable from "../components/project/datatable/ViewDataTable";
 import ProjectFiles from "../components/project/files/ProjectFiles";
 import ProjectAllFiles from "../components/project/files/ProjectAllFiles";
 import ProjectRecentFiles from "../components/project/files/ProjectRecentFiles";
@@ -56,9 +58,30 @@ const routes = [
                 component: ProjectCode
             },
             {
-                path: 'datatable',
-                name: 'project-datatable',
-                component: ProjectDatatable
+                path: 'db',
+                name: 'project-database',
+                component: ProjectDatabase
+            },
+            {
+                path: 'db/:dbId',
+                name: 'project-database-view',
+                component: ViewDatabase,
+                meta: {
+                    hasParent: true
+                },
+                children: [
+                    {
+                        path: 'table/:tableId',
+                        name: 'project-database-table-view',
+                        component: ViewDataTable,
+                        meta: {
+                            hasParent: true,
+                            rootMenu: function(id) {
+                                return `/project/${id}/db`;
+                            }
+                        },
+                    }
+                ]
             },
             {
                 path: 'datatable/:tableId/fields/view',

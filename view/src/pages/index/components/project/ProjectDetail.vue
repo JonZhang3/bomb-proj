@@ -25,7 +25,7 @@
                     <i class="el-icon-error"></i>
                     <span slot="title">状态码</span>
                 </el-menu-item>
-                <el-menu-item :index="`/project/${$route.params.id}/datatable`">
+                <el-menu-item :index="`/project/${$route.params.id}/db`">
                     <i class="el-icon-s-grid"></i>
                     <span slot="title">数据库</span>
                 </el-menu-item>

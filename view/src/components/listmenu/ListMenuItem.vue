@@ -63,6 +63,7 @@
 
 <style>
     .el-list-menu-item {
+        position: relative;
         display: flex;
         font-size: 14px;
         cursor: pointer;

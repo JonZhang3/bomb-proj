@@ -1,16 +1,16 @@
 <template>
-    <el-dialog width="30%" :title="edit ? '修改数据库表' : '新增数据库表'" v-bind="$attrs"
+    <el-dialog width="30%" :title="edit ? '修改数据库' : '新增数据库'" v-bind="$attrs"
                class="add-project-member-dialog"
                :before-close="handleCancel" :close-on-click-modal="false">
-        <el-form :model="tableForm" ref="tableForm" :rules="tableFormRules" label-width="100px">
-            <el-form-item prop="tableName" label="数据库名">
-                <el-input v-model="tableForm.tableName"></el-input>
+        <el-form :model="dbForm" ref="dbForm" :rules="dbFormRules" label-width="100px">
+            <el-form-item prop="databaseName" label="数据库名">
+                <el-input v-model="dbForm.databaseName"></el-input>
             </el-form-item>
-            <el-form-item prop="tableDesc" label="描述">
-                <el-input v-model="tableForm.tableDesc"></el-input>
+            <el-form-item prop="databaseDesc" label="描述">
+                <el-input v-model="dbForm.databaseDesc"></el-input>
             </el-form-item>
             <el-form-item prop="type" label="数据库类型">
-                <el-select v-model="tableForm.type" placeholder="请选择" style="width: 100%;">
+                <el-select v-model="dbForm.type" placeholder="请选择" style="width: 100%;">
                     <el-option key="mysql" value="mysql" label="MySQL"></el-option>
                     <el-option key="oracle" value="oracle" label="Oracle"></el-option>
                 </el-select>
@@ -28,29 +28,29 @@
     import apis from "../../../../../api/apis";
 
     export default {
-        name: 'add-or-edit-project-datatable-dialog',
+        name: 'add-or-edit-project-database-dialog',
         props: {
             projectId: String,
             edit: {
                 type: Boolean,
                 default: false
             },
-            tableData: Object
+            dbData: Object
         },
         data() {
             return {
-                tableForm: {
+                dbForm: {
                     id: '',
-                    tableName: '',
-                    tableDesc: '',
+                    databaseName: '',
+                    databaseDesc: '',
                     type: ''
                 },
-                tableFormRules: {
-                    tableName: [
-                        {required: true, message: '请输入表名', trigger: 'blur'},
-                        {max: 50, message: '表名最大长度为 50', trigger: 'blur'}
+                dbFormRules: {
+                    databaseName: [
+                        {required: true, message: '请输入数据库名', trigger: 'blur'},
+                        {max: 50, message: '数据库名最大长度为 50', trigger: 'blur'}
                     ],
-                    tableDesc: [
+                    databaseDesc: [
                         {max: 255, message: '描述最大长度为 255', trigger: 'blur'}
                     ],
                     type: [
@@ -61,46 +61,46 @@
         },
         methods: {
             handleCancel() {
-                this.$refs['tableForm'].resetFields();
+                this.$refs['dbForm'].resetFields();
                 this.$emit('cancel');
             },
             handleAdd(e) {
-                this.$refs['tableForm'].validate(valid => {
+                this.$refs['dbForm'].validate(valid => {
                     if(valid) {
                         if(this.edit) {
-                            this.updateProjectDataTable(e);
+                            this.updateProjectDatabase(e);
                         } else {
-                            this.addProjectDataTable(e);
+                            this.addProjectDatabase(e);
                         }
                     } else {
                         return false;
                     }
                 });
             },
-            addProjectDataTable(e) {
-                apis.addProjectDataTable(this.projectId, {
-                    tableName: this.tableForm.tableName,
-                    tableDesc: this.tableForm.tableDesc,
-                    type: this.tableForm.type
+            addProjectDatabase(e) {
+                apis.addProjectDatabase(this.projectId, {
+                    databaseName: this.dbForm.databaseName,
+                    databaseDesc: this.dbForm.databaseDesc,
+                    type: this.dbForm.type
                 }).then(data => {
                     if(data.code === 1) {
-                        this.$message.success('新增数据库表成功');
-                        this.$refs['tableForm'].resetFields();
+                        this.$message.success('新增数据库成功');
+                        this.$refs['dbForm'].resetFields();
                         this.$emit('success', e);
                     } else {
                         this.$message.error(data.message);
                     }
                 });
             },
-            updateProjectDataTable(e) {
-                apis.updateProjectDataTable(this.projectId, this.tableForm.id, {
-                    tableName: this.tableForm.tableName,
-                    tableDesc: this.tableForm.tableDesc,
-                    type: this.tableForm.type
+            updateProjectDatabase(e) {
+                apis.updateProjectDatabase(this.projectId, this.dbForm.id, {
+                    databaseName: this.dbForm.databaseName,
+                    databaseDesc: this.dbForm.databaseDesc,
+                    type: this.dbForm.type
                 }).then(data => {
                     if(data.code === 1) {
-                        this.$message.success('修改数据库表成功');
-                        this.$refs['tableForm'].resetFields();
+                        this.$message.success('修改数据库成功');
+                        this.$refs['dbForm'].resetFields();
                         this.$emit('success', e);
                     } else {
                         this.$message.error(data.message);
@@ -109,17 +109,17 @@
             }
         },
         watch: {
-            'tableData.id'(val) {
-                this.tableForm.id = val ? val : '';
+            'dbData.id'(val) {
+                this.dbForm.id = val ? val : '';
             },
-            'tableData.tableName'(val) {
-                this.tableForm.tableName = val ? val : '';
+            'dbData.databaseName'(val) {
+                this.dbForm.databaseName = val ? val : '';
             },
-            'tableData.tableDesc'(val) {
-                this.tableForm.tableDesc = val ? val : '';
+            'dbData.databaseDesc'(val) {
+                this.dbForm.databaseDesc = val ? val : '';
             },
-            'tableData.type'(val) {
-                this.tableForm.type = val ? val : '';
+            'dbData.type'(val) {
+                this.dbForm.type = val ? val : '';
             }
         }
     }

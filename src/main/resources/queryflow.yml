@@ -1,6 +1,6 @@
 defaultPageLimit: 12
 camelCaseToSnake: false
-url: jdbc:mysql://cdb-2iihyikg.bj.tencentcdb.com:10147/bombproj?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC&allowMultiQueries=true&useAffectedRows=true
+url: jdbc:mysql://cdb-5jq7en2c.bj.tencentcdb.com:10223/bombproj?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC&allowMultiQueries=true&useAffectedRows=true
 username: root
 password: 1qaz@WSX
 maxActive: 5

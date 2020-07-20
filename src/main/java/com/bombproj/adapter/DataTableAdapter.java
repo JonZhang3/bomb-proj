@@ -13,7 +13,7 @@ import java.util.List;
 public class DataTableAdapter {
 
     public static List<List<Object>> getInsertListValues(List<DataTableField> fields, String projectId, String datatableId,
-                                                         String version, String userId) {
+                                                         Long dbId, String version, String userId) {
         List<List<Object>> values = new LinkedList<>();
         int i = 1;
         for (DataTableField field : fields) {
@@ -46,6 +46,7 @@ public class DataTableAdapter {
             value.add(now);
             value.add(now);
             value.add(i++);
+            value.add(dbId);
             values.add(value);
         }
         return values;
