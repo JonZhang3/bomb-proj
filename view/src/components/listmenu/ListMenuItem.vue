@@ -78,7 +78,7 @@
     }
     .el-list-menu-item [class^=el-icon-] {
         font-size: 16px;
-        margin-right: 10px;
+        padding-right: 10px;
         text-align: center;
     }
     .el-list-menu-item.is-active {

@@ -15,6 +15,7 @@ import com.bombproj.vo.DataTableFieldVO;
 import com.bombproj.vo.ProjectDataTableVO;
 import com.bombproj.vo.ProjectDatabaseVO;
 import com.queryflow.accessor.A;
+import com.queryflow.page.Pager;
 import com.queryflow.sql.SqlBox;
 import org.springframework.stereotype.Repository;
 
@@ -110,7 +111,7 @@ public class ProjectDatabaseDao {
             .execute();
     }
 
-    public List<ProjectDataTableVO> pageQueryTables(String tableName, String dbId, String projectId, Integer page) {
+    public Pager<ProjectDataTableVO> pageQueryTables(String tableName, String dbId, String projectId, Integer page) {
         StringBuilder sql = new StringBuilder();
         List<Object> values = new LinkedList<>();
         sql.append(" SELECT d.id,d.tableName,d.tableDesc,d.type,d.updateTime,u.nickName createUser FROM project_datatable d ");
@@ -125,7 +126,8 @@ public class ProjectDatabaseDao {
             values.add("%" + tableName + "%");
         }
         sql.append(" ORDER BY d.tableName ");
-        return A.query(sql.toString(), values).list(ProjectDataTableVO.class);
+        return A.page(sql.toString(), values, page, ProjectDataTableVO.class);
+//        return A.query(sql.toString(), values).list(ProjectDataTableVO.class);
     }
 
     public Integer countTableByTableName(String tableName, String tableId, String projectId, Long dbId) {

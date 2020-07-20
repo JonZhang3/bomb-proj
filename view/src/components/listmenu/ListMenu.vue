@@ -49,6 +49,9 @@
                 this.$emit('select', index, item);
                 if(this.router && hasIndex) {
                     let route = index || item.route;
+                    if(this.$route.fullPath === route) {
+                        return;
+                    }
                     try {
                         this.$router.push(route, () => {}, (error) => {
                             this.activeIndex = oldActiveIndex;
@@ -100,5 +103,6 @@
     .el-list-menu {
         list-style: none;
         position: relative;
+        overflow: hidden auto;
     }
 </style>

@@ -13,6 +13,7 @@ import ViewDatatableFields from "../components/project/datatable/ViewDatatableFi
 import EditDatatableFields from "../components/project/datatable/EditDatatableFields";
 import ViewDatabase from "../components/project/datatable/ViewDatabase";
 import ViewDataTable from "../components/project/datatable/ViewDataTable";
+import EditDataTable from "../components/project/datatable/EditDataTable";
 import ProjectFiles from "../components/project/files/ProjectFiles";
 import ProjectAllFiles from "../components/project/files/ProjectAllFiles";
 import ProjectRecentFiles from "../components/project/files/ProjectRecentFiles";
@@ -71,7 +72,7 @@ const routes = [
                 },
                 children: [
                     {
-                        path: 'table/:tableId',
+                        path: 'table/:tableId/view',
                         name: 'project-database-table-view',
                         component: ViewDataTable,
                         meta: {
@@ -80,7 +81,18 @@ const routes = [
                                 return `/project/${id}/db`;
                             }
                         },
-                    }
+                    },
+                    {
+                        path: 'table/:tableId/edit',
+                        name: 'project-database-table-edit',
+                        component: EditDataTable,
+                        meta: {
+                            hasParent: true,
+                            rootMenu: function(id) {
+                                return `/project/${id}/db`;
+                            }
+                        },
+                    },
                 ]
             },
             {

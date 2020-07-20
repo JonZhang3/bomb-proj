@@ -6,23 +6,32 @@
                 <el-breadcrumb slot="content" separator-class="el-icon-arrow-right">
                     <el-breadcrumb-item>项目【{{projectName}}】</el-breadcrumb-item>
                     <el-breadcrumb-item>数据库【{{databaseName}}】</el-breadcrumb-item>
+                    <el-breadcrumb-item v-if="currentTableName">{{currentOperation}}表【{{currentTableName}}】</el-breadcrumb-item>
                 </el-breadcrumb>
             </el-page-header>
         </el-row>
         <el-row style="margin-top: 10px;flex: 1;display: flex;height: 100%;overflow: hidden;">
-            <div style="min-width: 200px;border-right: 1px solid #DCDFE6;height: 100%">
-                <list-menu router>
+            <div style="display: flex;flex-direction: column; width: 200px;border-right: 1px solid #DCDFE6;height: 100%;overflow: hidden;">
+                <div style="padding: 0 5px 10px 5px">
+                    <el-input v-model="tableSearchText" size="mini" placeholder="模糊匹配表名" clearable></el-input>
+                </div>
+                <list-menu router style="flex: 1;" v-loading="tableLoading">
                     <list-menu-item v-for="(item, i) in tables"
-                                    :key="item.id"
-                                    :index="`/project/${$route.params.id}/db/${$route.params.dbId}/table/${item.id}`">
+                                    :key="item.id" @click="handleTableClick(item)"
+                                    :index="`/project/${$route.params.id}/db/${$route.params.dbId}/table/${item.id}/view`">
                         <i class="el-icon-s-grid"></i>
-                        <span>{{item.tableName}}</span>
-                        <i class="el-icon-edit" style="position: absolute;right: 0;"></i>
+                        <el-tooltip effect="dark" :content="item.tableName" placement="right">
+                            <span style="flex: 1;overflow: hidden;text-overflow: ellipsis;font-size: 12px;">{{item.tableName}}</span>
+                        </el-tooltip>
                     </list-menu-item>
                 </list-menu>
+                <div style="text-align: center;">
+                    <el-pagination hide-on-single-page small layout="prev, pager, next"
+                                   :page-size="pager.pageSize" :current-page="pager.page" :total="pager.total"></el-pagination>
+                </div>
             </div>
             <div style="flex: 1;height: 100%;">
-                <router-view></router-view>
+                <router-view>点击右侧</router-view>
             </div>
         </el-row>
     </el-row>
@@ -40,6 +49,11 @@
             ListMenu,
             ListMenuItem
         },
+        provide() {
+            return {
+                root: this
+            }
+        },
         props: {
 
         },
@@ -47,9 +61,18 @@
             return {
                 tables: [],
                 databaseName: this.$route.params.databaseName,
+                currentTableName: '',
+                currentOperation: '查看',
                 dbType: this.$route.params.type,
                 indexesOptions: [],
-                fieldTypeOptions: []
+                fieldTypeOptions: [],
+                tableSearchText: '',
+                tableLoading: false,
+                pager: {
+                    pageSize: 0,
+                    page: 1,
+                    total: 0
+                },
             }
         },
         mounted() {
@@ -75,6 +98,16 @@
         methods: {
             handleBack() {
                 this.$router.replace({path: `/project/${this.projectId}/db`});
+            },
+            changeBreadcrumb(operation) {
+                this.currentOperation = operation;
+            },
+            handleTableEdit(row) {
+
+            },
+            handleTableClick(row) {
+                this.changeBreadcrumb('查看');
+                this.currentTableName = row.tableName;
             },
             init(callback) {
                 const loading = this.$loading({fullscreen: true});
@@ -105,10 +138,16 @@
                     }
                 });
             },
-            listDatabaseTables() {
-                apis.listProjectDataTables(this.projectId, this.databaseId).then(data => {
+            listDatabaseTables(useGlobalLoading = false) {
+                this.tableLoading = true;
+                apis.listProjectDataTables(this.projectId, this.databaseId,
+                    {tableName: this.tableSearchText}, {useLoading: useGlobalLoading}).then(data => {
+                    this.tableLoading = false;
                     if(data.code === 1) {
-                        this.tables = data.data;
+                        this.pager.pageSize = data.data.limit;
+                        this.pager.page = data.data.page;
+                        this.pager.total = data.data.total;
+                        this.tables = data.data.records;
                     } else {
                         this.$message.error(data.message);
                     }
@@ -118,3 +157,7 @@
     }
 
 </script>
+
+<style>
+
+</style>

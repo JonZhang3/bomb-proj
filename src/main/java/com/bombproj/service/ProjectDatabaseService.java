@@ -19,6 +19,7 @@ import com.bombproj.vo.ProjectDataTableVO;
 import com.bombproj.vo.ProjectDatabaseVO;
 import com.google.gson.reflect.TypeToken;
 import com.queryflow.key.KeyGenerateUtil;
+import com.queryflow.page.Pager;
 import com.queryflow.sql.SqlBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -135,7 +136,7 @@ public class ProjectDatabaseService {
         // TODO log
     }
 
-    public List<ProjectDataTableVO> pageListTables(String tableName, String dbId, String projectId, Integer page) {
+    public Pager<ProjectDataTableVO> pageListTables(String tableName, String dbId, String projectId, Integer page) {
         if (page == null || page <= 0) {
             page = 1;
         }
