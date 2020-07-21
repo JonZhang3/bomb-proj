@@ -1,5 +1,5 @@
 <template>
-    <el-row style="padding: 0 10px">
+    <el-row class="project-table-info">
         <el-row style="display: flex;align-items: center;">
             <el-col :span="12">
                 <span style="font-size: 14px;color: #606266">查看表【{{tableData.tableName}}】</span>
@@ -18,61 +18,55 @@
                 </el-button-group>
             </el-col>
         </el-row>
-        <el-tabs v-model="activeTab">
-            <el-tab-pane label="基本信息" name="baseInfo">{{tableData.tableName}}</el-tab-pane>
+        <el-tabs v-model="activeTab" style="flex: 1;overflow: hidden;">
+            <el-tab-pane ref="baseInfoEl" label="基本信息" name="baseInfo" style="padding: 0 10px;">
+                <el-form>
+                    <el-form-item label="表名：">
+                        <span>{{tableData.tableName}}</span>
+                    </el-form-item>
+                    <el-form-item label="注释：">
+                        <span>{{tableData.tableDesc}}</span>
+                    </el-form-item>
+                    <el-form-item label="创建者：">
+                        <span>{{tableData.createUser}}</span>
+                    </el-form-item>
+                </el-form>
+            </el-tab-pane>
             <el-tab-pane label="列信息" name="columnsInfo">
-                <el-table
-                    :data="fields"
-                    size="medium" stripe>
-                    <el-table-column label="字段名" prop="fieldName"></el-table-column>
-                    <el-table-column label="类型" prop="type"></el-table-column>
-                    <el-table-column label="长度" prop="length"></el-table-column>
-                    <el-table-column label="注释" prop="notes"></el-table-column>
-                    <el-table-column label="非空" prop="notNull">
-                        <template slot-scope="scope">
-                            <i v-if="scope.row.notNull === '1'"
+                <div ref="tableWrapper" style="height: 100%;display: flex;flex-direction: column;">
+                    <div style="text-align: right;">
+                        <search-input style="width: 30%;" v-model="fieldNameSearchText" placeholder="模糊搜索列名"></search-input>
+                    </div>
+                    <bomb-table :columns="columns"
+                                :data="fields.filter(data => !fieldNameSearchText || data.fieldName.toLowerCase().includes(fieldNameSearchText.toLowerCase()))"
+                                fix-header>
+                        <template slot-scope="scope" slot="notNull">
+                            <i v-if="scope.notNull === '1'"
                                style="font-size: 20px; color: #409EFF;" class="el-icon-success"></i>
                             <i v-else style="font-size: 20px;" class="el-icon-error"></i>
                         </template>
-                    </el-table-column>
-                    <el-table-column label="主键" prop="pk">
-                        <template slot-scope="scope">
-                            <i v-if="scope.row.pk === '1'"
+                        <template slot-scope="scope" slot="pk">
+                            <i v-if="scope.pk === '1'"
                                style="font-size: 20px; color: #409EFF;" class="el-icon-success"></i>
                             <i v-else style="font-size: 20px;" class="el-icon-error"></i>
                         </template>
-                    </el-table-column>
-                    <el-table-column label="自增" prop="autoIncrement">
-                        <template slot-scope="scope">
-                            <i v-if="scope.row.autoIncrement === '1'"
+                        <template slot-scope="scope" slot="autoIncrement">
+                            <i v-if="scope.autoIncrement === '1'"
                                style="font-size: 20px; color: #409EFF;" class="el-icon-success"></i>
                             <i v-else style="font-size: 20px;" class="el-icon-error"></i>
                         </template>
-                    </el-table-column>
-                    <el-table-column label="默认值" prop="defaultValue"></el-table-column>
-                    <el-table-column label="其他">
-                        <template slot-scope="scope">
-                            <el-popover placement="top-start" trigger="click">
-                                <el-table :data="[{indexes: scope.row.indexes, indexesName: scope.row.indexesName, createUserName: scope.row.createUserName}]">
-                                    <el-table-column label="索引" min-width="140">
-                                        <template slot-scope="scope">
-                                            <span>{{isArray(scope.row.indexes) ? scope.row.indexes.join('/') : '-'}}</span>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column label="索引名" prop="indexesName" min-width="120">
-                                        <template slot-scope="scope">
-                                            <span>{{scope.row.indexesName ? scope.row.indexesName : '-'}}</span>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column label="创建者" prop="createUserName" min-width="120"></el-table-column>
-                                </el-table>
-                                <el-button size="mini" slot="reference">其 他</el-button>
-                            </el-popover>
-                        </template>
-                    </el-table-column>
+                    </bomb-table>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="索引" name="indexesInfo">
+                <el-table>
+                    <el-table-column label="索引名" prop="fieldName"></el-table-column>
+                    <el-table-column label="包含列" prop="fieldName"></el-table-column>
+                    <el-table-column label="索引名" prop="fieldName"></el-table-column>
+                    <el-table-column label="索引类型" prop="fieldName"></el-table-column>
+                    <el-table-column label="索引方式" prop="fieldName"></el-table-column>
                 </el-table>
             </el-tab-pane>
-            <el-tab-pane label="索引" name="indexesInfo">索引</el-tab-pane>
         </el-tabs>
     </el-row>
 </template>
@@ -81,15 +75,31 @@
 
     import apis from "../../../../../api/apis";
     import utils from "../../../../../common/utils";
+    import SearchInput from "../../../../../components/SearchInput";
 
     export default {
         name: 'ViewDataTable',
         inject: ['root'],
+        components: {
+            SearchInput
+        },
         data() {
             return {
                 activeTab: 'baseInfo',
+                fieldNameSearchText: '',
+                tableHeight: '',
                 currentVersion: '',
                 fieldVersions: [],
+                columns: [
+                    {title: '列名', key: 'fieldName'},
+                    {title: '类型', key: 'type'},
+                    {title: '长度', key: 'length'},
+                    {title: '注释', key: 'notes'},
+                    {title: '非空', key: 'notNull', slot: 'notNull'},
+                    {title: '主键', key: 'pk', slot: 'pk'},
+                    {title: '自增', key: 'autoIncrement', slot: 'autoIncrement'},
+                    {title: '默认值', key: 'defaultValue'},
+                ],
                 fields: [],
                 tableData: this.root.currentTableData
             }
@@ -114,6 +124,7 @@
         watch: {
             tableId() {
                 this.activeTab = 'baseInfo';
+                this.fieldNameSearchText = '';
                 this.getDataTableFields();
             },
             'root.currentTableData'(val) {
@@ -175,9 +186,29 @@
 
 </script>
 
-<style scoped>
-    .el-tabs__item {
+<style>
+    .project-table-info {
+        padding: 0 10px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+
+    }
+    .project-table-info .el-tabs {
+        display: flex;
+        flex-direction: column;
+    }
+    .project-table-info .el-tabs__item {
         height: 30px;
         line-height: 30px;
+    }
+    .project-table-info .el-form-item {
+        margin-bottom: 0;
+    }
+    .project-table-info .el-tabs__content {
+        flex: 1;
+    }
+    .project-table-info .el-tab-pane {
+        height: 100%;
     }
 </style>

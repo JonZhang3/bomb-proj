@@ -2,6 +2,7 @@
     position: relative;
     color: #3F536E;
     font-size: 14px;
+    overflow: hidden;
 }
 .at-table .at-table__tbody .at-table-row-active{
     background-color: #eaf4ff;
@@ -69,28 +70,22 @@
     margin-left: 16px;
 }
 
-.at-table--fixHeight .at-table__content {
+.at-table--fixHeader .at-table__content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     border-bottom-width: 1px;
 }
 
-.at-table--fixHeight .at-table__header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-}
-
-.at-table--fixHeight .at-table__header table {
-    border: 1px solid #ECECEC;
+.at-table--fixHeader .at-table__header table {
+    /*border: 1px solid #ECECEC;*/
     border-bottom: none;
 }
 
-.at-table--fixHeight .at-table__body {
-    overflow: scroll;
-}
-
-.at-table--fixHeight .at-table__tbody > tr:last-child td {
-    border-bottom: none;
+.at-table--fixHeader .at-table__body {
+    flex: 1;
+    overflow: auto;
 }
 
 .at-table--stripe .at-table__tbody > tr:nth-child(2n) {
@@ -141,7 +136,7 @@
     flex-direction: column;
     align-items: center;
     height: 34px;
-    width: 24px;
+    /*width: 24px;*/
     vertical-align: middle;
     cursor: pointer;
     overflow: initial;

@@ -40,7 +40,7 @@
         <el-row ref="tableRoot" style="display: flex;flex: 1;overflow: hidden;">
             <el-row ref="tableWrapper" style="display: flex;flex-direction: column; flex: 1;position: relative;">
                 <bomb-table :columns="columns" :data="files"
-                            optional ref="fileTable"
+                            optional ref="fileTable" fix-header
                             :height="fileTableHeight" style="flex: 1;"
                             @on-selection-change="handleTableSelectChange"
                             @on-sort-change="handleTableSortChange"
@@ -78,7 +78,6 @@
             return {
                 customOperationFooterShow: false,
                 fileTableHeight: 0,
-                fileTableWidth: 0,
                 searchType: '1',
                 fileDetailSideBarShow: true,
                 columns: [
@@ -99,21 +98,21 @@
                     },
                     {fileName: "2Cloud Studio.pdf", creator: '张三', updateTime: '123', fileSize: '12M'},
                     {fileName: '3Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
-                    // {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
-                    // {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
-                    // {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
-                    // {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
-                    // {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
-                    // {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
-                    // {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
-                    // {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
-                    // {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
-                    // {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
-                    // {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
-                    // {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
-                    // {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
-                    // {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
-                    // {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
+                    {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
+                    {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
+                    {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
+                    {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
+                    {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
+                    {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
+                    {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
+                    {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
+                    {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
+                    {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
+                    {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
+                    {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
+                    {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
+                    {fileName: 'Cloud Studio.pdf', creator: '张三', updateTime: '123', fileSize: '12M'},
+                    {fileName: 'Cloud Studio.pdf234', creator: '张三', updateTime: '123', fileSize: '12M'},
                 ],
                 selection: [],// 被选中行的数组
                 activeRowData: {}

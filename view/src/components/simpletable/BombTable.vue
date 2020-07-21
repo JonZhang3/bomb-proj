@@ -2,7 +2,7 @@
     <div
             class="at-table"
             :class="{
-      'at-table--fixHeight': this.height,
+        'at-table--fixHeader': this.fixHeader,
       'at-table--stripe': this.stripe,
       [`at-table--${this.size}`]: this.size,
       [`at-table--border`]: this.border
@@ -12,7 +12,7 @@
         <!-- S Content -->
         <div class="at-table__content" :style="contentStyle">
             <!-- S Header -->
-            <div class="at-table__header" v-if="height">
+            <div class="at-table__header" v-if="fixHeader">
                 <table>
                     <colgroup>
                         <col v-for="(column, index) in columnsData" :width="setCellWidth(column, index)">
@@ -57,7 +57,7 @@
                     <colgroup>
                         <col v-for="(column, index) in columnsData" :width="setCellWidth(column, index)">
                     </colgroup>
-                    <thead class="at-table__thead" v-if="!height" ref="header">
+                    <thead class="at-table__thead" v-if="!fixHeader" ref="header">
                     <tr>
                         <!-- S Checkbox -->
                         <th v-if="optional" class="at-table__cell at-table__column-selection">
@@ -116,7 +116,7 @@
                     <tr>
                         <td class="at-table__cell at-table__cell--nodata"
                             :colspan="optional ? columns.length + 1 : columns.length">
-                            <slot name="emptyText">{{ t('at.table.emptyText') }}</slot>
+                            <slot name="emptyText">暂无数据</slot>
                         </td>
                     </tr>
                     </tbody>
@@ -213,6 +213,10 @@
             height: {
                 type: [Number, String]
             },
+            fixHeader: {
+                type: Boolean,
+                default: false
+            },
             highlightCurrentRow: {
                 type: Boolean,
                 default: false
@@ -251,6 +255,7 @@
                 this.sortData = this.makeDataWithPaginate()
             },
             data() {
+                this.objData = this.makeObjData();
                 this.sortData = this.makeDataWithSortAndPage()
             }
         },
@@ -260,6 +265,8 @@
 
                 if (this.height) {
                     styles.height = `${this.height}px`
+                } else {
+                    styles.height = '100%';
                 }
                 if (this.width) {
                     styles.width = `${this.width}px`
@@ -301,16 +308,16 @@
         },
         methods: {
             calculateBodyHeight() {
-                if (this.height) {
-                    this.$nextTick(() => {
-                        const headerHeight = parseInt(getStyle(this.$refs.header, 'height')) || 0
-                        const footerHeight = parseInt(getStyle(this.$refs.footer, 'height')) || 0
-
-                        this.bodyHeight = this.height - headerHeight - footerHeight
-                    })
-                } else {
-                    this.bodyHeight = 0
-                }
+                // if (this.height) {
+                //     this.$nextTick(() => {
+                //         const headerHeight = parseInt(getStyle(this.$refs.header, 'height')) || 0
+                //         const footerHeight = parseInt(getStyle(this.$refs.footer, 'height')) || 0
+                //
+                //         this.bodyHeight = this.height - headerHeight - footerHeight
+                //     })
+                // } else {
+                //     this.bodyHeight = 0
+                // }
             },
             makeColumns() {
                 const columns = deepCopy(this.columns)
@@ -334,16 +341,16 @@
             },
             makeObjData() {
                 const rowData = {}
+                if(this.data && this.data.length > 0) {
+                    this.data.forEach((row, index) => {
+                        const newRow = deepCopy(row)
 
-                this.data.forEach((row, index) => {
-                    const newRow = deepCopy(row)
+                        newRow.isChecked = !!newRow.isChecked
+                        newRow._isHover = false;
 
-                    newRow.isChecked = !!newRow.isChecked
-                    newRow._isHover = false;
-
-                    rowData[index] = newRow
-                })
-
+                        rowData[index] = newRow
+                    })
+                }
                 return rowData
             },
             makeDataWithSortAndPage(pageNum) {
@@ -466,8 +473,7 @@
             handleResize() {
                 this.$nextTick(() => {
                     const columnsWidth = {}
-
-                    if (this.data.length) {
+                    if (this.data && this.data.length > 0) {
                         const $td = this.$refs.body.querySelectorAll('tr')[0].querySelectorAll('td')
 
                         for (let i = 0; i < $td.length; i++) {

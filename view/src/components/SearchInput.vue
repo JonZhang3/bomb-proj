@@ -1,6 +1,6 @@
 <template>
     <el-input :size="size" v-bind="$attrs" class="scoped-search-input" @input="handleInput" v-model="searchText">
-        <el-button slot="suffix" type="primary"
+        <el-button v-if="buttonText" slot="suffix" type="primary"
                    @click="handleClick"
                    size="small" :style="buttonStyle">{{buttonText}}</el-button>
     </el-input>
