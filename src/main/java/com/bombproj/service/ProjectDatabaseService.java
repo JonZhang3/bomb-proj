@@ -155,7 +155,6 @@ public class ProjectDatabaseService {
         table.setTableDesc(dto.getTableDesc());
         table.setCreateTime(now);
         table.setUpdateTime(now);
-        table.setType(dto.getType());
         table.setState(ProjectDataTableState.COMMON.getState());
         table.setProjectId(dto.getProjectId());
         table.setUserId(dto.getUserId());

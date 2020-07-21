@@ -14,7 +14,6 @@ public class ProjectDataTable {
     private String tableDesc;
     private Date createTime;
     private Date updateTime;
-    private String type;
     private Integer state;
     private String projectId;
     private String userId;

@@ -114,7 +114,8 @@ public class ProjectDatabaseDao {
     public Pager<ProjectDataTableVO> pageQueryTables(String tableName, String dbId, String projectId, Integer page) {
         StringBuilder sql = new StringBuilder();
         List<Object> values = new LinkedList<>();
-        sql.append(" SELECT d.id,d.tableName,d.tableDesc,d.type,d.updateTime,u.nickName createUser FROM project_datatable d ");
+        sql.append(" SELECT d.id,d.tableName,d.tableDesc,b.type type,d.updateTime,u.nickName createUser FROM project_datatable d ");
+        sql.append(" JOIN project_database b ON d.databaseId = b.id ");
         sql.append(" JOIN project p ON d.projectId = p.id JOIN users u ON d.userId = u.id ");
         sql.append(" WHERE d.state = ? AND p.state = ? AND d.projectId = ? AND databaseId = ? ");
         values.add(ProjectDataTableState.COMMON.getState());
@@ -127,7 +128,6 @@ public class ProjectDatabaseDao {
         }
         sql.append(" ORDER BY d.tableName ");
         return A.page(sql.toString(), values, page, ProjectDataTableVO.class);
-//        return A.query(sql.toString(), values).list(ProjectDataTableVO.class);
     }
 
     public Integer countTableByTableName(String tableName, String tableId, String projectId, Long dbId) {
@@ -154,7 +154,6 @@ public class ProjectDatabaseDao {
         SqlBox.update("project_datatable")
             .set("tableName", dto.getTableName())
             .set("tableDesc", dto.getTableDesc())
-            .set("type", dto.getType())
             .set("updateTime", new Date())
             .where().eq("projectId", dto.getProjectId())
             .and().eq("databaseId", dto.getDatabaseId())

@@ -1,7 +1,10 @@
 <template>
     <el-row style="padding: 0 10px">
-        <el-row>
+        <el-row style="display: flex;align-items: center;">
             <el-col :span="12">
+                <span style="font-size: 14px;color: #606266">编辑表【{{tableData.tableName}}】</span>
+            </el-col>
+            <el-col :span="12" style="display: flex;align-items: center; justify-content: flex-end">
                 <el-button-group>
                     <el-button icon="el-icon-receiving" @click="saveDataTableFields"
                                type="primary" size="mini" round>保存</el-button>
@@ -9,8 +12,9 @@
             </el-col>
         </el-row>
         <el-row style="margin-top: 10px;">
-            <el-tabs>
-                <el-tab-pane label="列信息" name="first">
+            <el-tabs v-model="activeTab">
+                <el-tab-pane label="基本信息" name="baseInfo">{{tableData.tableName}}</el-tab-pane>
+                <el-tab-pane label="列信息" name="columnsInfo">
                     <draggable-table v-model="formData.fields"
                                      draggable-element=".drag-ele"
                                      :form-data="formData" ref="fieldsTable" size="small"
@@ -101,8 +105,7 @@
                         </el-table-column>
                     </draggable-table>
                 </el-tab-pane>
-                <el-tab-pane label="索引" name="second">索引</el-tab-pane>
-                <el-tab-pane label="外键" name="third">外键</el-tab-pane>
+                <el-tab-pane label="索引" name="indexesInfo">索引</el-tab-pane>
             </el-tabs>
         </el-row>
     </el-row>
@@ -117,11 +120,13 @@
 
     export default {
         name: 'EditDataTable',
+        inject: ['root'],
         components: {
             DraggableTable
         },
         data() {
             return {
+                activeTab: 'baseInfo',
                 formData: {
                     fields: [
                         {index: 0, fieldName: '', type: '', length: 0, notNull: '0', pk: '0', autoIncrement: '0', defaultValue: '', notes: '', indexes: '', indexesName: '', marker: ''}
@@ -152,7 +157,8 @@
                     marker: ''
                 },
                 indexesOptions: [],
-                fieldTypeOptions: []
+                fieldTypeOptions: [],
+                tableData: this.root.currentTableData
             }
         },
         computed: {
@@ -171,6 +177,11 @@
                 this.getDataTableFields();
             });
         },
+        // watch: {
+        //     'root.currentTableData'(val) {
+        //         this.tableData = val;
+        //     }
+        // },
         methods: {
             isArray(src) {
                 return utils.isArray(src);
@@ -186,8 +197,8 @@
             init(callback) {
                 const loading = this.$loading({fullscreen: true});
                 Promise.all([
-                    apis.getDataTableIndexes(this.dbType, {useLoading: false}),
-                    apis.getDataTableFieldTypes(this.dbType, {useLoading: false})
+                    apis.getDataTableIndexes(this.tableData.type, {useLoading: false}),
+                    apis.getDataTableFieldTypes(this.tableData.type, {useLoading: false})
                 ]).then(datas => {
                     loading.close();
                     if(datas && datas.length === 2) {

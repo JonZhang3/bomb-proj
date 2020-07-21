@@ -1,7 +1,7 @@
 <template>
     <li :key="index"
         class="el-list-menu-item"
-        :class="{'is-active': active, 'is-disabled': disabled}"
+        :class="{'is-active': rootMenu.activeIndex === index, 'is-disabled': disabled}"
         :style="itemStyle"
         @click="handleClick"
         @mouseenter="handleMouseEnter"

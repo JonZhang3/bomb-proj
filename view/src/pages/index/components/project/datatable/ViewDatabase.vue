@@ -6,7 +6,7 @@
                 <el-breadcrumb slot="content" separator-class="el-icon-arrow-right">
                     <el-breadcrumb-item>项目【{{projectName}}】</el-breadcrumb-item>
                     <el-breadcrumb-item>数据库【{{databaseName}}】</el-breadcrumb-item>
-                    <el-breadcrumb-item v-if="currentTableName">{{currentOperation}}表【{{currentTableName}}】</el-breadcrumb-item>
+<!--                    <el-breadcrumb-item v-if="currentTableData.tableName">{{currentOperation}}表【{{currentTableData.tableName}}】</el-breadcrumb-item>-->
                 </el-breadcrumb>
             </el-page-header>
         </el-row>
@@ -15,7 +15,9 @@
                 <div style="padding: 0 5px 10px 5px">
                     <el-input v-model="tableSearchText" size="mini" placeholder="模糊匹配表名" clearable></el-input>
                 </div>
-                <list-menu router style="flex: 1;" v-loading="tableLoading">
+                <list-menu router style="flex: 1;"
+                           :default-active="tableListActiveIndex"
+                           v-loading="tableLoading">
                     <list-menu-item v-for="(item, i) in tables"
                                     :key="item.id" @click="handleTableClick(item)"
                                     :index="`/project/${$route.params.id}/db/${$route.params.dbId}/table/${item.id}/view`">
@@ -54,14 +56,12 @@
                 root: this
             }
         },
-        props: {
-
-        },
         data() {
             return {
+                tableListActiveIndex: '',
                 tables: [],
                 databaseName: this.$route.params.databaseName,
-                currentTableName: '',
+                currentTableData: {},
                 currentOperation: '查看',
                 dbType: this.$route.params.type,
                 indexesOptions: [],
@@ -76,13 +76,17 @@
             }
         },
         mounted() {
+            this.tableListActiveIndex = this.$route.path;
             if(!this.databaseName) {
                 this.handleBack();
                 return;
             }
-            this.init(() => {
-                this.listDatabaseTables();
-            });
+            this.listDatabaseTables();
+        },
+        watch: {
+            '$route.path'(val) {
+                this.tableListActiveIndex = val;
+            }
         },
         computed: {
             projectName() {
@@ -102,41 +106,9 @@
             changeBreadcrumb(operation) {
                 this.currentOperation = operation;
             },
-            handleTableEdit(row) {
-
-            },
             handleTableClick(row) {
                 this.changeBreadcrumb('查看');
-                this.currentTableName = row.tableName;
-            },
-            init(callback) {
-                const loading = this.$loading({fullscreen: true});
-                Promise.all([
-                    apis.getDataTableIndexes(this.dbType, {useLoading: false}),
-                    apis.getDataTableFieldTypes(this.dbType, {useLoading: false})
-                ]).then(datas => {
-                    loading.close();
-                    if(datas && datas.length === 2) {
-                        let initSuccess = true;
-                        if(datas[0].code === 1) {
-                            this.indexesOptions = datas[0].data;
-                        } else {
-                            initSuccess = false;
-                            this.$message.error(datas[0].message);
-                        }
-                        if(datas[1].code === 1) {
-                            this.fieldTypeOptions = datas[1].data;
-                        } else {
-                            initSuccess = false;
-                            this.$message.error(datas[1].message);
-                        }
-                        if(initSuccess) {
-                            callback && callback();
-                        }
-                    } else {
-                        this.$message.error("获取初始化信息失败");
-                    }
-                });
+                this.currentTableData = row;
             },
             listDatabaseTables(useGlobalLoading = false) {
                 this.tableLoading = true;

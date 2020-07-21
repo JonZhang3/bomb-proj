@@ -23,7 +23,4 @@ public class ProjectDataTableDto {
     @Length(max = 255, message = "描述最大长度为 255")
     private String tableDesc;
 
-    @NotEmpty(message = "数据库类型不能为空")
-    private String type;
-
 }

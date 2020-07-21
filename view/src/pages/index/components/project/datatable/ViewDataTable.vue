@@ -1,22 +1,25 @@
 <template>
     <el-row style="padding: 0 10px">
-        <el-row>
+        <el-row style="display: flex;align-items: center;">
             <el-col :span="12">
+                <span style="font-size: 14px;color: #606266">查看表【{{tableData.tableName}}】</span>
+            </el-col>
+            <el-col :span="12" style="display: flex;align-items: center; justify-content: flex-end">
+                <div v-if="activeTab === 'columnsInfo'" style="margin-right: 10px;">
+                    <span style="margin-left: 10px;font-size: 14px;color: #606266;">版本：</span>
+                    <el-select v-model="currentVersion" @change="handleTableVersionChange" size="mini">
+                        <el-option v-for="item in fieldVersions" :key="item" :value="item" :label="item"></el-option>
+                    </el-select>
+                </div>
                 <el-button-group>
                     <el-button @click="handleRefresh" icon="el-icon-refresh" size="mini" round>刷新</el-button>
                     <el-button @click="handleEdit" type="primary" icon="el-icon-edit" size="mini" round>编辑</el-button>
                     <el-button @click="handleTableDelete" type="danger" icon="el-icon-delete" size="mini" round>删除</el-button>
                 </el-button-group>
             </el-col>
-            <el-col :span="12" style="text-align: right">
-                <span style="margin-left: 10px;font-size: 14px;color: #606266;">版本：</span>
-                <el-select v-model="currentVersion" @change="handleTableVersionChange" size="mini">
-                    <el-option v-for="item in fieldVersions" :key="item" :value="item" :label="item"></el-option>
-                </el-select>
-            </el-col>
         </el-row>
         <el-tabs v-model="activeTab">
-            <el-tab-pane label="基本信息" name="baseInfo">基本信息</el-tab-pane>
+            <el-tab-pane label="基本信息" name="baseInfo">{{tableData.tableName}}</el-tab-pane>
             <el-tab-pane label="列信息" name="columnsInfo">
                 <el-table
                     :data="fields"
@@ -77,6 +80,7 @@
 <script>
 
     import apis from "../../../../../api/apis";
+    import utils from "../../../../../common/utils";
 
     export default {
         name: 'ViewDataTable',
@@ -86,7 +90,8 @@
                 activeTab: 'baseInfo',
                 currentVersion: '',
                 fieldVersions: [],
-                fields: []
+                fields: [],
+                tableData: this.root.currentTableData
             }
         },
         computed: {
@@ -110,18 +115,24 @@
             tableId() {
                 this.activeTab = 'baseInfo';
                 this.getDataTableFields();
+            },
+            'root.currentTableData'(val) {
+                this.tableData = val;
             }
         },
         methods: {
+            isArray(src) {
+                return utils.isArray(src);
+            },
             handleRefresh() {
                 this.getDataTableFields();
             },
             handleEdit() {
                 this.root.changeBreadcrumb('编辑');
-                this.$router.replace({path: `/project/${this.projectId}/db/${this.databaseId}/table/${this.tableId}/edit`});
+                this.$router.push({path: `/project/${this.projectId}/db/${this.databaseId}/table/${this.tableId}/edit`});
             },
             handleTableDelete() {
-                this.$confirm(`<span>确定删除 [<strong style="color: #f56c6c;"></strong>] 成员吗</span>`, "提示", {
+                this.$confirm(`<span>确定删除 [<strong style="color: #f56c6c;">${this.tableData.tableName}</strong>] 表吗</span>`, "提示", {
                     dangerouslyUseHTMLString: true,
                     confirmButtonText: '删除',
                     type: 'warning'
