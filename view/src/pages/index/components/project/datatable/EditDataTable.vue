@@ -1,5 +1,5 @@
 <template>
-    <el-row style="padding: 0 10px">
+    <el-row style="padding: 0 10px" class="project-table-info">
         <el-row style="display: flex;align-items: center;">
             <el-col :span="12">
                 <span style="font-size: 14px;color: #606266">编辑表【{{tableData.tableName}}】</span>
@@ -13,7 +13,16 @@
         </el-row>
         <el-row style="margin-top: 10px;">
             <el-tabs v-model="activeTab">
-                <el-tab-pane label="基本信息" name="baseInfo">{{tableData.tableName}}</el-tab-pane>
+                <el-tab-pane label="基本信息" name="baseInfo">
+                    <el-form style="width: 40%" label-width="80px">
+                        <el-form-item label="表名：">
+                            <el-input size="small" v-model="tableData.tableName"></el-input>
+                        </el-form-item>
+                        <el-form-item label="注释：">
+                            <el-input type="textarea" size="small" v-model="tableData.tableDesc"></el-input>
+                        </el-form-item>
+                    </el-form>
+                </el-tab-pane>
                 <el-tab-pane label="列信息" name="columnsInfo">
                     <draggable-table v-model="formData.fields"
                                      draggable-element=".drag-ele"

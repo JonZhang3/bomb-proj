@@ -177,6 +177,10 @@ public class ProjectDatabaseService {
         //TODO log
     }
 
+    public Map<String, Object> getTableIndexes(String tableId, String projectId, String version) {
+        return null;
+    }
+
     public Map<String, Object> getTableFields(String tableId, String projectId, String version) {
         List<String> versions = this.projectDatabaseDao.queryTableFieldVersions(tableId, projectId);
         List<DataTableFieldVO> fields = this.projectDatabaseDao.queryTableFields(tableId, projectId, version);

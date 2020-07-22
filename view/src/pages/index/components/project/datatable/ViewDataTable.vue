@@ -20,7 +20,7 @@
         </el-row>
         <el-tabs v-model="activeTab" style="flex: 1;overflow: hidden;">
             <el-tab-pane ref="baseInfoEl" label="基本信息" name="baseInfo" style="padding: 0 10px;">
-                <el-form>
+                <el-form label-width="80px">
                     <el-form-item label="表名：">
                         <span>{{tableData.tableName}}</span>
                     </el-form-item>
@@ -192,7 +192,6 @@
         height: 100%;
         display: flex;
         flex-direction: column;
-
     }
     .project-table-info .el-tabs {
         display: flex;

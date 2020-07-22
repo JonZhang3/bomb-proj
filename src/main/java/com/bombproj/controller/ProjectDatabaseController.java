@@ -152,6 +152,17 @@ public class ProjectDatabaseController {
     }
 
     @AuthPassport
+    @GetMapping("/{projectId}/db/{dbId}/table/{tableId}/indexes")
+    public JsonResult getTableIndexes(@PathVariable("projectId") String projectId,
+                                      @PathVariable("dbId") Long dbId,
+                                      @PathVariable("tableId") String tableId,
+                                      @RequestParam(value = "version", required = false) String version) {
+        SessionConfig sessionConfig = SessionConfig.current();
+        // TODO check permission
+        return JsonResult.success(this.projectDatabaseService.getTableIndexes(tableId, projectId, version));
+    }
+
+    @AuthPassport
     @GetMapping("/{projectId}/db/{dbId}/table/{tableId}/fields")
     public JsonResult getTableFields(@PathVariable("projectId") String projectId,
                                      @PathVariable("dbId") Long dbId,
