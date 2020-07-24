@@ -3,7 +3,10 @@ package com.bombproj.dto;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 public class ProjectDatabaseDto {
@@ -22,5 +25,15 @@ public class ProjectDatabaseDto {
     @NotEmpty(message = "数据库类型不能为空")
     private String type;
 
+    @NotEmpty(message = "数据库主机名不能为空")
+    private String host;
+
+    @NotNull(message = "数据库端口号不能为空")
+    @Max(value = 65535, message = "端口号必须在 1~65535 之间")
+    @Min(value = 1, message = "端口号必须在 1~65535 之间")
+    private Integer port;
+
+    private String userName;
+    private String password;
 
 }
