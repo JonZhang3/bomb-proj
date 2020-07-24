@@ -109,6 +109,9 @@ public class ProjectDatabaseService {
         Date now = new Date();
         database.setDatabaseName(dto.getDatabaseName());
         database.setDatabaseDesc(dto.getDatabaseDesc());
+        database.setDbHost(dto.getHost());
+        database.setDbPort(dto.getPort() + "");
+        database.setUserName(dto.getUserName());
         database.setType(dto.getType());
         database.setState(ProjectDatabaseState.COMMON.getState());
         database.setProjectId(dto.getProjectId());

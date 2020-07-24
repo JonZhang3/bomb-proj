@@ -25,7 +25,7 @@
             <el-table :data="tableData"
                       :row-style="{cursor: 'pointer'}"
                       stripe style="width: 100%;" @row-click="handleProjectTableRowClick">
-                <el-table-column prop="img" label="封面">
+                <el-table-column prop="img" label="封面" width="80">
                     <template slot-scope="scope">
                         <img v-if="scope.row.cover" alt="cover" :src="coverBaseUrl + scope.row.cover" style="width: 32px;height: 32px;border-radius: 5px;">
                         <img v-else src="../../../assets/default_cover.png" alt="cover" style="width: 32px;height: 32px;border-radius: 5px;">

@@ -88,3 +88,17 @@
 .side-trigger:hover {
     background-image: url("../../../assets/sidebar-right-active.svg");
 }
+
+.el-form-item__tip {
+    color: #909399;
+    font-size: 12px;
+    line-height: 1;
+    padding-bottom: 4px;
+    position: absolute;
+    top: -16px;
+    left: 0;
+}
+
+.el-form-item.has-tip .el-form-item__content {
+    margin-top: 16px;
+}

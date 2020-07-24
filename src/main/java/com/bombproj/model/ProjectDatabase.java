@@ -16,6 +16,9 @@ public class ProjectDatabase {
     private String databaseName;
     private String databaseDesc;
     private String type;
+    private String dbHost;
+    private String dbPort;
+    private String userName;
     private Integer state;
     private String projectId;
     private String userId;

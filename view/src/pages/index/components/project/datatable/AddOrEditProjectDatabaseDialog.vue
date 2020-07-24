@@ -2,7 +2,7 @@
     <el-dialog width="30%" :title="edit ? '修改数据库' : '新增数据库'" v-bind="$attrs"
                class="add-project-member-dialog"
                :before-close="handleCancel" :close-on-click-modal="false">
-        <el-form :model="dbForm" ref="dbForm" :rules="dbFormRules" label-width="100px">
+        <el-form :model="dbForm" ref="dbForm" :rules="dbFormRules" label-width="100px" size="medium">
             <el-form-item prop="databaseName" label="数据库名">
                 <el-input v-model="dbForm.databaseName"></el-input>
             </el-form-item>
@@ -10,10 +10,24 @@
                 <el-input v-model="dbForm.databaseDesc"></el-input>
             </el-form-item>
             <el-form-item prop="type" label="数据库类型">
-                <el-select v-model="dbForm.type" placeholder="请选择" style="width: 100%;">
+                <span v-if="!edit" class="el-form-item__tip"><i class="el-icon-warning"></i> 数据库类型在选择保存后不可修改</span>
+                <el-select v-model="dbForm.type" placeholder="请选择" :disabled="edit" style="width: 100%;">
                     <el-option key="mysql" value="mysql" label="MySQL"></el-option>
                     <el-option key="oracle" value="oracle" label="Oracle"></el-option>
                 </el-select>
+            </el-form-item>
+            <el-form-item prop="dbHost" label="Host">
+                <el-input v-model="dbForm.dbHost"></el-input>
+            </el-form-item>
+            <el-form-item prop="dbPort" label="Port">
+                <el-input v-model="dbForm.dbPort"></el-input>
+            </el-form-item>
+            <el-form-item prop="userName" label="用户名">
+                <el-input v-model="dbForm.userName"></el-input>
+            </el-form-item>
+            <el-form-item v-if="!edit" prop="password" label="密码">
+                <span class="el-form-item__tip"><i class="el-icon-warning"></i> 密码不会被保存，仅用于初始化数据库信息</span>
+                <el-input></el-input>
             </el-form-item>
         </el-form>
         <span slot="footer">
@@ -43,7 +57,10 @@
                     id: '',
                     databaseName: '',
                     databaseDesc: '',
-                    type: ''
+                    type: '',
+                    dbHost: '',
+                    dbPort: '',
+                    userName: ''
                 },
                 dbFormRules: {
                     databaseName: [
@@ -55,6 +72,12 @@
                     ],
                     type: [
                         {required: true, message: '请选择数据库类型', trigger: 'blur'}
+                    ],
+                    dbHost: [
+                        {required: true, message: '请填写数据库主机名', trigger: 'blur'}
+                    ],
+                    dbPort: [
+                        {required: true, message: '请填写数据库端口号', trigger: 'blur'}
                     ]
                 }
             }
@@ -81,6 +104,9 @@
                 apis.addProjectDatabase(this.projectId, {
                     databaseName: this.dbForm.databaseName,
                     databaseDesc: this.dbForm.databaseDesc,
+                    host: this.dbForm.dbHost,
+                    port: this.dbForm.dbPort,
+                    userName: this.dbForm.userName,
                     type: this.dbForm.type
                 }).then(data => {
                     if(data.code === 1) {
@@ -96,6 +122,9 @@
                 apis.updateProjectDatabase(this.projectId, this.dbForm.id, {
                     databaseName: this.dbForm.databaseName,
                     databaseDesc: this.dbForm.databaseDesc,
+                    host: this.dbForm.dbHost,
+                    port: this.dbForm.dbPort,
+                    userName: this.dbForm.userName,
                     type: this.dbForm.type
                 }).then(data => {
                     if(data.code === 1) {
@@ -120,6 +149,15 @@
             },
             'dbData.type'(val) {
                 this.dbForm.type = val ? val : '';
+            },
+            'dbData.dbHost'(val) {
+                this.dbForm.dbHost = val ? val : '';
+            },
+            'dbData.dbPort'(val) {
+                this.dbForm.dbPort = val ? val : '';
+            },
+            'dbData.userName'(val) {
+                this.dbForm.userName = val ? val : '';
             }
         }
     }

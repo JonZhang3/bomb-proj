@@ -45,7 +45,8 @@ public class ProjectDatabaseDao {
     public List<ProjectDatabaseVO> queryDatabases(String projectId, String databaseName) {
         StringBuilder sql = new StringBuilder();
         List<Object> values = new LinkedList<>();
-        sql.append(" SELECT d.id, d.databaseName, d.databaseDesc, d.type, d.updateTime, d.createTime, u.nickName createUser ");
+        sql.append(" SELECT d.id, d.databaseName, d.databaseDesc, d.type, d.dbHost, d.dbPort,d.userName, ");
+        sql.append("  d.updateTime, d.createTime, u.nickName createUser ");
         sql.append(" FROM project_database d ");
         sql.append(" JOIN project p ON d.projectId = p.id JOIN users u ON d.userId = u.id ");
         sql.append(" WHERE d.state = ? AND p.state = ? AND d.projectId = ? ");
@@ -77,6 +78,9 @@ public class ProjectDatabaseDao {
         SqlBox.update("project_database")
             .set("databaseName", dto.getDatabaseName())
             .set("databaseDesc", dto.getDatabaseDesc())
+            .set("dbHost", dto.getHost())
+            .set("dbPort", dto.getPort())
+            .set("userName", dto.getUserName())
             .set("type", dto.getType())
             .set("updateTime", new Date())
             .where().eq("id", dto.getId())
