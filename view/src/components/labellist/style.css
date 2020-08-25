@@ -1,0 +1,33 @@
+.bomb-label-list {
+    margin: 0;
+    padding: 0;
+}
+
+.bomb-label-list-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.bomb-label-list.no-border .bomb-label-list-item:not(:last-child) {
+    border-bottom: 0;
+}
+
+.bomb-label-list-item:not(:last-child) {
+    /*margin-bottom: 5px;*/
+    border-bottom: 1px solid #DCDFE6;
+}
+
+.bomb-label-list-item__label {
+    text-align: right;
+    font-size: 14px;
+    color: #909399;
+    padding: 0 10px 0 0;
+}
+
+.bomb-label-list-item__content {
+    flex: 1;
+    position: relative;
+    font-size: 14px;
+}

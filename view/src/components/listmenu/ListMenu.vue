@@ -1,6 +1,8 @@
 <template>
     <ul class="el-list-menu">
-        <slot></slot>
+        <slot>
+            <div style="text-align: center;font-size: 14px;color: #909399;">暂无数据</div>
+        </slot>
     </ul>
 </template>
 
@@ -30,7 +32,11 @@
                 type: String,
                 default: ''
             },
-            router: Boolean
+            router: Boolean,
+            routerMode: {
+                type: String,
+                default: 'push'
+            }
         },
         data() {
             return {
@@ -53,12 +59,21 @@
                         return;
                     }
                     try {
-                        this.$router.push(route, () => {}, (error) => {
-                            this.activeIndex = oldActiveIndex;
-                            if(error) {
-                                console.error(error);
-                            }
-                        });
+                        if(this.routerMode === 'replace') {
+                            this.$router.replace(route, () => {}, (error) => {
+                                this.activeIndex = oldActiveIndex;
+                                if(error) {
+                                    console.error(error);
+                                }
+                            });
+                        } else {
+                            this.$router.push(route, () => {}, (error) => {
+                                this.activeIndex = oldActiveIndex;
+                                if(error) {
+                                    console.error(error);
+                                }
+                            });
+                        }
                     } catch (e) {
                         console.error(e);
                     }

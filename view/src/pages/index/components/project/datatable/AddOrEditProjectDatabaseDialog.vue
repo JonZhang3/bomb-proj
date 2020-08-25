@@ -1,6 +1,6 @@
 <template>
     <el-dialog width="30%" :title="edit ? '修改数据库' : '新增数据库'" v-bind="$attrs"
-               class="add-project-member-dialog"
+               class="add-project-member-dialog" top="60px"
                :before-close="handleCancel" :close-on-click-modal="false">
         <el-form :model="dbForm" ref="dbForm" :rules="dbFormRules" label-width="100px" size="medium">
             <el-form-item prop="databaseName" label="数据库名">
@@ -16,19 +16,49 @@
                     <el-option key="oracle" value="oracle" label="Oracle"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item prop="dbHost" label="Host">
-                <el-input v-model="dbForm.dbHost"></el-input>
+            <el-form-item prop="version" label="数据库版本">
+                <el-input v-model="dbForm.version"></el-input>
             </el-form-item>
-            <el-form-item prop="dbPort" label="Port">
-                <el-input v-model="dbForm.dbPort"></el-input>
-            </el-form-item>
-            <el-form-item prop="userName" label="用户名">
-                <el-input v-model="dbForm.userName"></el-input>
-            </el-form-item>
-            <el-form-item v-if="!edit" prop="password" label="密码">
-                <span class="el-form-item__tip"><i class="el-icon-warning"></i> 密码不会被保存，仅用于初始化数据库信息</span>
-                <el-input></el-input>
-            </el-form-item>
+            <el-tabs v-model="activeTab">
+                <el-tab-pane label="开发库" name="dev">
+                    <el-form-item prop="dbHost" label="Host">
+                        <el-input v-model="dbForm.dbHost"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="dbPort" label="Port">
+                        <el-input v-model="dbForm.dbPort"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="userName" label="用户名">
+                        <el-input v-model="dbForm.userName"></el-input>
+                    </el-form-item>
+                </el-tab-pane>
+                <el-tab-pane label="测试库" name="test">
+                    <el-form-item prop="dbHost" label="Host">
+                        <el-input v-model="dbForm.testDbHost"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="dbPort" label="Port">
+                        <el-input v-model="dbForm.testDbPort"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="userName" label="用户名">
+                        <el-input v-model="dbForm.testUserName"></el-input>
+                    </el-form-item>
+                </el-tab-pane>
+                <el-tab-pane label="正式库" name="prod">
+                    <el-form-item prop="dbHost" label="Host">
+                        <el-input v-model="dbForm.prodDbHost"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="dbPort" label="Port">
+                        <el-input v-model="dbForm.prodDbPort"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="userName" label="用户名">
+                        <el-input v-model="dbForm.prodUserName"></el-input>
+                    </el-form-item>
+                </el-tab-pane>
+            </el-tabs>
+
+<!--            <el-form-item v-if="!edit" prop="password" label="密码">-->
+<!--                <span class="el-form-item__tip"><i class="el-icon-warning"></i> 密码不会被保存，仅用于初始化数据库信息</span>-->
+<!--                <el-input></el-input>-->
+<!--            </el-form-item>-->
         </el-form>
         <span slot="footer">
             <el-button @click="handleCancel">取 消</el-button>
@@ -53,6 +83,7 @@
         },
         data() {
             return {
+                activeTab: 'dev',
                 dbForm: {
                     id: '',
                     databaseName: '',
@@ -60,7 +91,14 @@
                     type: '',
                     dbHost: '',
                     dbPort: '',
-                    userName: ''
+                    userName: '',
+                    testDbHost: '',
+                    testDbPort: '',
+                    testUserName: '',
+                    prodDbHost: '',
+                    prodDbPort: '',
+                    prodUserName: '',
+                    version: ''
                 },
                 dbFormRules: {
                     databaseName: [
@@ -78,6 +116,9 @@
                     ],
                     dbPort: [
                         {required: true, message: '请填写数据库端口号', trigger: 'blur'}
+                    ],
+                    version: [
+                        {max: 50, message: '数据库版本最大长度为 50', trigger: 'blur'}
                     ]
                 }
             }
@@ -85,6 +126,7 @@
         methods: {
             handleCancel() {
                 this.$refs['dbForm'].resetFields();
+                this.activeTab = 'dev';
                 this.$emit('cancel');
             },
             handleAdd(e) {
@@ -107,10 +149,12 @@
                     host: this.dbForm.dbHost,
                     port: this.dbForm.dbPort,
                     userName: this.dbForm.userName,
+                    version: this.dbForm.version,
                     type: this.dbForm.type
                 }).then(data => {
                     if(data.code === 1) {
                         this.$message.success('新增数据库成功');
+                        this.activeTab = 'dev';
                         this.$refs['dbForm'].resetFields();
                         this.$emit('success', e);
                     } else {
@@ -125,10 +169,12 @@
                     host: this.dbForm.dbHost,
                     port: this.dbForm.dbPort,
                     userName: this.dbForm.userName,
+                    version: this.dbForm.version,
                     type: this.dbForm.type
                 }).then(data => {
                     if(data.code === 1) {
                         this.$message.success('修改数据库成功');
+                        this.activeTab = 'dev';
                         this.$refs['dbForm'].resetFields();
                         this.$emit('success', e);
                     } else {
@@ -158,6 +204,9 @@
             },
             'dbData.userName'(val) {
                 this.dbForm.userName = val ? val : '';
+            },
+            'dbData.version'(val) {
+                this.dbForm.version = val ? val : ''
             }
         }
     }

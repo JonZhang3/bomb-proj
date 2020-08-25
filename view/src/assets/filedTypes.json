@@ -1,0 +1,275 @@
+{
+    "extras": {
+        "defaultValue": {
+            "name": "默认值",
+            "key": "defaultValue",
+            "type": "input"
+        },
+        "dpDefaultValue": {
+            "name": "默认值",
+            "key": "defaultValue",
+            "type": "datepicker",
+            "mutexType": "checkbox",
+            "mutexName": "CURRENT_TIMESTAMP"
+        },
+        "dtpDefaultValue": {
+            "name": "默认值",
+            "key": "defaultValue",
+            "type": "datetimepicker"
+        },
+        "tpDefaultValue": {
+            "name": "默认值",
+            "key": "defaultValue",
+            "type": "timepicker"
+        },
+        "autoIncrement": {
+            "name": "自动增长",
+            "key": "autoIncrement",
+            "kw": "AUTO_INCREMENT",
+            "type": "checkbox"
+        },
+        "_unsigned": {
+            "name": "无符号",
+            "key": "_unsigned",
+            "kw": "UNSIGNED",
+            "type": "checkbox"
+        },
+        "_zerofill": {
+            "name": "ZEROFILL",
+            "key": "_zerofill",
+            "kw": "ZEROFILL",
+            "type": "checkbox"
+        },
+        "_charset": {
+            "name": "字符集",
+            "key": "_charset",
+            "kw": "CHARACTER SET",
+            "type": "select"
+        },
+        "_collation": {
+            "name": "排序规则",
+            "key": "_collation",
+            "kw": "COLLATE",
+            "type": "select"
+        },
+        "_binary": {
+            "name": "二进制",
+            "key": "_binary",
+            "kw": "BINARY",
+            "type": "checkbox"
+        },
+        "onUpdateCT": {
+            "name": "根据当前时间更新",
+            "key": "onUpdateCT",
+            "kw": "ON UPDATE CURRENT_TIMESTAMP",
+            "type": "checkbox"
+        },
+        "_decimal": {
+            "name": "小数位",
+            "key": "_decimal",
+            "type": "numberinput"
+        },
+        "valueList": {
+            "name": "值列表",
+            "key": "valueList",
+            "type": "iteminput"
+        }
+    },
+    "types": [
+        {
+            "name": "bigint",
+            "length": false,
+            "extras": ["defaultValue", "autoIncrement", "_unsigned", "_zerofill"]
+        },
+        {
+            "name": "binary",
+            "length": true,
+            "extras": ["defaultValue"]
+        },
+        {
+            "name": "bit",
+            "length": true,
+            "extras": ["defaultValue"]
+        },
+        {
+            "name": "blob",
+            "length": false,
+            "extras": null
+        },
+        {
+            "name": "char",
+            "length": true,
+            "extras": ["defaultValue", "_charset", "_collation", "_binary"]
+        },
+        {
+            "name": "date",
+            "length": true,
+            "extras": ["dpDefaultValue"]
+        },
+        {
+            "name": "datetime",
+            "length": false,
+            "extras": ["dtpDefaultValue", "onUpdateCT"]
+        },
+        {
+            "name": "decimal",
+            "length": true,
+            "extras": ["_decimal", "defaultValue", "_unsigned", "_zerofill"]
+        },
+        {
+            "name": "double",
+            "length": true,
+            "extras": ["_decimal", "defaultValue", "_unsigned", "_zerofill"]
+        },
+        {
+            "name": "enum",
+            "length": false,
+            "extras": ["valueList", "defaultValue", "_charset", "_collation"]
+        },
+        {
+            "name": "float",
+            "length": true,
+            "extras": ["_decimal", "defaultValue", "_unsigned", "_zerofill"]
+        },
+        {
+            "name": "geometry",
+            "length": false,
+            "extras": ["defaultValue"]
+        },
+        {
+            "name": "geometrycollection",
+            "length": false,
+            "extras": ["defaultValue"]
+        },
+        {
+            "name": "int",
+            "length": true,
+            "extras": ["defaultValue", "autoIncrement", "_unsigned", "_zerofill"]
+        },
+        {
+            "name": "integer",
+            "length": true,
+            "extras": ["defaultValue", "autoIncrement", "_unsigned", "_zerofill"]
+        },
+        {
+            "name": "json",
+            "length": false,
+            "extras": ["defaultValue"]
+        },
+        {
+            "name": "linestring",
+            "length": false,
+            "extras": ["defaultValue"]
+        },
+        {
+            "name": "longblob",
+            "length": false,
+            "extras": null
+        },
+        {
+            "name": "longtext",
+            "length": false,
+            "extras": ["_charset", "_collation", "_binary"]
+        },
+        {
+            "name": "mediumblob",
+            "length": false,
+            "extras": null
+        },
+        {
+            "name": "mediumint",
+            "length": true,
+            "extras": ["defaultValue", "autoIncrement", "_unsigned", "_zerofill"]
+        },
+        {
+            "name": "mediumtext",
+            "length": false,
+            "extras": ["_charset", "_collation", "_binary"]
+        },
+        {
+            "name": "multilinestring",
+            "length": false,
+            "extras": ["defaultValue"]
+        },
+        {
+            "name": "multipoint",
+            "length": false,
+            "extras": ["defaultValue"]
+        },
+        {
+            "name": "multipolygon",
+            "length": false,
+            "extras": ["defaultValue"]
+        },
+        {
+            "name": "point",
+            "length": false,
+            "extras": ["defaultValue"]
+        },
+        {
+            "name": "polygon",
+            "length": false,
+            "extras": ["defaultValue"]
+        },
+        {
+            "name": "real",
+            "length": true,
+            "extras": ["_decimal", "defaultValue", "_unsigned", "_zerofill"]
+        },
+        {
+            "name": "set",
+            "length": false,
+            "extras": ["valueList", "defaultValue", "_charset", "_collation"]
+        },
+        {
+            "name": "smallint",
+            "length": true,
+            "extras": ["defaultValue", "autoIncrement", "_unsigned", "_zerofill"]
+        },
+        {
+            "name": "text",
+            "length": false,
+            "extras": ["_charset", "_collation", "_binary"]
+        },
+        {
+            "name": "time",
+            "length": false,
+            "extras": ["tpDefaultValue"]
+        },
+        {
+            "name": "timestamp",
+            "length": false,
+            "extras": ["dtpDefaultValue", "onUpdateCT"]
+        },
+        {
+            "name": "tinyblob",
+            "length": false,
+            "extras": null
+        },
+        {
+            "name": "tinyint",
+            "length": true,
+            "extras": ["defaultValue", "autoIncrement", "_unsigned", "_zerofill"]
+        },
+        {
+            "name": "tinytext",
+            "length": false,
+            "extras": ["_charset", "_collation", "_binary"]
+        },
+        {
+            "name": "varbinary",
+            "length": true,
+            "extras": ["defaultValue"]
+        },
+        {
+            "name": "varchar",
+            "length": true,
+            "extras": ["defaultValue", "_charset", "_collation", "_binary"]
+        },
+        {
+            "name": "year",
+            "length": false,
+            "extras": ["defaultValue"]
+        }
+    ]
+}

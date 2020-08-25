@@ -3,5 +3,6 @@ module.exports = {
     icon: '',
     baseUrl: 'http://localhost:8081',
     httpTimeout: 20000,
-    maxDataTableFieldsLenght: 200
+    maxDataTableFieldsLenght: 200,
+    maxDataTableIndexesLength: 100
 }

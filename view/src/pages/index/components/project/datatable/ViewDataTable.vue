@@ -5,12 +5,6 @@
                 <span style="font-size: 14px;color: #606266">查看表【{{tableData.tableName}}】</span>
             </el-col>
             <el-col :span="12" style="display: flex;align-items: center; justify-content: flex-end">
-                <div v-if="activeTab === 'columnsInfo'" style="margin-right: 10px;">
-                    <span style="margin-left: 10px;font-size: 14px;color: #606266;">版本：</span>
-                    <el-select v-model="currentVersion" @change="handleTableVersionChange" size="mini">
-                        <el-option v-for="item in fieldVersions" :key="item" :value="item" :label="item"></el-option>
-                    </el-select>
-                </div>
                 <el-button-group>
                     <el-button @click="handleRefresh" icon="el-icon-refresh" size="mini" round>刷新</el-button>
                     <el-button @click="handleEdit" type="primary" icon="el-icon-edit" size="mini" round>编辑</el-button>
@@ -19,25 +13,37 @@
             </el-col>
         </el-row>
         <el-tabs v-model="activeTab" style="flex: 1;overflow: hidden;">
-            <el-tab-pane ref="baseInfoEl" label="基本信息" name="baseInfo" style="padding: 0 10px;">
-                <el-form label-width="80px">
-                    <el-form-item label="表名：">
+            <el-tab-pane label="基本信息" name="baseInfo" style="padding: 0 10px;">
+                <label-list no-border>
+                    <label-list-item label="表名：">
                         <span>{{tableData.tableName}}</span>
-                    </el-form-item>
-                    <el-form-item label="注释：">
+                    </label-list-item>
+                    <label-list-item label="注释：">
                         <span>{{tableData.tableDesc}}</span>
-                    </el-form-item>
-                    <el-form-item label="创建者：">
+                    </label-list-item>
+                    <label-list-item label="创建者：">
                         <span>{{tableData.createUser}}</span>
-                    </el-form-item>
-                </el-form>
+                    </label-list-item>
+                    <label-list-item label="更新时间：">
+                        <span>{{tableData.updateTime}}</span>
+                    </label-list-item>
+                </label-list>
             </el-tab-pane>
             <el-tab-pane label="列信息" name="columnsInfo">
-                <div ref="tableWrapper" style="height: 100%;display: flex;flex-direction: column;">
-                    <div style="text-align: right;">
-                        <search-input style="width: 30%;" v-model="fieldNameSearchText" placeholder="模糊搜索列名"></search-input>
-                    </div>
-                    <bomb-table :columns="columns"
+                <div style="height: 100%;display: flex;flex-direction: column;">
+                    <el-row>
+                        <el-col :span="12">
+                            <span style="margin-left: 10px;font-size: 14px;color: #606266;">版本：</span>
+                            <el-select v-model="currentVersion" @change="handleTableVersionChange" size="small">
+                                <el-option v-for="item in fieldVersions" :key="item" :value="item" :label="item"></el-option>
+                            </el-select>
+                        </el-col>
+                        <el-col :span="12" style="text-align: right;">
+                            <search-input style="width: 60%;margin-left: 10px;"
+                                          v-model="fieldNameSearchText" placeholder="模糊搜索列名"></search-input>
+                        </el-col>
+                    </el-row>
+                    <bomb-table :columns="filedColumns"
                                 :data="fields.filter(data => !fieldNameSearchText || data.fieldName.toLowerCase().includes(fieldNameSearchText.toLowerCase()))"
                                 fix-header>
                         <template slot-scope="scope" slot="notNull">
@@ -59,13 +65,21 @@
                 </div>
             </el-tab-pane>
             <el-tab-pane label="索引" name="indexesInfo">
-                <el-table>
-                    <el-table-column label="索引名" prop="fieldName"></el-table-column>
-                    <el-table-column label="包含列" prop="fieldName"></el-table-column>
-                    <el-table-column label="索引名" prop="fieldName"></el-table-column>
-                    <el-table-column label="索引类型" prop="fieldName"></el-table-column>
-                    <el-table-column label="索引方式" prop="fieldName"></el-table-column>
-                </el-table>
+                <div style="height: 100%;display: flex;flex-direction: column;">
+                    <el-row>
+                        <el-col :span="12">
+                            <span style="margin-left: 10px;font-size: 14px;color: #606266;">版本：</span>
+                            <el-select v-model="currentVersion" @change="handleTableVersionChange" size="small">
+                                <el-option v-for="item in fieldVersions" :key="item" :value="item" :label="item"></el-option>
+                            </el-select>
+                        </el-col>
+                        <el-col :span="12" style="text-align: right;">
+                            <search-input style="width: 60%;margin-left: 10px;"
+                                          v-model="fieldNameSearchText" placeholder="模糊搜索列名"></search-input>
+                        </el-col>
+                    </el-row>
+                    <bomb-table :columns="indexColumns" :data="indexes" fix-header></bomb-table>
+                </div>
             </el-tab-pane>
         </el-tabs>
     </el-row>
@@ -76,12 +90,16 @@
     import apis from "../../../../../api/apis";
     import utils from "../../../../../common/utils";
     import SearchInput from "../../../../../components/SearchInput";
+    import LabelList from "../../../../../components/labellist/LabelList";
+    import LabelListItem from "../../../../../components/labellist/LabelListItem";
 
     export default {
         name: 'ViewDataTable',
         inject: ['root'],
         components: {
-            SearchInput
+            SearchInput,
+            LabelList,
+            LabelListItem
         },
         data() {
             return {
@@ -90,7 +108,7 @@
                 tableHeight: '',
                 currentVersion: '',
                 fieldVersions: [],
-                columns: [
+                filedColumns: [
                     {title: '列名', key: 'fieldName'},
                     {title: '类型', key: 'type'},
                     {title: '长度', key: 'length'},
@@ -101,6 +119,14 @@
                     {title: '默认值', key: 'defaultValue'},
                 ],
                 fields: [],
+                indexColumns: [
+                    {title: '索引名'},
+                    {title: '包含列'},
+                    {title: '索引名'},
+                    {title: '索引类型'},
+                    {title: '索引方式'},
+                ],
+                indexes: [],
                 tableData: this.root.currentTableData
             }
         },
@@ -176,6 +202,8 @@
                 apis.deleteProjectDataTable(this.projectId, this.databaseId, this.tableId).then(data => {
                     if(data.code === 1) {
                         this.$message.success('删除成功');
+                        this.root.listDatabaseTables();
+                        this.$router.replace({path: `/project/${this.projectId}/db/${this.databaseId}`});
                     } else {
                         this.$message.error(data.message);
                     }
@@ -200,9 +228,6 @@
     .project-table-info .el-tabs__item {
         height: 30px;
         line-height: 30px;
-    }
-    .project-table-info .el-form-item {
-        margin-bottom: 0;
     }
     .project-table-info .el-tabs__content {
         flex: 1;

@@ -14,6 +14,7 @@ public class ProjectDatabaseVO {
     private String dbHost;
     private String dbPort;
     private String userName;
+    private String version;
     private String type;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date updateTime;

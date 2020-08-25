@@ -18,7 +18,10 @@
     "vue": "^2.6.10",
     "vue-router": "^3.1.5",
     "vuedraggable": "^2.23.2",
-    "vuex": "^3.4.0"
+    "vuex": "^3.4.0",
+    "vxe-table": "^2.9.15",
+    "vxe-table-plugin-element": "^1.9.1",
+    "xe-utils": "^2.6.6"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",

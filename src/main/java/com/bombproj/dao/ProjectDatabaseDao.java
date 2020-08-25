@@ -2,6 +2,7 @@ package com.bombproj.dao;
 
 import com.bombproj.adapter.DataTableAdapter;
 import com.bombproj.constants.DataTableFieldState;
+import com.bombproj.constants.DataTableIndexState;
 import com.bombproj.constants.ProjectDataTableState;
 import com.bombproj.constants.ProjectDatabaseState;
 import com.bombproj.constants.ProjectState;
@@ -12,13 +13,17 @@ import com.bombproj.model.DataTableIndexes;
 import com.bombproj.model.ProjectDataTable;
 import com.bombproj.utils.Utils;
 import com.bombproj.vo.DataTableFieldVO;
+import com.bombproj.vo.DataTableIndexesVO;
 import com.bombproj.vo.ProjectDataTableVO;
 import com.bombproj.vo.ProjectDatabaseVO;
 import com.queryflow.accessor.A;
+import com.queryflow.accessor.handler.ResultSetHandler;
 import com.queryflow.page.Pager;
 import com.queryflow.sql.SqlBox;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,7 +51,7 @@ public class ProjectDatabaseDao {
         StringBuilder sql = new StringBuilder();
         List<Object> values = new LinkedList<>();
         sql.append(" SELECT d.id, d.databaseName, d.databaseDesc, d.type, d.dbHost, d.dbPort,d.userName, ");
-        sql.append("  d.updateTime, d.createTime, u.nickName createUser ");
+        sql.append(" d.version, d.updateTime, d.createTime, u.nickName createUser ");
         sql.append(" FROM project_database d ");
         sql.append(" JOIN project p ON d.projectId = p.id JOIN users u ON d.userId = u.id ");
         sql.append(" WHERE d.state = ? AND p.state = ? AND d.projectId = ? ");
@@ -81,6 +86,7 @@ public class ProjectDatabaseDao {
             .set("dbHost", dto.getHost())
             .set("dbPort", dto.getPort())
             .set("userName", dto.getUserName())
+            .set("version", dto.getVersion())
             .set("type", dto.getType())
             .set("updateTime", new Date())
             .where().eq("id", dto.getId())
@@ -108,6 +114,15 @@ public class ProjectDatabaseDao {
 
     public void deleteTableFieldsByDatabaseId(String projectId, String dbId) {
         SqlBox.update("datatable_field")
+            .set("state", DataTableFieldState.DELETED.getState())
+            .set("updateTime", new Date())
+            .where().eq("projectId", projectId)
+            .and().eq("databaseId", dbId)
+            .execute();
+    }
+
+    public void deleteTableIndexesByDatabaseId(String projectId, String dbId) {
+        SqlBox.update("datatable_index")
             .set("state", DataTableFieldState.DELETED.getState())
             .set("updateTime", new Date())
             .where().eq("projectId", projectId)
@@ -183,6 +198,15 @@ public class ProjectDatabaseDao {
             .execute();
     }
 
+    public void deleteTableAllIndexes(String tableId, String projectId) {
+        SqlBox.update("datatable_index")
+            .set("state", DataTableIndexState.DELETED.getState())
+            .set("updateTime", new Date())
+            .where().eq("projectId", projectId)
+            .and().eq("datatableId", tableId)
+            .execute();
+    }
+
     public String queryTableFieldMaxVersion(String tableId, String projectId) {
         String sql = "SELECT MAX(version) FROM datatable_field WHERE projectId = ? AND datatableId = ?";
         return A.query(sql, projectId, tableId).one(String.class);
@@ -194,10 +218,17 @@ public class ProjectDatabaseDao {
         return A.query(sql, projectId, tableId).list(String.class);
     }
 
+    public List<String> queryTableIndexesVersions(String tableId, String projectId) {
+        String sql = "SELECT version FROM datatable_index WHERE projectId = ? AND datatableId = ? GROUP BY version" +
+            " ORDER BY version DESC ";
+        return A.query(sql, projectId, tableId).list(String.class);
+    }
+
     public List<DataTableFieldVO> queryTableFields(String tableId, String projectId, String version) {
         StringBuilder sql = new StringBuilder();
         List<Object> values = new LinkedList<>();
         sql.append(" SELECT f.id, f.fieldName, f.type, f.length, f.notNull, f.pk, f.autoIncrement, ");
+        sql.append(" f._unsigned, f._zerofill, f._charset, f._collation, f._binary, f.onUpdateCT, f._decimal, f.valueList, ");
         sql.append(" f.defaultValue, f.notes, f.indexes, f.indexesName, f.state, f.marker, f.version, u.nickName createUserName ");
         sql.append(" FROM datatable_field f LEFT JOIN users u ON f.userId = u.id ");
         sql.append(" WHERE f.projectId = ? AND f.datatableId = ? AND f.state = ? ");
@@ -225,19 +256,65 @@ public class ProjectDatabaseDao {
                 vo.setPk(rs.getString("pk"));
                 vo.setAutoIncrement(rs.getString("autoIncrement"));
                 vo.setDefaultValue(rs.getString("defaultValue"));
-                vo.setNotes(rs.getString("notes"));
-                String indexes = rs.getString("indexes");
-                String[] indexesArr = null;
-                if(Utils.isNotEmpty(indexes)) {
-                    indexesArr = indexes.split(",");
+                vo.set_unsigned(rs.getString("_unsigned"));
+                vo.set_zerofill(rs.getString("_zerofill"));
+                vo.set_charset(rs.getString("_charset"));
+                vo.set_collation(rs.getString("_collation"));
+                vo.set_binary(rs.getString("_binary"));
+                vo.setOnUpdateCT(rs.getString("onUpdateCT"));
+                vo.set_decimal(rs.getString("_decimal"));
+                String valueList = rs.getString("valueList");
+                String[] valueListArr = {};
+                if(Utils.isNotEmpty(valueList)) {
+                    valueListArr = valueList.split(",");
                 }
-                vo.setIndexes(indexesArr);
-                vo.setIndexesName(rs.getString("indexesName"));
+                vo.setValueList(valueListArr);
+                vo.setNotes(rs.getString("notes"));
                 vo.setState(rs.getInt("state"));
                 vo.setMarker(rs.getString("marker"));
                 vo.setVersion(rs.getString("version"));
                 vo.setCreateUserName(rs.getString("createUserName"));
                 result.add(vo);
+            }
+            return result;
+        });
+    }
+
+    public List<DataTableIndexesVO> queryTableIndexes(String tableId, String projectId, String version) {
+        StringBuilder sql = new StringBuilder();
+        List<Object> values = new LinkedList<>();
+        sql.append(" SELECT i.id, i.indexName, i.fieldNames, i.indexType, i.indexMethod, i.state, i.version, u.nickName createUserName ");
+        sql.append(" FROM datatable_index i LEFT JOIN users u ON i.userId = u.id ");
+        sql.append(" WHERE i.projectId = ? AND i.datatableId = ? AND i.state = ? ");
+        values.add(projectId);
+        values.add(tableId);
+        values.add(DataTableIndexState.COMMON.getState());
+        if(Utils.isEmpty(version)) {
+            sql.append(" AND i.version = (SELECT MAX(version) FROM datatable_index WHERE projectId = ? AND datatableId = ?) ");
+            values.add(projectId);
+            values.add(tableId);
+        } else {
+            sql.append(" AND i.version = ? ");
+            values.add(version);
+        }
+        sql.append(" ORDER BY i.sequence ");
+        return A.query(sql.toString(), values).result(rs -> {
+            List<DataTableIndexesVO> result = new LinkedList<>();
+            while (rs.next()) {
+                DataTableIndexesVO vo = new DataTableIndexesVO();
+                vo.setId(rs.getString("id"));
+                vo.setIndexName(rs.getString("indexName"));
+                String fieldNames = rs.getString("fieldNames");
+                String[] fieldNamesArr = {};
+                if(Utils.isNotEmpty(fieldNames)) {
+                    fieldNamesArr = fieldNames.split(",");
+                }
+                vo.setFieldNames(fieldNamesArr);
+                vo.setIndexType(rs.getString("indexType"));
+                vo.setIndexMethod(rs.getString("indexMethod"));
+                vo.setCreateUserName(rs.getString("createUserName"));
+                vo.setVersion(rs.getString("version"));
+                vo.setState(rs.getInt("state"));
             }
             return result;
         });
@@ -250,10 +327,6 @@ public class ProjectDatabaseDao {
             "version, datatableId, projectId, userId, createTime, updateTime, sequence, databaseId) " +
             "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         A.batch(sql, DataTableAdapter.getInsertListValues(fields, projectId, datatableId, dbId, version, userId));
-    }
-
-    public void batchUpdateTableFields() {
-
     }
 
 }

@@ -70,8 +70,8 @@ public class ProjectDatabaseController {
      * 更新数据库信息
      *
      * @param projectId 项目 ID
-     * @param dbId 数据库 ID
-     * @param dto 要更新的数据库信息
+     * @param dbId      数据库 ID
+     * @param dto       要更新的数据库信息
      */
     @AuthPassport
     @PutMapping("/{projectId}/db/{dbId}")
@@ -86,6 +86,11 @@ public class ProjectDatabaseController {
         return JsonResult.success();
     }
 
+    /**
+     * 删除指定的数据库，同时也会删除数据库中的表信息
+     * @param projectId 项目 ID
+     * @param dbId 数据库 ID
+     */
     @AuthPassport
     @DeleteMapping("/{projectId}/db/{dbId}")
     public JsonResult deleteDatabase(@PathVariable("projectId") String projectId,
@@ -99,6 +104,14 @@ public class ProjectDatabaseController {
         return JsonResult.success();
     }
 
+    /**
+     * 获取指定数据库的所有表信息
+     *
+     * @param projectId 项目 ID
+     * @param dbId 数据库 ID
+     * @param tableName 表名
+     * @param page 页码
+     */
     @AuthPassport
     @GetMapping("/{projectId}/db/{dbId}/table")
     public JsonResult pageListTables(@PathVariable("projectId") String projectId,
@@ -108,6 +121,13 @@ public class ProjectDatabaseController {
         return JsonResult.success(this.projectDatabaseService.pageListTables(tableName, dbId, projectId, page));
     }
 
+    /**
+     * 在指定的数据库中新增表
+     *
+     * @param projectId 项目 ID
+     * @param dbId 数据库 ID
+     * @param dto 新增的表的信息
+     */
     @AuthPassport
     @PostMapping("/{projectId}/db/{dbId}/table")
     public JsonResult addTable(@PathVariable("projectId") String projectId,
@@ -117,10 +137,17 @@ public class ProjectDatabaseController {
         dto.setProjectId(projectId);
         dto.setUserId(sessionConfig.getUserId());
         dto.setDatabaseId(dbId);
-        this.projectDatabaseService.addTable(dto);
-        return JsonResult.success();
+        return JsonResult.success().data(this.projectDatabaseService.addTable(dto));
     }
 
+    /**
+     * 更新表信息，包括表名、列信息、索引信息
+     *
+     * @param projectId 项目 ID
+     * @param dbId 数据库 ID
+     * @param tableId 表 ID
+     * @param dto
+     */
     @AuthPassport
     @PutMapping("/{projectId}/db/{dbId}/table/{tableId}")
     public JsonResult updateTable(@PathVariable("projectId") String projectId,
@@ -136,6 +163,13 @@ public class ProjectDatabaseController {
         return JsonResult.success();
     }
 
+    /**
+     * 删除指定的表
+     *
+     * @param projectId 项目 ID
+     * @param dbId 数据库 ID
+     * @param tableId 要删除的表 ID
+     */
     @AuthPassport
     @DeleteMapping("/{projectId}/db/{dbId}/table/{tableId}")
     public JsonResult deleteTable(@PathVariable("projectId") String projectId,
@@ -151,6 +185,14 @@ public class ProjectDatabaseController {
         return JsonResult.success();
     }
 
+    /**
+     * 获取指定表的索引信息
+     *
+     * @param projectId 项目 ID
+     * @param dbId      数据库 ID
+     * @param tableId   表 ID
+     * @param version   版本号
+     */
     @AuthPassport
     @GetMapping("/{projectId}/db/{dbId}/table/{tableId}/indexes")
     public JsonResult getTableIndexes(@PathVariable("projectId") String projectId,
@@ -162,6 +204,14 @@ public class ProjectDatabaseController {
         return JsonResult.success(this.projectDatabaseService.getTableIndexes(tableId, projectId, version));
     }
 
+    /**
+     * 获取指定表的字段信息
+     *
+     * @param projectId 项目 ID
+     * @param dbId      数据库 ID
+     * @param tableId   表 ID
+     * @param version   版本号
+     */
     @AuthPassport
     @GetMapping("/{projectId}/db/{dbId}/table/{tableId}/fields")
     public JsonResult getTableFields(@PathVariable("projectId") String projectId,

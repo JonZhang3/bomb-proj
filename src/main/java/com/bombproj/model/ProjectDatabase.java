@@ -19,6 +19,16 @@ public class ProjectDatabase {
     private String dbHost;
     private String dbPort;
     private String userName;
+
+    private String testDbHost;
+    private String testDbPort;
+    private String testUserName;
+
+    private String prodDbHost;
+    private String prodDbPort;
+    private String prodUserName;
+
+    private String version;
     private Integer state;
     private String projectId;
     private String userId;

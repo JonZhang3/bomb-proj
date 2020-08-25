@@ -9,7 +9,9 @@ export default {
     },
     render(h, ctx) {
         return h('div', ctx.injections.tableRoot.$scopedSlots[ctx.props.column.slot]({
-            ...ctx.props.item
+            ...ctx.props.item,
+            row: ctx.props.item,
+            $index: ctx.props.index
         }))
     }
 }

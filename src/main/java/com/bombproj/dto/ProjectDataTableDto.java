@@ -23,4 +23,7 @@ public class ProjectDataTableDto {
     @Length(max = 255, message = "描述最大长度为 255")
     private String tableDesc;
 
+    private String fields;
+    private String indexes;
+
 }

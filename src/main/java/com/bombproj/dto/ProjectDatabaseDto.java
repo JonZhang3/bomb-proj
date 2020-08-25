@@ -33,7 +33,12 @@ public class ProjectDatabaseDto {
     @Min(value = 1, message = "端口号必须在 1~65535 之间")
     private Integer port;
 
+    @Length(max = 50, message = "数据库版本最大长度为 50")
+    private String version;
+
     private String userName;
     private String password;
+
+
 
 }

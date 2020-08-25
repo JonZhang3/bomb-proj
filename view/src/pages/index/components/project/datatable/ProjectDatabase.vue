@@ -16,7 +16,7 @@
                 </el-col>
                 <el-col :span="12" style="text-align: right">
                     <search-input style="width: 40%;"
-                        v-model="databaseSearchText" placeholder="数据库名" button-text="搜索"></search-input>
+                        v-model="databaseSearchText" placeholder="模糊搜索数据库名"></search-input>
                 </el-col>
             </el-row>
         </el-row>
@@ -26,13 +26,59 @@
             <el-table stripe style="width: 100%;"
                       :data="databases.filter(data => !databaseSearchText || data.databaseName.toLowerCase().includes(databaseSearchText.toLowerCase()))">
                 <el-table-column prop="databaseName" show-overflow-tooltip sortable label="数据库"></el-table-column>
-                <el-table-column prop="databaseDesc" show-overflow-tooltip label="描述" width="380"></el-table-column>
+                <el-table-column prop="databaseDesc" show-overflow-tooltip label="描述"></el-table-column>
                 <el-table-column prop="type" sortable label="类型" width="120"></el-table-column>
-                <el-table-column prop="dbHost" label="Host"></el-table-column>
-                <el-table-column prop="dbPort" label="Port"></el-table-column>
-                <el-table-column prop="userName" label="用户名"></el-table-column>
                 <el-table-column prop="createUser" sortable label="创建者" width="150"></el-table-column>
                 <el-table-column prop="updateTime" sortable label="更新时间" width="150"></el-table-column>
+                <el-table-column prop="version" label="版本" width="100"></el-table-column>
+                <el-table-column label="更多" width="100">
+                    <template slot-scope="scope">
+                        <el-popover placement="top" trigger="click" width="400">
+                            <el-tabs value="dev">
+                                <el-tab-pane label="开发库" name="dev">
+                                    <label-list label-width="80px">
+                                        <label-list-item label="Host：">
+                                            <span>{{scope.row.dbHost}}</span>
+                                        </label-list-item>
+                                        <label-list-item label="Port：">
+                                            <span>{{scope.row.dbPort}}</span>
+                                        </label-list-item>
+                                        <label-list-item label="用户名：">
+                                            <span>{{scope.row.userName}}</span>
+                                        </label-list-item>
+                                    </label-list>
+                                </el-tab-pane>
+                                <el-tab-pane label="测试库" name="test">
+                                    <label-list label-width="80px">
+                                        <label-list-item label="Host：">
+                                            <span>{{scope.row.dbHost}}</span>
+                                        </label-list-item>
+                                        <label-list-item label="Port：">
+                                            <span>{{scope.row.dbPort}}</span>
+                                        </label-list-item>
+                                        <label-list-item label="用户名：">
+                                            <span>{{scope.row.userName}}</span>
+                                        </label-list-item>
+                                    </label-list>
+                                </el-tab-pane>
+                                <el-tab-pane label="正式库" name="prod">
+                                    <label-list label-width="80px">
+                                        <label-list-item label="Host：">
+                                            <span>{{scope.row.dbHost}}</span>
+                                        </label-list-item>
+                                        <label-list-item label="Port：">
+                                            <span>{{scope.row.dbPort}}</span>
+                                        </label-list-item>
+                                        <label-list-item label="用户名：">
+                                            <span>{{scope.row.userName}}</span>
+                                        </label-list-item>
+                                    </label-list>
+                                </el-tab-pane>
+                            </el-tabs>
+                            <el-button slot="reference" size="small">更多</el-button>
+                        </el-popover>
+                    </template>
+                </el-table-column>
                 <el-table-column width="140" label="操作">
                     <template slot-scope="scope">
                         <el-tooltip effect="dark" content="编辑" placement="top">
@@ -66,12 +112,16 @@
 
     import SearchInput from "../../../../../components/SearchInput";
     import AddOrEditProjectDatabaseDialog from "./AddOrEditProjectDatabaseDialog";
+    import LabelList from "../../../../../components/labellist/LabelList";
+    import LabelListItem from "../../../../../components/labellist/LabelListItem";
 
     export default {
         name: 'project-database',
         components: {
             SearchInput,
-            AddOrEditProjectDatabaseDialog
+            AddOrEditProjectDatabaseDialog,
+            LabelList,
+            LabelListItem
         },
         data() {
             return {

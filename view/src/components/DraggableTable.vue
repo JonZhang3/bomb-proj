@@ -1,11 +1,17 @@
 <template>
     <el-form :status-icon="false" :model="formData" ref="form">
-        <el-table :data="data" v-bind="$attrs" border stripe :row-key="handleRowKey" style="width: 100%;">
+        <bomb-table :columns="columns" :data="data" v-bind="$attrs" fix-header>
             <slot></slot>
-            <div slot="append" v-if="showAddRow" style="text-align: center;">
+            <div slot="footer" v-if="showAddRow" style="text-align: center;">
                 <el-button @click="handleAddRow" icon="el-icon-plus" type="text">添加一行</el-button>
             </div>
-        </el-table>
+        </bomb-table>
+<!--        <el-table :data="data" v-bind="$attrs" border stripe highlight-current-row :row-key="handleRowKey" style="width: 100%;">-->
+<!--            <slot></slot>-->
+<!--            <div slot="append" v-if="showAddRow" style="text-align: center;">-->
+<!--                <el-button @click="handleAddRow" icon="el-icon-plus" type="text">添加一行</el-button>-->
+<!--            </div>-->
+<!--        </el-table>-->
     </el-form>
 </template>
 
@@ -29,7 +35,8 @@
                 default: {}
             },
             rules: Object,
-            formData: Object
+            formData: Object,
+            columns: Array
         },
         data() {
             return {
@@ -38,6 +45,7 @@
             }
         },
         mounted() {
+            console.log(this);
             this.drag();
         },
         methods: {
@@ -66,7 +74,7 @@
             },
             drag() {
                 const that = this;
-                const el = document.querySelectorAll('.el-table__body-wrapper > table > tbody')[0];
+                const el = document.querySelectorAll('.at-table__body > table tbody')[0];
                 Sortable.create(el, {
                     disabled: false,
                     ghostClass: 'sortable-ghost',

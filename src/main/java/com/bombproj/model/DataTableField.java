@@ -22,17 +22,27 @@ public class DataTableField {
     private String pk;
     private String autoIncrement;
     private String defaultValue;
+    private String _unsigned;
+    private String _zerofill;
+    private String _charset;
+    private String _collation;
+    private String _binary;
+    private String onUpdateCT;
+    private String _decimal;
+    private String valueList;
     private String notes;
-    private String indexes;
-    private String indexesName;
+    private String indexes;// 保留
+    private String indexesName;// 保留
     private Integer state;
     private String marker;
     private String version;
     private String datatableId;
     private String projectId;
+    private Long databaseId;
     private String userId;
     private Date createTime;
     private Date updateTime;
+    private Integer sequence;
 
     @Override
     public boolean equals(Object o) {

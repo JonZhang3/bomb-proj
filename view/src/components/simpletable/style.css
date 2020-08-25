@@ -55,19 +55,6 @@
 
 .at-table__footer {
     position: relative;
-    margin: 16px 0;
-    height: 28px;
-}
-
-.at-table__footer .at-pagination {
-    float: right;
-}
-
-.at-table__footer .at-pagination__total {
-    position: absolute;
-    left: 0;
-    top: 0;
-    margin-left: 16px;
 }
 
 .at-table--fixHeader .at-table__content {

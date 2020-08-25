@@ -1,5 +1,6 @@
 package com.bombproj.service;
 
+import com.bombproj.adapter.DataTableAdapter;
 import com.bombproj.constants.DbType;
 import com.bombproj.constants.ProjectDataTableState;
 import com.bombproj.constants.ProjectDatabaseState;
@@ -9,12 +10,14 @@ import com.bombproj.dto.ProjectDatabaseDto;
 import com.bombproj.framework.aop.Transaction;
 import com.bombproj.framework.exception.BusinessException;
 import com.bombproj.model.DataTableField;
+import com.bombproj.model.DataTableIndex;
 import com.bombproj.model.DataTableIndexes;
 import com.bombproj.model.ProjectDataTable;
 import com.bombproj.model.ProjectDatabase;
 import com.bombproj.utils.Utils;
 import com.bombproj.vo.DataTableFieldIndexesVO;
 import com.bombproj.vo.DataTableFieldVO;
+import com.bombproj.vo.DataTableIndexesVO;
 import com.bombproj.vo.ProjectDataTableVO;
 import com.bombproj.vo.ProjectDatabaseVO;
 import com.google.gson.reflect.TypeToken;
@@ -113,6 +116,7 @@ public class ProjectDatabaseService {
         database.setDbPort(dto.getPort() + "");
         database.setUserName(dto.getUserName());
         database.setType(dto.getType());
+        database.setVersion(dto.getVersion());
         database.setState(ProjectDatabaseState.COMMON.getState());
         database.setProjectId(dto.getProjectId());
         database.setUserId(dto.getUserId());
@@ -136,6 +140,8 @@ public class ProjectDatabaseService {
         this.projectDatabaseDao.deleteTablesByDatabaseId(dto.getProjectId(), dto.getId());
         // 3. 删除列信息
         this.projectDatabaseDao.deleteTableFieldsByDatabaseId(dto.getProjectId(), dto.getId());
+        // 4. 删除索引信息
+        this.projectDatabaseDao.deleteTableIndexesByDatabaseId(dto.getProjectId(), dto.getId());
         // TODO log
     }
 
@@ -146,14 +152,15 @@ public class ProjectDatabaseService {
         return this.projectDatabaseDao.pageQueryTables(tableName, dbId, projectId, page);
     }
 
-    public void addTable(ProjectDataTableDto dto) {
+    public String addTable(ProjectDataTableDto dto) {
         if (this.projectDatabaseDao.countTableByTableName(dto.getTableName(),
             null, dto.getProjectId(), dto.getDatabaseId()) > 0) {
             throw new BusinessException("表名重复");
         }
         ProjectDataTable table = new ProjectDataTable();
         Date now = new Date();
-        table.setId(KeyGenerateUtil.generateId() + "");
+        String id = KeyGenerateUtil.generateId() + "";
+        table.setId(id);
         table.setTableName(dto.getTableName());
         table.setTableDesc(dto.getTableDesc());
         table.setCreateTime(now);
@@ -163,25 +170,51 @@ public class ProjectDatabaseService {
         table.setUserId(dto.getUserId());
         table.setDatabaseId(dto.getDatabaseId());
         this.projectDatabaseDao.insertTable(table);
+        return id;
     }
 
+    @Transaction
     public void updateTable(ProjectDataTableDto dto) {
         if (this.projectDatabaseDao.countTableByTableName(dto.getTableName(),
             dto.getTableId(), dto.getProjectId(), dto.getDatabaseId()) > 0) {
             throw new BusinessException("表名重复");
         }
         this.projectDatabaseDao.updateTable(dto);
+        List<DataTableField> fields = Utils.fromJson(dto.getFields(), new TypeToken<List<DataTableField>>() {}.getType());
+        if(fields != null && fields.size() > 0) {
+            String nowMaxVersion = this.projectDatabaseDao.queryTableFieldMaxVersion(dto.getTableId(), dto.getProjectId());
+            String version;
+            if (Utils.isEmpty(nowMaxVersion)) {
+                version = "1";
+            } else {
+                version = Integer.parseInt(nowMaxVersion) + 1 + "";
+            }
+            this.projectDatabaseDao.batchInsertTableFields(fields, dto.getProjectId(), dto.getTableId(), dto.getDatabaseId(), version, dto.getUserId());
+        }
+        List<DataTableIndex> indexes = Utils.fromJson(dto.getIndexes(), new TypeToken<List<DataTableIndex>>(){}.getType());
+        if(indexes != null && indexes.size() > 0) {
+
+        }
     }
 
     @Transaction
     public void deleteTable(ProjectDataTableDto dto) {
+        // 1. 删除所有的表
         this.projectDatabaseDao.deleteTable(dto.getTableId(), dto.getProjectId());
+        // 2. 删除所有的列
         this.projectDatabaseDao.deleteTableAllFields(dto.getTableId(), dto.getProjectId());
+        // 3. 删除所有的索引
+        this.projectDatabaseDao.deleteTableAllIndexes(dto.getTableId(), dto.getProjectId());
         //TODO log
     }
 
     public Map<String, Object> getTableIndexes(String tableId, String projectId, String version) {
-        return null;
+        List<String> versions = this.projectDatabaseDao.queryTableIndexesVersions(tableId, projectId);
+        List<DataTableIndexesVO> indexes = this.projectDatabaseDao.queryTableIndexes(tableId, projectId, version);
+        Map<String, Object> result = new HashMap<>();
+        result.put("indexes", indexes);
+        result.put("versions", versions);
+        return result;
     }
 
     public Map<String, Object> getTableFields(String tableId, String projectId, String version) {
@@ -196,16 +229,21 @@ public class ProjectDatabaseService {
     @Transaction
     public void addOrUpdateTableFields(String tableId, String projectId, String userId, Long dbId, String fieldJson) {
         List<DataTableField> fields = Utils.fromJson(fieldJson, new TypeToken<List<DataTableField>>() {}.getType());
-        String nowMaxVersion = this.projectDatabaseDao.queryTableFieldMaxVersion(tableId, projectId);
-        String version;
-        if (Utils.isEmpty(nowMaxVersion)) {
-            version = "1";
-        } else {
-            version = Integer.parseInt(nowMaxVersion) + 1 + "";
-        }
         if (fields != null && fields.size() > 0) {
+            String nowMaxVersion = this.projectDatabaseDao.queryTableFieldMaxVersion(tableId, projectId);
+            String version;
+            if (Utils.isEmpty(nowMaxVersion)) {
+                version = "1";
+            } else {
+                version = Integer.parseInt(nowMaxVersion) + 1 + "";
+            }
             this.projectDatabaseDao.batchInsertTableFields(fields, projectId, tableId, dbId, version, userId);
         }
+    }
+
+    @Transaction
+    public void updateTableAndFieldsAndIndexes(String tableId, String projectId) {
+
     }
 
 }

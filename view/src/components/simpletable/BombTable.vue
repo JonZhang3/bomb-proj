@@ -1,14 +1,10 @@
 <template>
-    <div
-            class="at-table"
-            :class="{
+    <div class="at-table" :class="{
         'at-table--fixHeader': this.fixHeader,
       'at-table--stripe': this.stripe,
       [`at-table--${this.size}`]: this.size,
       [`at-table--border`]: this.border
-    }"
-            :style="tableStyles">
-
+    }" :style="tableStyles">
         <!-- S Content -->
         <div class="at-table__content" :style="contentStyle">
             <!-- S Header -->
@@ -100,7 +96,7 @@
                             <td v-if="optional" class="at-table__cell at-table__column-selection">
                                 <el-checkbox v-model="objData[item.index].isChecked" @change="changeRowSelection"></el-checkbox>
                             </td>
-                            <td v-for="(column, cindex) in columns" v-if="column.type !== 'selection'" class="at-table__cell">
+                            <td v-for="(column, cindex) in columnsData" v-if="column.type !== 'selection'" class="at-table__cell">
                                 <template v-if="column.slot">
                                     <TableSlot :item="item" :index="index" :column="column"></TableSlot>
                                 </template>
@@ -115,32 +111,18 @@
                     <tbody class="at-table__tbody" v-else>
                     <tr>
                         <td class="at-table__cell at-table__cell--nodata"
-                            :colspan="optional ? columns.length + 1 : columns.length">
+                            :colspan="optional ? columnsData.length + 1 : columnsData.length">
                             <slot name="emptyText">暂无数据</slot>
                         </td>
                     </tr>
                     </tbody>
                 </table>
+                <div class="at-table__footer"><slot name="footer"></slot></div>
             </div>
             <!-- E Body -->
+            <slot name="append"></slot>
         </div>
         <!-- E Content -->
-
-        <!-- S Pagination -->
-        <!--        <div v-if="pagination && total" class="at-table__footer" ref="footer">-->
-        <!--            <el-pagination-->
-        <!--                background-->
-        <!--                layout="total, prev, pager, next"-->
-        <!--                :current-page="currentPage"-->
-        <!--                small-->
-        <!--                :total="total"-->
-        <!--                :page-size="pageSize"-->
-        <!--                :show-sizer="showPageSizer"-->
-        <!--                :show-quickjump="showPageQuickjump"-->
-        <!--                @page-change="pageChange"-->
-        <!--                @pagesize-change="pageSizeChange"></el-pagination>-->
-        <!--        </div>-->
-        <!-- E Pagination -->
     </div>
 </template>
 
@@ -162,6 +144,10 @@
             }
         },
         props: {
+            sortLocal: {
+                type: Boolean,
+                default: true
+            },
             size: {
                 type: String,
                 default: 'normal'
@@ -234,7 +220,6 @@
                 columnsData: this.makeColumns(),
                 total: 0,
                 bodyHeight: 0,
-                pageCurSize: this.pageSize,
                 columnsWidth: {},
                 currentPage: 1,
                 sortActiveIndex: 0,
@@ -250,9 +235,6 @@
             },
             sortData() {
                 this.handleResize()
-            },
-            pageCurSize() {
-                this.sortData = this.makeDataWithPaginate()
             },
             data() {
                 this.objData = this.makeObjData();
@@ -320,16 +302,15 @@
                 // }
             },
             makeColumns() {
-                const columns = deepCopy(this.columns)
+                const columns = deepCopy(this.columns);
                 columns.forEach((column, idx) => {
                     column._index = idx
                     column._sortType = 'normal'
 
                     if (column.sortType) {
                         column._sortType = column.sortType
-                        // column.sortType = column.sortType
                     }
-                })
+                });
                 return columns
             },
             makeData() {
@@ -357,11 +338,11 @@
                 let data = []
                 let allData = []
 
-                allData = this.makeDataWithSort()
-                this.allData = allData
-
-                data = this.makeDataWithPaginate(pageNum)
-                return data
+                return this.makeDataWithSort()
+                // this.allData = allData
+                //
+                // data = this.makeDataWithPaginate(pageNum)
+                // return data
             },
             makeDataWithPaginate(page) {
                 page = page || 1
@@ -420,12 +401,12 @@
                             type = sortNameArr[(tmpIdx + 1) > 2 ? 0 : tmpIdx + 1]
                         }
                     }
-                    if (type === 'normal') {
-                        this.sortData = this.makeDataWithSortAndPage(this.currentPage)
-                    } else {
-                        this.sortData = this.sort(this.sortData, type, index)
-                        console.log('sortData', this.sortData);
-                        console.log('objData', this.objData);
+                    if(this.sortLocal) {
+                        if (type === 'normal') {
+                            this.sortData = this.makeDataWithSortAndPage(this.currentPage)
+                        } else {
+                            this.sortData = this.sort(this.sortData, type, index)
+                        }
                     }
                 }
                 this.columnsData[index]._sortType = type
@@ -442,9 +423,9 @@
                     if (this.columnsData[index].sortMethod) {
                         return this.columnsData[index].sortMethod(a[key], b[key], type)
                     } else if (type === 'asc') {
-                        return a[key] > b[key] ? 1 : -1
+                        return a[key] === b[key] ? 0 : (a[key] > b[key] ? 1 : -1);
                     }
-                    return a[key] < b[key] ? 1 : -1
+                    return a[key] === b[key] ? 0 : (a[key] < b[key] ? 1 : -1);
                 })
                 return data
             },
@@ -460,15 +441,6 @@
             changeRowSelection() {
                 const selection = this.getSelection()
                 this.$emit('on-selection-change', selection)
-            },
-            pageChange(page) {
-                this.$emit('on-page-change', page)
-                this.currentPage = page
-                this.sortData = this.makeDataWithPaginate(page)
-            },
-            pageSizeChange(size) {
-                this.$emit('on-page-size-change', size)
-                this.pageCurSize = size
             },
             handleResize() {
                 this.$nextTick(() => {

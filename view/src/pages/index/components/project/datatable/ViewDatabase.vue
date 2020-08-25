@@ -12,10 +12,12 @@
         </el-row>
         <el-row style="margin-top: 10px;flex: 1;display: flex;height: 100%;overflow: hidden;">
             <div style="display: flex;flex-direction: column; width: 200px;border-right: 1px solid #DCDFE6;height: 100%;overflow: hidden;">
-                <div style="padding: 0 5px 10px 5px">
+                <div style="padding: 0 5px 10px 5px;display: flex;justify-content: center;align-items: center;">
                     <el-input v-model="tableSearchText" size="mini" placeholder="模糊匹配表名" clearable></el-input>
+                    <i class="el-icon-plus" @click="handleAddTable" title="添加表"
+                       style="cursor: pointer;font-size: 18px;padding-left: 5px;"></i>
                 </div>
-                <list-menu router style="flex: 1;"
+                <list-menu router router-mode="replace" style="flex: 1;"
                            :default-active="tableListActiveIndex"
                            v-loading="tableLoading">
                     <list-menu-item v-for="(item, i) in tables"
@@ -33,9 +35,11 @@
                 </div>
             </div>
             <div style="flex: 1;height: 100%;">
-                <router-view>点击右侧</router-view>
+                <router-view></router-view>
             </div>
         </el-row>
+        <add-database-table-dialog :visible.sync="addTableDialogVisible" :project-id="projectId" :database-id="databaseId"
+                                   @success="handleTableAddSuccess" @cancel="handleTableAddCancel"></add-database-table-dialog>
     </el-row>
 </template>
 
@@ -43,13 +47,16 @@
 
     import ListMenu from "../../../../../components/listmenu/ListMenu";
     import ListMenuItem from "../../../../../components/listmenu/ListMenuItem";
+    import AddDatabaseTableDialog from "./AddDatabaseTableDialog";
+
     import apis from "../../../../../api/apis";
 
     export default {
         name: 'ViewDatabase',
         components: {
             ListMenu,
-            ListMenuItem
+            ListMenuItem,
+            AddDatabaseTableDialog
         },
         provide() {
             return {
@@ -58,6 +65,7 @@
         },
         data() {
             return {
+                addTableDialogVisible: false,
                 tableListActiveIndex: '',
                 tables: [],
                 databaseName: this.$route.params.databaseName,
@@ -109,6 +117,16 @@
             handleTableClick(row) {
                 this.changeBreadcrumb('查看');
                 this.currentTableData = row;
+            },
+            handleAddTable() {
+                this.addTableDialogVisible = true;
+            },
+            handleTableAddSuccess() {
+                this.addTableDialogVisible = false;
+                this.listDatabaseTables();
+            },
+            handleTableAddCancel() {
+                this.addTableDialogVisible = false;
             },
             listDatabaseTables(useGlobalLoading = false) {
                 this.tableLoading = true;
