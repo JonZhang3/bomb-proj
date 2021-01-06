@@ -17,13 +17,10 @@ import com.bombproj.vo.DataTableIndexesVO;
 import com.bombproj.vo.ProjectDataTableVO;
 import com.bombproj.vo.ProjectDatabaseVO;
 import com.queryflow.accessor.A;
-import com.queryflow.accessor.handler.ResultSetHandler;
 import com.queryflow.page.Pager;
 import com.queryflow.sql.SqlBox;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;

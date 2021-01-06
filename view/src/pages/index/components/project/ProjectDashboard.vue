@@ -6,7 +6,7 @@
         </el-breadcrumb>
         <div style="margin-top: 10px;background-color: #fff;padding: 10px;border-radius: 5px;">
             <div>
-                <div style="display: flex;align-items: center;">
+                <div style="display: flex;align-items: center;justify-content: space-between;">
                     <span style="color: #409EFF;font-size: 20px;">{{projectName}}</span>
                     <el-button-group style="margin-left: 5px;">
                         <el-button @click="editProjectDialogVisible = true" round
@@ -27,7 +27,7 @@
                 </div>
                 <div style="margin-top: 10px;">
                     <span class="detail-item"><span class="title">创建时间：</span><span class="content">{{projectData.createTime}}</span></span>
-                    <span class="detail-item"><span class="title">更新时间：</span><span class="content">{{projectData.updateTime}}</span></span>
+<!--                    <span class="detail-item"><span class="title">更新时间：</span><span class="content">{{projectData.updateTime}}</span></span>-->
                 </div>
                 <div style="margin-top: 10px;" v-if="projectData.gitAddr">
                     <span class="detail-item"><span class="title">Git 地址：</span><span class="content">{{projectData.gitAddr}}</span></span>
@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div>
-                <p style="font-size: 14px;">项目统计</p>
+                <p class="proj-item-title">项目统计</p>
                 <div style="display: flex; flex-wrap: wrap">
                     <a class="project-db-statistics-item">
                         <span class="title"><i class="el-icon el-icon-edit"></i>项目成员</span>
@@ -53,6 +53,20 @@
                         <span class="desc">成员数：3</span>
                     </a>
                 </div>
+            </div>
+            <div>
+                <p class="proj-item-title">项目环境</p>
+                <el-tabs v-model="activeEnv">
+                    <el-tab-pane label="开发环境" name="dev">
+
+                    </el-tab-pane>
+                    <el-tab-pane label="测试环境" name="test">
+
+                    </el-tab-pane>
+                    <el-tab-pane label="线上环境" name="prod">
+
+                    </el-tab-pane>
+                </el-tabs>
             </div>
         </div>
         <edit-project-dialog :visible.sync="editProjectDialogVisible"
@@ -76,6 +90,7 @@
         data() {
             return {
                 editProjectDialogVisible: false,
+                activeEnv: 'dev',
                 projectData: {
                     id: '',
                     name: '',

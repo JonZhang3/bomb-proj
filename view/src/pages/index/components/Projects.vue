@@ -1,5 +1,5 @@
 <template>
-    <div style="display: flex;flex-direction: column; background-color: #ffffff;height: 100%;">
+    <div class="proj-container">
         <el-row type="flex" justify="space-between">
             <el-col :span="6">
                 <el-radio-group v-model="projectType" size="small">

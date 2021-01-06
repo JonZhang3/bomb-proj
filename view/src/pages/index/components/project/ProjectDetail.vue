@@ -17,28 +17,28 @@
                     <i class="el-icon-s-home"></i>
                     <span slot="title">项目详情</span>
                 </el-menu-item>
-                <el-menu-item :index="`/project/${$route.params.id}/member`">
-                    <i class="el-icon-user-solid"></i>
-                    <span slot="title">项目成员</span>
-                </el-menu-item>
-                <el-menu-item :index="`/project/${$route.params.id}/code`">
-                    <i class="el-icon-error"></i>
-                    <span slot="title">状态码</span>
-                </el-menu-item>
-                <el-menu-item :index="`/project/${$route.params.id}/db`">
-                    <i class="el-icon-s-grid"></i>
-                    <span slot="title">数据库</span>
-                </el-menu-item>
-                <el-submenu index="1">
-                    <template slot="title">
-                        <i class="el-icon-location"></i>
-                        <span>文档管理</span>
-                    </template>
-                    <el-menu-item :index="`/project/${$route.params.id}/files`">
-                        <i class="el-icon-s-grid"></i>
-                        <span slot="title">文件网盘</span>
-                    </el-menu-item>
-                </el-submenu>
+<!--                <el-menu-item :index="`/project/${$route.params.id}/member`">-->
+<!--                    <i class="el-icon-user-solid"></i>-->
+<!--                    <span slot="title">项目成员</span>-->
+<!--                </el-menu-item>-->
+<!--                <el-menu-item :index="`/project/${$route.params.id}/code`">-->
+<!--                    <i class="el-icon-error"></i>-->
+<!--                    <span slot="title">状态码</span>-->
+<!--                </el-menu-item>-->
+<!--                <el-menu-item :index="`/project/${$route.params.id}/db`">-->
+<!--                    <i class="el-icon-s-grid"></i>-->
+<!--                    <span slot="title">数据库</span>-->
+<!--                </el-menu-item>-->
+<!--                <el-submenu index="1">-->
+<!--                    <template slot="title">-->
+<!--                        <i class="el-icon-location"></i>-->
+<!--                        <span>文档管理</span>-->
+<!--                    </template>-->
+<!--                    <el-menu-item :index="`/project/${$route.params.id}/files`">-->
+<!--                        <i class="el-icon-s-grid"></i>-->
+<!--                        <span slot="title">文件网盘</span>-->
+<!--                    </el-menu-item>-->
+<!--                </el-submenu>-->
             </el-menu>
             <div class="menu-collapse-root" @click="menuCollapse = !menuCollapse">
                 <i :class="menuCollapse ? 'el-icon-arrow-right' : 'el-icon-arrow-left'"></i>

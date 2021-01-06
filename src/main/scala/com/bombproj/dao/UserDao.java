@@ -2,7 +2,6 @@ package com.bombproj.dao;
 
 import com.bombproj.constants.UserState;
 import com.bombproj.model.User;
-import com.bombproj.vo.UserQueryResultVO;
 import com.queryflow.accessor.A;
 import org.springframework.stereotype.Repository;
 

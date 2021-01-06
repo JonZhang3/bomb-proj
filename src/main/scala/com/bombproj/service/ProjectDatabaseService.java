@@ -1,6 +1,5 @@
 package com.bombproj.service;
 
-import com.bombproj.adapter.DataTableAdapter;
 import com.bombproj.constants.DbType;
 import com.bombproj.constants.ProjectDataTableState;
 import com.bombproj.constants.ProjectDatabaseState;

@@ -13,6 +13,12 @@
                         <span>项目管理</span>
                     </template>
                 </el-menu-item>
+                <el-menu-item index="/servers">
+                    <template slot="title">
+                        <i class="el-icon-s-platform"></i>
+                        <span>主机管理</span>
+                    </template>
+                </el-menu-item>
                 <el-menu-item index="2">
                     <template slot="title">
                         <i class="el-icon-s-custom"></i>

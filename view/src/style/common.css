@@ -19,3 +19,15 @@ h1, h2, h3, h4, h5, h6, hr, blockquote, dl, dt, dd, form, fieldset, legend, butt
     text-decoration: underline;
     cursor: pointer;
 }
+
+.proj-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    height: 100%;
+}
+
+.proj-item-title {
+    font-size: 14px;
+    color: #606266;
+}
