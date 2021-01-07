@@ -3,7 +3,7 @@ package com.bombproj.utils
 import java.security.SecureRandom
 import java.util.Random
 
-case class ShortID private(private val random: Random,
+final case class ShortID private(private val random: Random,
                       private val alphabet: String,
                       private val reduceTime: Long,
                       private val version: Int,
@@ -17,14 +17,18 @@ case class ShortID private(private val random: Random,
     def generate(): String = {
         var str = ""
         val seconds = Math.floor((System.currentTimeMillis - reduceTime) * 0.001).toLong
-        if (seconds == previousSeconds) counter += 1
-        else {
-            counter = 0
-            previousSeconds = seconds
+        var count = 0
+        this.synchronized {
+            if (seconds == previousSeconds) counter += 1
+            else {
+                counter = 0
+                previousSeconds = seconds
+            }
+            count = this.counter
         }
         str = str + encode(version)
         str = str + encode(clusterWorkerId)
-        if (counter > 0) str = str + encode(counter)
+        if (count > 0) str = str + encode(count)
         str = str + encode(seconds.toInt)
         str
     }
