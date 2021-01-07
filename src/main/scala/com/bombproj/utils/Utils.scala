@@ -26,7 +26,7 @@ object Utils {
         val size = CHARS.length
         val random = new Random
         val result = new StringBuilder(length)
-        for (i <- 0 until length) {
+        for (_ <- 0 until length) {
             result.append(CHARS.charAt(random.nextInt(size)))
         }
         result.toString

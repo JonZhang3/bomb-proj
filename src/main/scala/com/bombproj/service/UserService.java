@@ -8,7 +8,6 @@ import com.bombproj.framework.SessionConfig;
 import com.bombproj.framework.WebUtils;
 import com.bombproj.model.User;
 import com.bombproj.utils.MD5;
-import com.bombproj.utils.Utils;
 import com.queryflow.sql.SqlBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

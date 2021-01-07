@@ -7,7 +7,6 @@ import com.bombproj.constants.UserType;
 import com.bombproj.dto.LoginDto;
 import com.bombproj.model.User;
 import com.bombproj.utils.MD5;
-import com.bombproj.utils.Utils;
 import com.queryflow.key.KeyGenerateUtil;
 
 import java.util.Date;

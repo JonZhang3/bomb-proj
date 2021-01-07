@@ -1,6 +1,5 @@
 package com.bombproj.framework.aop;
 
-import com.bombproj.utils.Utils;
 import com.queryflow.accessor.A;
 import com.queryflow.accessor.Accessor;
 import org.aspectj.lang.ProceedingJoinPoint;

@@ -3,7 +3,6 @@ package com.bombproj.adapter;
 import com.bombproj.constants.DataTableFieldState;
 import com.bombproj.model.DataTableField;
 import com.bombproj.utils.ShortID;
-import com.bombproj.utils.Utils;
 import com.queryflow.key.KeyGenerateUtil;
 
 import java.util.Date;
