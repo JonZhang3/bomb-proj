@@ -8,6 +8,8 @@ import java.util.Random
 import com.bombproj.utils.ImageCode.DEFAULT_FONT
 import javax.imageio.ImageIO
 
+import scala.util.control.Breaks.break
+
 class ImageCode(width: Int = 80,// 图片的宽度。
                 height: Int = 30,// 图片的高度。
                 codeCount: Int = 4,// 验证码字符个数
@@ -30,6 +32,7 @@ class ImageCode(width: Int = 80,// 图片的宽度。
             for (s <- fontFamilies) {
                 if (s == _fontStr) {
                     supportFont = false
+                    break
                 }
             }
             if (!supportFont) _fontStr = fontFamilies(0)

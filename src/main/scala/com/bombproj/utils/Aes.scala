@@ -22,7 +22,7 @@ object Aes {
 
     def encrypt(data: String): String = {
         val appProperties = SpringContextHolder.getBean(classOf[AppProperties])
-        val PWD = handlerKey(appProperties.getAesKey)
+        val PWD = handlerKey(appProperties.aesKey)
         try {
             val cipher = Cipher.getInstance("AES/CBC/NoPadding")
             val blockSize = cipher.getBlockSize
@@ -46,7 +46,7 @@ object Aes {
     def desEncrypt(data: String): String = {
         var _data = data
         val appProperties = SpringContextHolder.getBean(classOf[AppProperties])
-        val PWD = handlerKey(appProperties.getAesKey)
+        val PWD = handlerKey(appProperties.aesKey)
         try {
             if (_data == null || _data == "") return ""
             _data = _data.trim

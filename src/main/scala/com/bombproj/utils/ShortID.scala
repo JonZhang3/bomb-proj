@@ -4,10 +4,10 @@ import java.security.SecureRandom
 import java.util.Random
 
 final case class ShortID private(private val random: Random,
-                      private val alphabet: String,
-                      private val reduceTime: Long,
-                      private val version: Int,
-                      private val clusterWorkerId: Int) {
+                                 private val alphabet: String,
+                                 private val reduceTime: Long,
+                                 private val version: Int,
+                                 private val clusterWorkerId: Int) {
     @volatile
     private var counter = 0
     @volatile
@@ -17,18 +17,18 @@ final case class ShortID private(private val random: Random,
     def generate(): String = {
         var str = ""
         val seconds = Math.floor((System.currentTimeMillis - reduceTime) * 0.001).toLong
-        var count = 0
+        var _count = 0
         this.synchronized {
             if (seconds == previousSeconds) counter += 1
             else {
                 counter = 0
                 previousSeconds = seconds
             }
-            count = this.counter
+            _count = this.counter
         }
         str = str + encode(version)
         str = str + encode(clusterWorkerId)
-        if (count > 0) str = str + encode(count)
+        if (_count > 0) str = str + encode(_count)
         str = str + encode(seconds.toInt)
         str
     }
