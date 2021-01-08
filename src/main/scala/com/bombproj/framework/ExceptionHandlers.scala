@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.{ControllerAdvice, ExceptionHandl
 @ControllerAdvice
 class ExceptionHandlers {
 
-    @ExceptionHandler(classOf[BusinessException])
+    @ExceptionHandler(Array(classOf[BusinessException]))
     @ResponseBody
     def handleBusinessException(e: BusinessException): JsonResult = {
         JsonResult()
@@ -16,7 +16,7 @@ class ExceptionHandlers {
             .message(e.getMessage)
     }
 
-    @ExceptionHandler(classOf[NotFoundException])
+    @ExceptionHandler(Array(classOf[NotFoundException]))
     def handleNotFoundException(e: NotFoundException): Unit = {
         throw e
     }

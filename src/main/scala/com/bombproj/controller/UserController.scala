@@ -9,10 +9,10 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.{GetMapping, ModelAttribute, PostMapping, RequestMapping, RestController}
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping(Array("/api/user"))
 class UserController @Resource()(userService: UserService) {
 
-    @PostMapping("/login")
+    @PostMapping(Array("/login"))
     def login(@ModelAttribute @Validated model: LoginDto): JsonResult = {
         val user = userService.login(model)
         val sessionConfig = new SessionConfig
@@ -28,14 +28,14 @@ class UserController @Resource()(userService: UserService) {
         JsonResult.success().data(user)
     }
 
-    @GetMapping("/logout")
+    @GetMapping(Array("/logout"))
     def logout(): JsonResult = {
         WebUtils.removeSessionAttribute(SessionConfig.KEY_SESSION_CONFIG)
         JsonResult.success()
     }
 
-    @PostMapping("/register")
-    def register(@ModelAttribute @Validated(classOf[LoginDto.Register]) model: LoginDto): JsonResult = {
+    @PostMapping(Array("/register"))
+    def register(@ModelAttribute @Validated(Array(classOf[LoginDto.Register])) model: LoginDto): JsonResult = {
         this.userService.register(model)
         JsonResult.success("注册成功")
     }

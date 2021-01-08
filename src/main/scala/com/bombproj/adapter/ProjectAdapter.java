@@ -28,7 +28,8 @@ public final class ProjectAdapter {
         project.setSequence(0L);
         project.setRemark("");
         project.setUserId(dto.getUserId());
-        project.setType(dto.getType() == null ? ProjectType.PUBLIC.getType() : dto.getType());
+        // TODO
+        // project.setType(dto.getType()) != 0 ? ProjectType.PUBLIC.getType() : dto.getType());
         project.setCover(dto.getCover());
         project.setGitAddr(dto.getGitAddr());
         return project;

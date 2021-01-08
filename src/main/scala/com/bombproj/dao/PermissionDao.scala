@@ -1,7 +1,6 @@
 package com.bombproj.dao
 
 import java.util
-import java.util.{LinkedList, List}
 
 import com.bombproj.constants.{PermissionState, PermissionType}
 import com.bombproj.model.Permission
@@ -11,14 +10,14 @@ import org.springframework.stereotype.Repository
 @Repository
 class PermissionDao {
 
-    def queryAllPermission(`type`: PermissionType): util.List[Permission] = {
+    def queryAllPermission(pType: PermissionType): util.List[Permission] = {
         val sql = new StringBuilder
-        val values = new util.LinkedList[AnyRef]
+        val values = new util.LinkedList[Any]
         sql.append(" SELECT * FROM permission WHERE state = ? ")
         values.add(PermissionState.COMMON.getState)
-        if (`type` != null) {
+        if (pType != null) {
             sql.append(" AND type = ? ")
-            values.add(`type`.getType)
+            values.add(pType.getType)
         }
         sql.append(" ORDER BY sequence ")
         A.query(sql.toString, values).list(classOf[Permission])

@@ -20,7 +20,7 @@ public final class UserAdapter {
     public static User getModel(LoginDto loginDto) {
         Date now = new Date();
         User user = new User();
-        String salt = Utils.getChars(Constants.PASSWORD_SALT_LENGTH);
+        String salt = Utils.getChars(Constants.PASSWORD_SALT_LENGTH());
         user.setId(KeyGenerateUtil.generateId() + "");
         user.setUserName(loginDto.getUserName());
         user.setPassword(MD5.encrytMD5(loginDto.getPassword(), salt));

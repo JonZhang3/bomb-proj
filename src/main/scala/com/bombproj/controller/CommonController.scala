@@ -11,7 +11,7 @@ class CommonController {
 
     @RequestMapping(Array("/captcha"))
     def getImageVCode(): Unit = {
-        val response = WebUtils.response()
+        val response = WebUtils.response
         response.setDateHeader("Expires", 0)
         response.addHeader("Pragma", "no-cache")
         response.setHeader("Cache-Control", "no-cache, no-store, max-age=0")
@@ -29,7 +29,7 @@ class CommonController {
     @RequestMapping(Array("/checkCaptcha"))
     @ResponseBody
     def checkVerificationCode(@RequestParam("verificationCode") verificationCode: String): JsonResult = {
-        if(Utils.isEmpty(verificationCode)) JsonResult.error("验证码有误")
+        if (Utils.isEmpty(verificationCode)) JsonResult.error("验证码有误")
         if (verificationCode == WebUtils.getSessionAttribute(SessionConfig.KEY_VERIFICATION_CODE)) JsonResult.success("通过")
         JsonResult.error("验证码有误")
     }

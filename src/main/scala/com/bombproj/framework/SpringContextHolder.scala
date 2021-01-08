@@ -11,12 +11,12 @@ class SpringContextHolder extends ApplicationContextAware {
         context = applicationContext
     }
 
+}
+
+object SpringContextHolder {
+    private var context: ApplicationContext = _
+
     def getBean[T](clazz: Class[T]): T = {
         context.getBean(clazz)
     }
-
-}
-
-private object SpringContextHolder {
-    private var context: ApplicationContext = _
 }

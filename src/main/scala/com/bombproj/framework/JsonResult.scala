@@ -31,20 +31,8 @@ object JsonResult {
 
     def apply(): JsonResult = new JsonResult()
 
-    def success: JsonResult = success(MESSAGE_SUCCESS)
+    def success(message: String = MESSAGE_SUCCESS, data: Any = null): JsonResult = new JsonResult().code(CODE_SUCCESS).message(message).data(data)
 
-    def success(data: Any): JsonResult = success(MESSAGE_SUCCESS, data)
-
-    def success(message: String): JsonResult = new JsonResult().code(CODE_SUCCESS).message(message)
-
-    def success(message: String, data: Any): JsonResult = new JsonResult().code(CODE_SUCCESS).message(message).data(data)
-
-    def error: JsonResult = error(MESSAGE_ERROR)
-
-    def error(data: Any): JsonResult = error(MESSAGE_ERROR, data)
-
-    def error(message: String): JsonResult = new JsonResult().code(CODE_ERROR).message(message)
-
-    def error(message: String, data: Any): JsonResult = new JsonResult().code(CODE_ERROR).message(message).data(data)
+    def error(message: String = MESSAGE_ERROR, data: Any = null): JsonResult = new JsonResult().code(CODE_ERROR).message(message).data(data)
 
 }
