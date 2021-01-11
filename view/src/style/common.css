@@ -31,3 +31,11 @@ h1, h2, h3, h4, h5, h6, hr, blockquote, dl, dt, dd, form, fieldset, legend, butt
     font-size: 14px;
     color: #606266;
 }
+
+.primary-color {
+    color: #409EFF;
+}
+
+.danger-color {
+    color: #F56C6C;
+}

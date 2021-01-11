@@ -43,8 +43,8 @@ class ProjectDatabaseDao {
         sql.append(" FROM project_database d ")
         sql.append(" JOIN project p ON d.projectId = p.id JOIN users u ON d.userId = u.id ")
         sql.append(" WHERE d.state = ? AND p.state = ? AND d.projectId = ? ")
-        values.add(ProjectDatabaseState.COMMON.getState)
-        values.add(ProjectState.COMMON.getState)
+        values.add(ProjectDatabaseState.COMMON.getState.asInstanceOf[Integer])
+        values.add(ProjectState.COMMON.getState.asInstanceOf[Integer])
         values.add(projectId)
         if (Utils.isNotEmpty(databaseName)) {
             sql.append(" AND d.databaseName LIKE ? ")
@@ -58,7 +58,7 @@ class ProjectDatabaseDao {
         var sql = "SELECT COUNT(id) FROM project_database WHERE projectId = ? AND state = ? AND databaseName = ?"
         val values = new util.LinkedList[AnyRef]
         values.add(projectId)
-        values.add(ProjectDatabaseState.COMMON.getState)
+        values.add(ProjectDatabaseState.COMMON.getState.asInstanceOf[Integer])
         values.add(databaseName)
         if (Utils.isNotEmpty(databaseId)) {
             sql += " AND id <> ? "
@@ -125,8 +125,8 @@ class ProjectDatabaseDao {
         sql.append(" JOIN project_database b ON d.databaseId = b.id ")
         sql.append(" JOIN project p ON d.projectId = p.id JOIN users u ON d.userId = u.id ")
         sql.append(" WHERE d.state = ? AND p.state = ? AND d.projectId = ? AND databaseId = ? ")
-        values.add(ProjectDataTableState.COMMON.getState)
-        values.add(ProjectState.COMMON.getState)
+        values.add(ProjectDataTableState.COMMON.getState.asInstanceOf[Integer])
+        values.add(ProjectState.COMMON.getState.asInstanceOf[Integer])
         values.add(projectId)
         values.add(dbId)
         if (Utils.isNotEmpty(tableName)) {
@@ -143,9 +143,9 @@ class ProjectDatabaseDao {
         sql.append(" SELECT COUNT(id) FROM project_datatable WHERE projectId = ? AND state = ? AND tableName = ? ")
         sql.append(" AND databaseId = ? ")
         values.add(projectId)
-        values.add(ProjectDataTableState.COMMON.getState)
+        values.add(ProjectDataTableState.COMMON.getState.asInstanceOf[Integer])
         values.add(tableName)
-        values.add(dbId)
+        values.add(dbId.asInstanceOf[java.lang.Long])
         if (Utils.isNotEmpty(tableId)) {
             sql.append(" AND id <> ? ")
             values.add(tableId)
@@ -220,7 +220,7 @@ class ProjectDatabaseDao {
         sql.append(" WHERE f.projectId = ? AND f.datatableId = ? AND f.state = ? ")
         values.add(projectId)
         values.add(tableId)
-        values.add(DataTableFieldState.COMMON.getState)
+        values.add(DataTableFieldState.COMMON.getState.asInstanceOf[Integer])
         if (Utils.isEmpty(version)) {
             sql.append(" AND f.version = (SELECT MAX(version) FROM datatable_field WHERE projectId = ? AND datatableId = ?) ")
             values.add(projectId)
@@ -246,13 +246,13 @@ class ProjectDatabaseDao {
                     vo.setPk(rs.getString("pk"))
                     vo.setAutoIncrement(rs.getString("autoIncrement"))
                     vo.setDefaultValue(rs.getString("defaultValue"))
-                    vo.set_unsigned(rs.getString("_unsigned"))
-                    vo.set_zerofill(rs.getString("_zerofill"))
-                    vo.set_charset(rs.getString("_charset"))
-                    vo.set_collation(rs.getString("_collation"))
-                    vo.set_binary(rs.getString("_binary"))
+                    vo.unsigned = rs.getString("_unsigned")
+                    vo.zerofill = rs.getString("_zerofill")
+                    vo.charset = rs.getString("_charset")
+                    vo.collation = rs.getString("_collation")
+                    vo.binary = rs.getString("_binary")
                     vo.setOnUpdateCT(rs.getString("onUpdateCT"))
-                    vo.set_decimal(rs.getString("_decimal"))
+                    vo.decimal = rs.getString("_decimal")
                     val valueList = rs.getString("valueList")
                     var valueListArr = Array[String]()
                     if (Utils.isNotEmpty(valueList)) valueListArr = valueList.split(",")
@@ -279,7 +279,7 @@ class ProjectDatabaseDao {
         sql.append(" WHERE i.projectId = ? AND i.datatableId = ? AND i.state = ? ")
         values.add(projectId)
         values.add(tableId)
-        values.add(DataTableIndexState.COMMON.getState)
+        values.add(DataTableIndexState.COMMON.getState.asInstanceOf[Integer])
         if (Utils.isEmpty(version)) {
             sql.append(" AND i.version = (SELECT MAX(version) FROM datatable_index WHERE projectId = ? AND datatableId = ?) ")
             values.add(projectId)

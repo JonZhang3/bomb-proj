@@ -1,6 +1,6 @@
 defaultPageLimit: 12
 camelCaseToSnake: false
-url: jdbc:mysql://bj-cynosdbmysql-grp-e14uos2k.sql.tencentcdb.com:28191/bombproj?useUnicode=true&characterEncoding=utf-8&useSSL=false&allowMultiQueries=true&serverTimezone=UTC&allowMultiQueries=true&useAffectedRows=true
+url: jdbc:mysql://bj-cynosdbmysql-grp-e14uos2k.sql.tencentcdb.com:28191/bombproj?useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false&allowMultiQueries=true&serverTimezone=UTC&allowMultiQueries=true&useAffectedRows=true
 username: root
 password: 1qaz@WSX
 maxActive: 5

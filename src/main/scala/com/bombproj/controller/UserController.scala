@@ -35,7 +35,7 @@ class UserController @Resource()(userService: UserService) {
     }
 
     @PostMapping(Array("/register"))
-    def register(@ModelAttribute @Validated(Array(classOf[LoginDto.Register])) model: LoginDto): JsonResult = {
+    def register(@ModelAttribute @Validated(Array(classOf[LoginDto#Register])) model: LoginDto): JsonResult = {
         this.userService.register(model)
         JsonResult.success("注册成功")
     }

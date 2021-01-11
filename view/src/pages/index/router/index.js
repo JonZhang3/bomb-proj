@@ -21,7 +21,7 @@ import ProjectDashboard from "../components/project/ProjectDashboard";
 // import ProjectSharedFiles from "../components/project/files/ProjectSharedFiles";
 // import ProjectFileRecycleBin from "../components/project/files/ProjectFileRecycleBin";
 
-import Servers from "@/pages/index/components/servers/Servers";
+import Servers from "@/pages/index/components/Servers";
 
 import NotFound from "../components/NotFound";
 

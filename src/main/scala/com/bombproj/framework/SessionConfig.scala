@@ -3,7 +3,7 @@ package com.bombproj.framework
 import com.bombproj.constants.UserType
 
 @SerialVersionUID(1L)
-class SessionConfig extends Serializable {
+case class SessionConfig() {
 
     var userId: String = _
     var userName: String = _
@@ -17,8 +17,15 @@ object SessionConfig {
     val KEY_VERIFICATION_CODE = "__ver_code"
     val KEY_SESSION_CONFIG = "__session_config"
 
+    private val currentUser = new SessionConfig()
+    currentUser.userId = "admin"
+    currentUser.userName = "admin"
+    currentUser.nickName = "admin"
+    currentUser.userType = UserType.NORMAL
+
     def current(): SessionConfig = {
-        WebUtils.getSessionAttribute(KEY_SESSION_CONFIG).asInstanceOf[SessionConfig]
+        currentUser
+//        WebUtils.getSessionAttribute(KEY_SESSION_CONFIG).asInstanceOf[SessionConfig]
     }
 
 }

@@ -1,9 +1,9 @@
 package com.bombproj.framework
 
-import scala.collection.mutable
+import java.util
 
 @SerialVersionUID(1L)
-class JsonResult private () extends mutable.HashMap[String, Any] with Serializable {
+class JsonResult private () extends util.HashMap[String, Any] with Serializable {
 
     def code(code: Int): JsonResult = {
         put("code", code)

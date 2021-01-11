@@ -24,10 +24,10 @@ class ProjectFilesDao {
         sql.append(" GROUP BY f2.parentId) c ON f.id = c.id ")
         sql.append(" LEFT JOIN users u ON f.creator = u.id ")
         sql.append(" WHERE f.projectId = ? AND f.state = ? AND parentId = ? ")
-        values.add(ProjectFileState.NORMAL.getState)
+        values.add(ProjectFileState.NORMAL.getState.asInstanceOf[Integer])
         values.add(dto.projectId)
         values.add(dto.projectId)
-        values.add(ProjectFileState.NORMAL.getState)
+        values.add(ProjectFileState.NORMAL.getState.asInstanceOf[Integer])
         values.add(dto.folderId)
         // name、creatorName、updateTime、size
         // desc、asc

@@ -24,7 +24,7 @@ class ProjectDao {
         sql.append(" p.cover, p.uniKey, p.type, p.userId, u.nickName userName FROM project p ")
         sql.append(" JOIN users u ON p.userId = u.id ")
         sql.append(" WHERE p.state = ? ")
-        values.add(ProjectState.COMMON.getState)
+        values.add(ProjectState.COMMON.getState.asInstanceOf[Integer])
         if (Utils.isNotEmpty(query.getName)) {
             sql.append(" AND p.projectName LIKE ? ")
             values.add(s"%${query.getName}%")
@@ -55,7 +55,7 @@ class ProjectDao {
 
     def deleteProject(projectId: String, userId: String): Unit = {
         val sql = "UPDATE project SET state = ? WHERE userId = ? AND id = ?"
-        A.update(sql, ProjectState.DELETED.getState, userId, projectId)
+        A.update(sql, ProjectState.DELETED.getState.asInstanceOf[Integer], userId, projectId)
     }
 
     def updateProject(dto: ProjectDto): Unit = {
@@ -85,15 +85,15 @@ class ProjectDao {
         sql.append(" JOIN users u ON m.userId = u.id ")
         sql.append(" WHERE u.state = ? AND p.userId = ? AND m.state = ? ")
         val values = new util.LinkedList[AnyRef]
-        values.add(UserState.VALID.getCode)
-        values.add(dto.getCreateUserId)
-        values.add(ProjectMemberState.NORMAL.getState)
+        values.add(UserState.VALID.getCode.asInstanceOf[Integer])
+        values.add(dto.createUserId)
+        values.add(ProjectMemberState.NORMAL.getState.asInstanceOf[Integer])
         if (Utils.isNotEmpty(dto.userName)) {
             sql.append(" AND u.nickName LIKE ? ")
             values.add(s"%${dto.userName}%")
         }
         sql.append(" AND m.projectId = ? ")
-        values.add(dto.getProjectId)
+        values.add(dto.projectId)
         sql.append(" ORDER BY m.createTime DESC ")
         A.page(sql.toString, values, dto.getPage, classOf[ProjectMemberListVO])
     }
@@ -102,10 +102,10 @@ class ProjectDao {
         val sqlPrefix = "SELECT u.id, u.userName, u.nickName, u.email, u.phone FROM users u WHERE NOT EXISTS " +
             "(SELECT * FROM project_member m WHERE m.userId = u.id AND m.projectId = ? ) AND u.state = ? "
         val sql = s"$sqlPrefix AND u.userName LIKE ?  UNION $sqlPrefix AND u.nickName LIKE ?  UNION $sqlPrefix AND u.email LIKE ?  UNION $sqlPrefix AND u.phone LIKE ? "
-        A.query(sql, projectId, UserState.VALID.getCode, s"%$name%",
-            projectId, UserState.VALID.getCode, s"%$name%",
-            projectId, UserState.VALID.getCode, s"%$name%",
-            projectId, UserState.VALID.getCode, s"%$name%")
+        A.query(sql, projectId, UserState.VALID.getCode.asInstanceOf[Integer], s"%$name%",
+            projectId, UserState.VALID.getCode.asInstanceOf[Integer], s"%$name%",
+            projectId, UserState.VALID.getCode.asInstanceOf[Integer], s"%$name%",
+            projectId, UserState.VALID.getCode.asInstanceOf[Integer], s"%$name%")
             .list(classOf[UserQueryResultVO])
     }
 
@@ -119,14 +119,14 @@ class ProjectDao {
             if (Utils.isNotEmpty(userId)) {
                 val value = new util.LinkedList[AnyRef]
                 value.add(KeyGenerateUtil.generateId + "")
-                value.add(ProjectMemberState.NORMAL.getState)
+                value.add(ProjectMemberState.NORMAL.getState.asInstanceOf[Integer])
                 value.add("0")
                 value.add(now)
                 value.add(now)
                 value.add(projectId)
                 value.add(userId)
                 value.add(permissions)
-                value.add(memberType.getType)
+                value.add(memberType.getType.asInstanceOf[Integer])
                 value.add(projectId)
                 value.add(userId)
                 values.add(value)

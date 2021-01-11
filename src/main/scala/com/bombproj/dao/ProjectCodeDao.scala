@@ -13,30 +13,33 @@ import com.queryflow.page.Pager
 import com.queryflow.sql.SqlBox
 import org.springframework.stereotype.Repository
 
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
+import scala.collection.JavaConverters._
+
 @Repository
 class ProjectCodeDao {
 
     def pageQueryProjectCodes(dto: ProjectCodeDto): Pager[ProjectCodeVO] = {
         val sql = new StringBuilder
-        val values = new util.LinkedList[AnyRef]
+        val values = new ArrayBuffer[Object]
         sql.append(" SELECT id, code, message, createTime FROM project_code WHERE state = ? AND projectId = ? ")
-        values.add(ProjectCodeState.COMMON.getState)
-        values.add(dto.getProjectId)
+        values += ProjectCodeState.COMMON.getState.asInstanceOf[Integer]
+        values += dto.projectId
         if (Utils.isNotEmpty(dto.getCode)) {
             sql.append(" AND code LIKE ? ")
-            values.add(s"%${dto.getCode}%")
+            values += s"%${dto.getCode}%"
         }
         if (Utils.isNotEmpty(dto.getMessage)) {
             sql.append(" AND message LIKE ? ")
-            values.add(s"%${dto.message}%")
+            values += s"%${dto.message}%"
         }
         if (Utils.isNotEmpty(dto.getQueryText)) {
             sql.append(" AND (code LIKE ? OR message LIKE ?) ")
-            values.add(s"%${dto.getQueryText}%")
-            values.add(s"%${dto.getQueryText}%")
+            values += s"%${dto.getQueryText}%"
+            values += s"%${dto.getQueryText}%"
         }
         sql.append(" ORDER BY createTime DESC ")
-        A.page(sql.toString, values, dto.getPage, classOf[ProjectCodeVO])
+        A.page(sql.toString, values.asJava, dto.getPage, classOf[ProjectCodeVO])
     }
 
     def countProjectCodeByCode(code: String, projectId: String): Integer = {

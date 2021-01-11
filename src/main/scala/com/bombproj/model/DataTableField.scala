@@ -2,7 +2,7 @@ package com.bombproj.model
 
 import java.util.{Date, Objects}
 
-import com.queryflow.annotation.Table
+import com.queryflow.annotation.{Column, Table}
 
 import scala.beans.BeanProperty
 
@@ -17,13 +17,19 @@ case class DataTableField() {
     @BeanProperty var pk: String = _
     @BeanProperty var autoIncrement: String = _
     @BeanProperty var defaultValue: String = _
-    @BeanProperty var _unsigned: String = _
-    @BeanProperty var _zerofill: String = _
-    @BeanProperty var _charset: String = _
-    @BeanProperty var _collation: String = _
-    @BeanProperty var _binary: String = _
+    @Column("_unsigned")
+    @BeanProperty var unsigned: String = _
+    @Column("_zerofill")
+    @BeanProperty var zerofill: String = _
+    @Column("_charset")
+    @BeanProperty var charset: String = _
+    @Column("_collation")
+    @BeanProperty var collation: String = _
+    @Column("_binary")
+    @BeanProperty var binary: String = _
     @BeanProperty var onUpdateCT: String = _
-    @BeanProperty var _decimal: String = _
+    @Column("_decimal")
+    @BeanProperty var decimal: String = _
     @BeanProperty var valueList: String = _
     @BeanProperty var notes: String = _
     @BeanProperty var indexes: String = _
@@ -53,7 +59,8 @@ case class DataTableField() {
     }
 
     override def hashCode: Int =
-        Objects.hash(id, fieldName, `type`, length, notNull, defaultValue, notes, indexes, indexesName, state, marker,
+        Objects.hash(id, fieldName, `type`, length, notNull, defaultValue, notes, indexes, indexesName,
+            state.asInstanceOf[Integer], marker,
             version, datatableId, projectId, userId, createTime, updateTime)
 
 }
