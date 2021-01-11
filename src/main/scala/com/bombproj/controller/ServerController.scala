@@ -1,15 +1,15 @@
 package com.bombproj.controller
 
-import com.bombproj.dto.ServerGroupDto
+import com.bombproj.dto.{ServerDto, ServerGroupDto}
 import com.bombproj.framework.{JsonResult, SessionConfig}
-import com.bombproj.service.ServerGroupService
+import com.bombproj.service.{ServerGroupService, ServerService}
 import javax.annotation.Resource
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.{DeleteMapping, GetMapping, ModelAttribute, PathVariable, PostMapping, PutMapping, RequestMapping, RestController}
 
 @RestController
 @RequestMapping(Array("/api/server"))
-class ServerController @Resource() (serverGroupService: ServerGroupService) {
+class ServerController @Resource() (serverGroupService: ServerGroupService, serverService: ServerService) {
 
     @PutMapping(Array("/group"))
     def newGroup(@ModelAttribute @Validated(Array(classOf[ServerGroupDto#NewOrUpdateGroup])) dto: ServerGroupDto): JsonResult = {
@@ -44,6 +44,11 @@ class ServerController @Resource() (serverGroupService: ServerGroupService) {
         JsonResult.success(data = this.serverGroupService.pageQuery(dto))
     }
 
-    
+    def newServer(@ModelAttribute @Validated(Array(classOf[ServerDto#NewOrUpdateServer])) dto: ServerDto): JsonResult = {
+        val sessionConfig = SessionConfig.current()
+        dto.userId = sessionConfig.userId
+        serverService.newServer(dto)
+        JsonResult.success()
+    }
 
 }

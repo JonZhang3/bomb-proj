@@ -1,15 +1,15 @@
 <template>
-    <el-dialog title="新增主机" v-bind="$attrs" :before-close="handleCancel"
+    <el-dialog title="新增主机" v-bind="$attrs" :before-close="handleCancel" width="40%"
                @open="handleOpen"
                :close-on-click-modal="false">
         <el-form ref="newServerForm" :model="newServerForm" :rules="newServerFormRule"
-                 label-width="80px" size="small" :inline="true">
-            <el-form-item label="名称" prop="serverName">
+                 label-width="90px" size="small" :inline="true">
+            <el-form-item label="名称" prop="serverName" required>
                 <el-input v-model="newServerForm.serverName" size="small"></el-input>
             </el-form-item>
             <el-form-item label="所属组" prop="group">
                 <el-select placeholder="输入组名称搜索" remote :remote-method="handleSeatchServerGroups"
-                           :loading="groupSearchLoading"
+                           :loading="groupSearchLoading" :disabled="lockGroup"
                            loading-text="正在搜索"
                            v-model="newServerForm.serverGroup" filterable>
                     <el-option v-for="item in serverGroups" :key="item.id"
@@ -23,17 +23,17 @@
                           v-model="newServerForm.describe"></el-input>
             </el-form-item>
             <br/>
-            <el-form-item label="HostName" prop="hostName">
+            <el-form-item label="HostName" prop="hostName" required>
                 <el-input v-model="newServerForm.hostName" size="small"></el-input>
             </el-form-item>
-            <el-form-item label="SSH Port" prop="sshPort">
+            <el-form-item label="SSH Port" prop="sshPort" required>
                 <el-input-number size="mini" v-model="newServerForm.sshPort" :min="1" :max="65535"></el-input-number>
             </el-form-item>
             <br/>
-            <el-form-item label="用户名" prop="username">
+            <el-form-item label="用户名" prop="username" required>
                 <el-input v-model="newServerForm.username" size="small"></el-input>
             </el-form-item>
-            <el-form-item label="密码" prop="pass">
+            <el-form-item label="密码" prop="pass" required>
                 <el-input type="password" v-model="newServerForm.pass" size="small"></el-input>
             </el-form-item>
             <el-form-item>
@@ -41,7 +41,9 @@
             </el-form-item>
             <br/>
             <el-form-item label="标签" prop="tags">
-                <el-select v-model="newServerForm.tags" multiple filterable allow-create default-first-option></el-select>
+                <el-select v-model="newServerForm.tags"
+                           placeholder="请填写"
+                           multiple filterable allow-create default-first-option></el-select>
             </el-form-item>
         </el-form>
         <span slot="footer">
@@ -58,6 +60,12 @@ import {debounce} from 'throttle-debounce'
 
 export default {
     name: 'new-server-dialog',
+    props: {
+        lockGroup: {
+            type: Boolean,
+            default: false
+        }
+    },
     data() {
         return {
             serverGroups: [],
@@ -107,7 +115,7 @@ export default {
             if(name) {
                 params['groupName'] = name;
             }
-            apis.listServerGroups(params, {useLoading: false}).then(data => {
+            apis.servers.listServerGroups(params, {useLoading: false}).then(data => {
                 this.groupSearchLoading = false;
                 if(data.code === 1) {
                     this.serverGroups = data.data.records;

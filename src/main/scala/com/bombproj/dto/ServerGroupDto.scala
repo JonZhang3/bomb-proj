@@ -11,10 +11,10 @@ case class ServerGroupDto() {
     @BeanProperty var id: String = _
 
     @NotBlank(message = "主机组名称不能为空", groups = Array(classOf[NewOrUpdateGroup]))
-    @Length(max = 50, message = "主机组名称最大长度为 50", groups = Array(classOf[NewOrUpdateGroup]))
+    @Length(max = 64, message = "主机组名称最大长度为 64", groups = Array(classOf[NewOrUpdateGroup]))
     @BeanProperty var groupName: String = _
 
-    @Length(max = 255, message = "主机组简介最大长度为 255", groups = Array(classOf[NewOrUpdateGroup]))
+    @Length(max = 64, message = "主机组简介最大长度为 64", groups = Array(classOf[NewOrUpdateGroup]))
     @BeanProperty var groupDesc: String = _
 
     @BeanProperty var userId: String = _

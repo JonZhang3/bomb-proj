@@ -131,7 +131,7 @@ export default {
             if(name) {
                 params['groupName'] = name;
             }
-            apis.listServerGroups(params).then(data => {
+            apis.servers.listServerGroups(params).then(data => {
                 if(data.code === 1) {
                     this.groupPager.pageSize = data.data.limit;
                     this.groupPager.page = data.data.page;

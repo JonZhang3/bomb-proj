@@ -6,7 +6,7 @@ import servers from "@/api/servers";
 const baseUrl = settings.baseUrl;
 
 export default {
-    ...servers,
+    servers,
     captchaUrl: baseUrl + '/api/common/captcha',
     coverBaseUrl: baseUrl + '/static/',
     coverUploadUrl: baseUrl + '/api/upload/cover',

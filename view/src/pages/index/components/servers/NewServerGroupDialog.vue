@@ -50,7 +50,7 @@ export default {
             });
         },
         addServerGroup(e) {
-            apis.addServerGroup({
+            apis.servers.addServerGroup({
                 groupName: this.newServerGroupForm.groupName,
                 groupDesc: this.newServerGroupForm.desc
             }).then(data => {
