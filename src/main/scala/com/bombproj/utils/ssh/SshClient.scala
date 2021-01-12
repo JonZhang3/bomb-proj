@@ -26,11 +26,12 @@ class SshClient(val host: String, val username: String, val password: String, va
         session.disconnect()
     }
 
-    def exec(command: String): String = {
-        if(Utils.isEmpty(command)) return ""
+    def exec(command: String): (String, String) = {
+        if(Utils.isEmpty(command)) return ("", "")
         var channel: ChannelExec = null
         var input: InputStream = null
         val sb = new StringBuilder
+        val errResponse = new StringBuilder
         try {
             channel = session.openChannel("exec").asInstanceOf[ChannelExec]
             channel.setCommand(COMMAND_PREFIX + command)
@@ -46,25 +47,27 @@ class SshClient(val host: String, val username: String, val password: String, va
             if(input != null) input.close()
             if(channel != null) channel.disconnect()
         }
-        sb.toString()
+        (sb.toString(), errResponse.toString())
     }
 
-    def exec(command: String): Unit = {
-        if(Utils.isEmpty(command)) return
+    def execLines(): Unit = {
+
+    }
+
+    def execStream(command: String): (InputStream, InputStream) = {
+        if(Utils.isEmpty(command)) return (null, null)
         var channel: ChannelExec = null
-        var input: InputStream = null
-        val sb = new StringBuilder
         try {
             channel = session.openChannel("exec").asInstanceOf[ChannelExec]
             channel.setCommand(COMMAND_PREFIX + command)
-            input = channel.getInputStream
-
+            val input = channel.getInputStream
+            val errInput = channel.getErrStream
             channel.connect(DEFAULT_TIMEOUT)
-
+            return (input, errInput)
         } finally {
-            if(input != null) input.close()
             if(channel != null) channel.disconnect()
         }
+        (null, null)
     }
 
     def shell(): Unit = {

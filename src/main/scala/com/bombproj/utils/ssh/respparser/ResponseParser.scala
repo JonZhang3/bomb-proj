@@ -4,8 +4,8 @@ import java.io.InputStream
 
 trait ResponseParser[T] {
 
-    def parse(message: String): T
+    def parse(messages: (String, String)): T
 
-    def parse(input: InputStream): T
+    def parseStream(inputs: (InputStream, InputStream)): T
 
 }
