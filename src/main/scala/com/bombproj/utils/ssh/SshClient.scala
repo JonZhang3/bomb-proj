@@ -1,13 +1,10 @@
 package com.bombproj.utils.ssh
 
-import java.io.{BufferedReader, InputStream, InputStreamReader}
+import java.io.{BufferedReader, File, FileInputStream, FileNotFoundException, IOException, InputStream, InputStreamReader, OutputStream}
 
-import ch.ethz.ssh2.{Connection, SCPClient}
 import com.bombproj.utils.Utils
-import com.bombproj.utils.ssh.SshClient.DEFAULT_TIMEOUT
+import com.bombproj.utils.ssh.SshClient.{COMMAND_PREFIX, DEFAULT_TIMEOUT}
 import com.jcraft.jsch.{ChannelExec, JSch, Session}
-
-import scala.io.Source
 
 class SshClient(val host: String, val username: String, val password: String, val port: Int = 22) {
 
@@ -36,7 +33,7 @@ class SshClient(val host: String, val username: String, val password: String, va
         val sb = new StringBuilder
         try {
             channel = session.openChannel("exec").asInstanceOf[ChannelExec]
-            channel.setCommand(command)
+            channel.setCommand(COMMAND_PREFIX + command)
             input = channel.getInputStream
             channel.connect(DEFAULT_TIMEOUT)
             val reader = new BufferedReader(new InputStreamReader(input, "UTF-8"))
@@ -52,43 +49,102 @@ class SshClient(val host: String, val username: String, val password: String, va
         sb.toString()
     }
 
+    def exec(command: String): Unit = {
+        if(Utils.isEmpty(command)) return
+        var channel: ChannelExec = null
+        var input: InputStream = null
+        val sb = new StringBuilder
+        try {
+            channel = session.openChannel("exec").asInstanceOf[ChannelExec]
+            channel.setCommand(COMMAND_PREFIX + command)
+            input = channel.getInputStream
+
+            channel.connect(DEFAULT_TIMEOUT)
+
+        } finally {
+            if(input != null) input.close()
+            if(channel != null) channel.disconnect()
+        }
+    }
+
+    def shell(): Unit = {
+
+    }
+
+    def scpTo(source: String, dest: String = ""): Int = {
+        if(Utils.isEmpty(source)) throw new IOException("source not be null")
+        val sourceFile = new File(source)
+        if(!sourceFile.exists()) throw new FileNotFoundException("source file not found")
+        var _dest = dest
+        if(Utils.isEmpty(_dest)) _dest = "."
+        var channel: ChannelExec = null
+        var output: OutputStream = null
+        try {
+            channel = session.openChannel("exec").asInstanceOf[ChannelExec]
+            _dest = _dest.replace("'", "'\"'\"'")
+            _dest = "'" + _dest + "'"
+            var command = "scp"
+            command += " -t " + _dest
+            channel.setCommand(command)
+            output = channel.getOutputStream
+            val input = channel.getInputStream
+            channel.connect(DEFAULT_TIMEOUT)
+            if(checkAck(input) != 0) return -1
+            val fileSize = sourceFile.length()
+            command = "C0644 " + fileSize + " "
+            if(source.lastIndexOf('/') > 0) command += source.substring(source.lastIndexOf('/') + 1)
+            else command += source
+            command += "\n"
+            output.write(command.getBytes())
+            output.flush()
+            if(checkAck(input) != 0) return -1
+            var fis = new FileInputStream(sourceFile)
+            val buffer = new Array[Byte](1024)
+            var len: Int = fis.read(buffer, 0, buffer.length)
+            while (len > 0) {
+                output.write(buffer, 0, len)
+                len = fis.read(buffer, 0, buffer.length)
+            }
+            fis.close(); fis = null
+            output.write('\0')
+            output.flush()
+            if(checkAck(input) != 0) {
+                return -1
+            }
+        } finally {
+            if(output != null) output.close()
+            if(channel != null) channel.disconnect()
+        }
+        0
+    }
+
+    private def checkAck(in: InputStream): Int = {
+        val b = in.read()
+        if (b == 1 || b == 2) {
+            val sb = new StringBuilder
+            var c: Int = 0
+            do {
+                c = in.read()
+                sb.append(c.toChar)
+            } while (c != '\n')
+        }
+        b
+    }
+
 }
 
 object SshClient {
 
     private val DEFAULT_TIMEOUT: Int = 15 * 1000
+    private val COMMAND_PREFIX = "source /etc/profile;"
 
     def main(args: Array[String]): Unit = {
-//        val client = new SshClient("81.68.133.247", "root", "1qaz@WSX")
-//        client.connect()
-//        println("exec ls")
-//        val start = System.currentTimeMillis()
-//        val str = client.exec("ls /")
-//        println(System.currentTimeMillis() - start)
-//        client.disconnect() // 2462
-        test2()
-    }
-
-    def test2(): Unit = {
-        val conn = new Connection("81.68.133.247")
-        conn.connect()
-        val result = conn.authenticateWithPassword("root", "1qaz@WSX")
-        println("connection " + result)
-        val session = conn.openSession()
-        val sb = new StringBuilder
-        val start = System.currentTimeMillis()
-        session.execCommand("ls /;echo 1")
-        val input: InputStream = session.getStdout
-        val reader = new BufferedReader(new InputStreamReader(input, "UTF-8"))
-        var line: String = reader.readLine()
-        while (line != null) {
-            sb.append(line + "\n")
-            line = reader.readLine()
-        }
-        println(System.currentTimeMillis() - start)
-        println(sb.toString())
-        SCPClient
-        conn.close()
+        val client = new SshClient("192.168.33.16", "root", "1qaz@WSX")
+        client.connect()
+        println(client.exec("java -verbose"))
+//        val flag = client.scpTo("/Users/jon/Desktop/a.jpeg", "/home")
+//        println(flag)
+        client.disconnect() // 2462
     }
 
 }
