@@ -13,7 +13,7 @@ case class Server() {
     @BeanProperty var serverName: String = _
     @BeanProperty var hostName: String = _
     @BeanProperty var sshPort: Int = _
-    @BeanProperty var describe: String = _
+    @BeanProperty var description: String = _
     @BeanProperty var username: String = _
     @BeanProperty var pass: String = _
     @BeanProperty var tags: String = _

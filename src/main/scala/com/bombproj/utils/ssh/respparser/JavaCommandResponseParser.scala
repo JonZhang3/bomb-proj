@@ -14,7 +14,7 @@ class JavaCommandResponseParser extends ResponseParser[Map[String, Any]] {
     }
 
     def parseLines(lines: List[String]): Map[String, Any] = {
-
+        null
     }
 
 }

@@ -35,11 +35,3 @@ class ServerGroupService @Resource()(groupDao: ServerGroupDao) {
     }
 
 }
-
-//object Main {
-//    def main(args: Array[String]): Unit = {
-//        val conn = new Connection("")
-//        conn.connect()
-//        val authResult = conn.authenticateWithPassword("", "")
-//    }
-//}

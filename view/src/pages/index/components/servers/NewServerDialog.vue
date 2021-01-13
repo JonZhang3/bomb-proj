@@ -3,24 +3,22 @@
                @open="handleOpen"
                :close-on-click-modal="false">
         <el-form ref="newServerForm" :model="newServerForm" :rules="newServerFormRule"
-                 label-width="90px" size="small" :inline="true">
+                 label-width="100px" size="small" :inline="true">
             <el-form-item label="名称" prop="serverName" required>
                 <el-input v-model="newServerForm.serverName" size="small"></el-input>
             </el-form-item>
             <el-form-item label="所属组" prop="group">
                 <el-select placeholder="输入组名称搜索" remote :remote-method="handleSeatchServerGroups"
-                           :loading="groupSearchLoading" :disabled="lockGroup"
-                           loading-text="正在搜索"
+                           :loading="groupSearchLoading" :disabled="lockGroup" loading-text="正在搜索"
                            v-model="newServerForm.serverGroup" filterable>
                     <el-option v-for="item in serverGroups" :key="item.id"
                                :label="item.groupName" :value="item.id"></el-option>
                 </el-select>
             </el-form-item>
             <br/>
-            <el-form-item label="描述" prop="describe">
-                <el-input type="textarea" show-word-limit
-                          :autosize="{minRows: 4, maxRows: 6}"
-                          v-model="newServerForm.describe"></el-input>
+            <el-form-item label="描述" prop="description">
+                <el-input type="textarea" show-word-limit :autosize="{minRows: 4, maxRows: 6}"
+                          v-model="newServerForm.description"></el-input>
             </el-form-item>
             <br/>
             <el-form-item label="HostName" prop="hostName" required>
@@ -72,7 +70,7 @@ export default {
             groupSearchLoading: false,
             newServerForm: {
                 serverName: '',
-                describe: '',
+                description: '',
                 serverGroup: '',
                 hostName: '',
                 sshPort: 22,
@@ -90,7 +88,7 @@ export default {
             this.$emit('cancel');
         },
         handleAdd(e) {
-            this.$refs['newServerGroupForm'].validate(valid => {
+            this.$refs['newServerForm'].validate(valid => {
                 if(valid) {
                     this.addServer(e);
                 } else {
@@ -99,7 +97,28 @@ export default {
             });
         },
         addServer(e) {
-
+            let tags = this.newServerForm.tags;
+            if(tags) {
+                tags = tags.join(',')
+            }
+            apis.servers.addServer({
+                serverName: this.newServerForm.serverName,
+                description: this.newServerForm.description,
+                serverGroup: this.newServerForm.serverGroup,
+                hostName: this.newServerForm.hostName,
+                sshPort: this.newServerForm.sshPort,
+                username: this.newServerForm.username,
+                pass: this.newServerForm.pass,
+                tags
+            }).then(data => {
+                if(data.code === 1) {
+                    this.$message.success('添加主机成功');
+                    this.$refs['newServerForm'].resetFields();
+                    this.$emit('added', e);
+                } else {
+                    this.$message.error(data.message);
+                }
+            });
         },
         handleOpen() {
             this.listServerGroups();

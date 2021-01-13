@@ -15,7 +15,7 @@ case class ServerDto() {
     @BeanProperty var serverName: String = _
 
     @Length(max = 64, message = "描述信息最大长度为 64", groups = Array(classOf[NewOrUpdateServer]))
-    @BeanProperty var describe: String = _
+    @BeanProperty var description: String = _
 
     @BeanProperty var serverGroup: String = _
 

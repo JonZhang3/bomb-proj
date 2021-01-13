@@ -1,6 +1,6 @@
 import axios from 'axios';
 import qs from 'querystring';
-import {Loading, Message} from 'element-ui';
+import {Loading} from 'element-ui';
 import settings from '../common/settings';
 
 axios.defaults.timeout = settings.httpTimeout;
@@ -8,10 +8,10 @@ axios.defaults.baseURL = settings.baseUrl;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
 axios.defaults.withCredentials = true;
 
-export const get = (url, params, config = {useLoading: true}) => {
+export const get = (url, params, configs = {useLoading: true, loadingText: ''}) => {
     let loading;
-    if(config.useLoading) {
-        loading = Loading.service({fullscreen: true});
+    if(configs.useLoading) {
+        loading = Loading.service({fullscreen: true, text: configs.loadingText ? configs.loadingText : '拼命加载中...'});
     }
     return new Promise((resolve, reject) => {
         axios.get(url, {
@@ -26,10 +26,10 @@ export const get = (url, params, config = {useLoading: true}) => {
     });
 }
 
-export const post = (url, params, configs = {useLoading: true}) => {
+export const post = (url, params, configs = {useLoading: true, loadingText: ''}) => {
     let loading;
     if(configs.useLoading) {
-        loading = Loading.service({fullscreen: true});
+        loading = Loading.service({fullscreen: true, text: configs.loadingText ? configs.loadingText : '拼命加载中...'});
     }
     return new Promise((resolve, reject) => {
         axios.post(url, qs.stringify(params), configs)
@@ -43,10 +43,10 @@ export const post = (url, params, configs = {useLoading: true}) => {
     });
 }
 
-export const del = (url, params, configs = {useLoading: true}) => {
+export const del = (url, params, configs = {useLoading: true, loadingText: ''}) => {
     let loading;
     if(configs.useLoading) {
-        loading = Loading.service({fullscreen: true});
+        loading = Loading.service({fullscreen: true, text: configs.loadingText ? configs.loadingText : '拼命加载中...'});
     }
     return new Promise((resolve, reject) => {
         axios.delete(url, {
@@ -61,10 +61,10 @@ export const del = (url, params, configs = {useLoading: true}) => {
     });
 }
 
-export const put = (url, params, configs = {useLoading: true}) => {
+export const put = (url, params, configs = {useLoading: true, loadingText: ''}) => {
     let loading;
     if(configs.useLoading) {
-        loading = Loading.service({fullscreen: true});
+        loading = Loading.service({fullscreen: true, text: configs.loadingText ? configs.loadingText : '拼命加载中...'});
     }
     return new Promise((resolve, reject) => {
         axios.put(url, qs.stringify(params), configs).then(res => {

@@ -5,7 +5,7 @@ import com.bombproj.framework.{JsonResult, SessionConfig}
 import com.bombproj.service.{ServerGroupService, ServerService}
 import javax.annotation.Resource
 import org.springframework.validation.annotation.Validated
-import org.springframework.web.bind.annotation.{DeleteMapping, GetMapping, ModelAttribute, PathVariable, PostMapping, PutMapping, RequestMapping, RestController}
+import org.springframework.web.bind.annotation.{DeleteMapping, GetMapping, ModelAttribute, PathVariable, PostMapping, PutMapping, RequestMapping, RequestParam, RestController}
 
 @RestController
 @RequestMapping(Array("/api/server"))
@@ -44,11 +44,21 @@ class ServerController @Resource() (serverGroupService: ServerGroupService, serv
         JsonResult.success(data = this.serverGroupService.pageQuery(dto))
     }
 
-    @PutMapping(Array("/"))
+    @PutMapping(Array(""))
     def newServer(@ModelAttribute @Validated(Array(classOf[ServerDto#NewOrUpdateServer])) dto: ServerDto): JsonResult = {
         val sessionConfig = SessionConfig.current()
         dto.userId = sessionConfig.userId
         serverService.newServer(dto)
+        JsonResult.success()
+    }
+
+    @PostMapping(Array("/{serverId}"))
+    def updateServer(@PathVariable("serverId") serverId: String,
+                     @ModelAttribute @Validated(Array(classOf[ServerDto#NewOrUpdateServer])) dto: ServerDto): JsonResult = {
+        val sessionConfig = SessionConfig.current()
+        dto.userId = sessionConfig.userId
+        dto.id = serverId
+        serverService.updateServer(dto)
         JsonResult.success()
     }
 
@@ -58,15 +68,25 @@ class ServerController @Resource() (serverGroupService: ServerGroupService, serv
         val dto = new ServerDto
         dto.id = serverId
         dto.userId = sessionConfig.userId
-
+        serverService.deleteServer(dto)
         JsonResult.success()
     }
 
-    @GetMapping(Array("/"))
-    def pageQueryServer(@ModelAttribute @Validated(Array(classOf[ServerDto#NewOrUpdateServer])) dto: ServerDto): JsonResult = {
+    @GetMapping(Array(""))
+    def pageQueryServer(@ModelAttribute dto: ServerDto): JsonResult = {
         val sessionConfig = SessionConfig.current()
         dto.userId = sessionConfig.userId
         JsonResult.success(data = serverService.pageQuery(dto))
+    }
+
+    @DeleteMapping(Array("/{serverId}"))
+    def removeFromGroup(@PathVariable("serverId") serverId: String,
+                        @RequestParam("groupId") groupId: String): JsonResult = {
+        val sessionConfig = SessionConfig.current()
+        val dto = new ServerDto
+        dto.userId = sessionConfig.userId
+        serverService.removeFromGroup(groupId, serverId)
+        JsonResult.success()
     }
 
 }

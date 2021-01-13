@@ -32,6 +32,10 @@ export default {
 
 <style>
 
+.bomb-text-btn {
+    font-weight: normal;
+}
+
 .bomb-text-btn.primary {
     color: #409EFF;
 }

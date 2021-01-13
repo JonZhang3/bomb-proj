@@ -28,7 +28,7 @@ object ServerAdapter {
         server.serverName = dto.serverName
         server.hostName = dto.hostName
         server.sshPort = dto.sshPort
-        server.describe = dto.describe
+        server.description = dto.description
         server.username = dto.username
         server.pass = dto.pass
         server.tags = dto.tags

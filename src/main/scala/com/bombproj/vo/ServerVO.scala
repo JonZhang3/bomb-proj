@@ -13,7 +13,7 @@ case class ServerVO() {
     @BeanProperty var serverName: String = _
     @BeanProperty var hostName: String = _
     @BeanProperty var sshPort: String = _
-    @BeanProperty var describe: String = _
+    @BeanProperty var description: String = _
     @BeanProperty var username: String = _
     @BeanProperty var tags: String = _
     @BeanProperty var createUserName: String = _

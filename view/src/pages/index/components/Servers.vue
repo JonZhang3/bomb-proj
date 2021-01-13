@@ -8,10 +8,7 @@
         </el-row>
         <el-row>
             <p class="proj-item-title">主机组</p>
-            <el-table :show-header="false"
-                      :row-style="{cursor: 'pointer'}"
-                      @row-click="handleGroupItemClick"
-                      :data="serverGroups">
+            <el-table :show-header="false" stripe :data="serverGroups">
                 <el-table-column>
                     <template slot-scope="scope">
                         <div style="display: flex;flex-direction: row;align-items: center;">
@@ -23,8 +20,9 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column width="100">
+                <el-table-column width="140">
                     <template slot-scope="scope">
+                        <bomb-text-button>查看</bomb-text-button>
                         <bomb-text-button>编辑</bomb-text-button>
                         <bomb-text-button type="danger">删除</bomb-text-button>
                     </template>
@@ -39,16 +37,15 @@
 
         <el-row>
             <p class="proj-item-title">主机</p>
-            <el-table :show-header="false" stripe
-                      :row-style="{cursor: 'pointer'}"
-                      :data="servers">
+            <el-table :show-header="false" stripe :data="servers">
                 <el-table-column>
                     <template slot-scope="scope">
                         <server-table-item :data="scope.row"></server-table-item>
                     </template>
                 </el-table-column>
-                <el-table-column width="180">
+                <el-table-column width="220">
                     <template slot-scope="scope">
+                        <bomb-text-button>查看</bomb-text-button>
                         <bomb-text-button>编辑</bomb-text-button>
                         <bomb-text-button>安装软件</bomb-text-button>
                         <bomb-text-button type="danger">删除</bomb-text-button>
@@ -93,34 +90,21 @@ export default {
             groupPager: {pageSize: 10, page: 1, total: 0},
             serverPager: {pageSize: 10, page: 1, total: 0},
             serverGroups: [],
-            servers: [
-                {
-                    serverName: 'Redis',
-                    hostName: '192.168.1.1',
-                    sshPort: '22',
-                    username: 'root',
-                    describe: 'Redis 安装服务器'
-                },
-                {
-                    serverName: 'trtt',
-                    hostName: '192.168.1.1',
-                    sshPort: '22',
-                    username: 'root',
-                    describe: 'dsds'
-                }
-            ]
+            servers: []
         }
     },
     mounted() {
         this.listServerGroups(null, 1);
+        this.pageListServers(null, 1);
     },
     methods: {
         handleServerGroupAdded() {
             this.newServerGroupDialogVisible = false;
-            this.listServerGroups(null, 1)
+            this.listServerGroups(null, 1);
         },
         handleServerAdded() {
             this.newServerDialogVisible = false;
+            this.pageListServers(null, 1);
         },
         handleGroupItemClick(row, column, e) {
             e.stopPropagation();
@@ -137,6 +121,22 @@ export default {
                     this.groupPager.page = data.data.page;
                     this.groupPager.total = data.data.total;
                     this.serverGroups = data.data.records;
+                } else {
+                    this.$message.error(data.message)
+                }
+            });
+        },
+        pageListServers(name, page) {
+            const params = {page};
+            if(name) {
+                params['name'] = name;
+            }
+            apis.servers.pageListServers(params).then(data => {
+                if(data.code === 1) {
+                    this.serverPager.pageSize = data.data.limit;
+                    this.serverPager.page = data.data.page;
+                    this.serverPager.total = data.data.total;
+                    this.servers = data.data.records;
                 } else {
                     this.$message.error(data.message)
                 }
