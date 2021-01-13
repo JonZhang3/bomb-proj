@@ -4,7 +4,7 @@ import java.io.{BufferedReader, File, FileInputStream, FileNotFoundException, IO
 
 import com.bombproj.utils.Utils
 import com.bombproj.utils.ssh.SshClient.{COMMAND_PREFIX, DEFAULT_TIMEOUT}
-import com.jcraft.jsch.{ChannelExec, JSch, Session}
+import com.jcraft.jsch.{ChannelExec, ChannelSftp, JSch, Session}
 
 class SshClient(val host: String, val username: String, val password: String, val port: Int = 22) {
 
@@ -23,7 +23,10 @@ class SshClient(val host: String, val username: String, val password: String, va
     def connect(): Boolean = connect(DEFAULT_TIMEOUT)
 
     def disconnect(): Unit = {
-        session.disconnect()
+        if(session != null && session.isConnected) {
+            session.disconnect()
+            session = null
+        }
     }
 
     def exec(command: String): (String, String) = {
@@ -132,6 +135,11 @@ class SshClient(val host: String, val username: String, val password: String, va
             } while (c != '\n')
         }
         b
+    }
+
+    def putFile(): Unit = {
+        val chaneel = session.openChannel("sftp").asInstanceOf[ChannelSftp]
+
     }
 
 }

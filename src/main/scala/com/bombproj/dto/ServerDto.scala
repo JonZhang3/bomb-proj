@@ -39,6 +39,9 @@ case class ServerDto() {
 
     @BeanProperty var userId: String = _
 
+    @BeanProperty var page: Int = _
+    @BeanProperty var name: String = _ //server or host name, for query
+
     trait NewOrUpdateServer
 
 }

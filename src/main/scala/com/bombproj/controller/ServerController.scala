@@ -44,11 +44,29 @@ class ServerController @Resource() (serverGroupService: ServerGroupService, serv
         JsonResult.success(data = this.serverGroupService.pageQuery(dto))
     }
 
+    @PutMapping(Array("/"))
     def newServer(@ModelAttribute @Validated(Array(classOf[ServerDto#NewOrUpdateServer])) dto: ServerDto): JsonResult = {
         val sessionConfig = SessionConfig.current()
         dto.userId = sessionConfig.userId
         serverService.newServer(dto)
         JsonResult.success()
+    }
+
+    @DeleteMapping(Array("/{serverId}"))
+    def deleteServer(@PathVariable("serverId") serverId: String): JsonResult = {
+        val sessionConfig = SessionConfig.current()
+        val dto = new ServerDto
+        dto.id = serverId
+        dto.userId = sessionConfig.userId
+
+        JsonResult.success()
+    }
+
+    @GetMapping(Array("/"))
+    def pageQueryServer(@ModelAttribute @Validated(Array(classOf[ServerDto#NewOrUpdateServer])) dto: ServerDto): JsonResult = {
+        val sessionConfig = SessionConfig.current()
+        dto.userId = sessionConfig.userId
+        JsonResult.success(data = serverService.pageQuery(dto))
     }
 
 }
