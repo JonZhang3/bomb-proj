@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="新增主机" v-bind="$attrs" :before-close="handleCancel" width="40%"
+    <el-dialog title="新增主机" v-bind="$attrs" :before-close="handleCancel"
                @open="handleOpen"
                :close-on-click-modal="false">
         <el-form ref="newServerForm" :model="newServerForm" :rules="newServerFormRule"
@@ -11,8 +11,14 @@
                 <el-select placeholder="输入组名称搜索" remote :remote-method="handleSeatchServerGroups"
                            :loading="groupSearchLoading" :disabled="lockGroup" loading-text="正在搜索"
                            v-model="newServerForm.serverGroup" filterable>
-                    <el-option v-for="item in serverGroups" :key="item.id"
-                               :label="item.groupName" :value="item.id"></el-option>
+                    <template v-if="lockGroup">
+                        <el-option :key="staticServerGroup.id"
+                                   :label="staticServerGroup.groupName" :value="staticServerGroup.id"></el-option>
+                    </template>
+                    <template v-else>
+                        <el-option v-for="item in serverGroups" :key="item.id"
+                                   :label="item.groupName" :value="item.id"></el-option>
+                    </template>
                 </el-select>
             </el-form-item>
             <br/>
@@ -62,6 +68,15 @@ export default {
         lockGroup: {
             type: Boolean,
             default: false
+        },
+        staticServerGroup: {
+            type: Object,
+            default() {
+                return {
+                    id: '',
+                    groupName: ''
+                }
+            }
         }
     },
     data() {
@@ -71,7 +86,7 @@ export default {
             newServerForm: {
                 serverName: '',
                 description: '',
-                serverGroup: '',
+                serverGroup: this.staticServerGroup.id,
                 hostName: '',
                 sshPort: 22,
                 username: '',

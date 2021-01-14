@@ -1,7 +1,10 @@
 <template>
     <div class="proj-container">
         <el-row>
-            <el-col :span="12"><span>主机组：{{groupName}}</span></el-col>
+            <el-col :span="12">
+                <i class="el-icon-arrow-left bomb-back-menu" @click="$router.push('/servers')"></i>
+                <span>主机组【{{groupName}}】</span>
+            </el-col>
             <el-col :span="12" style="text-align: right;">
                 <el-button-group>
                     <el-button round size="mini" type="primary" @click="newServerDialogVisible = true">新增主机</el-button>
@@ -16,13 +19,13 @@
                         <server-table-item :data="scope.row"></server-table-item>
                     </template>
                 </el-table-column>
-                <el-table-column width="220">
+                <el-table-column width="260">
                     <template slot-scope="scope">
-                        <bomb-text-button>查看</bomb-text-button>
-                        <bomb-text-button>编辑</bomb-text-button>
-                        <bomb-text-button>安装软件</bomb-text-button>
-                        <bomb-text-button type="danger">移出组</bomb-text-button>
-                        <bomb-text-button type="danger">删除</bomb-text-button>
+                        <el-link :underline="false" type="primary">查看</el-link>
+                        <el-link :underline="false" type="primary">编辑</el-link>
+                        <el-link :underline="false" type="primary">安装软件</el-link>
+                        <el-link :underline="false" type="danger">移出组</el-link>
+                        <el-link :underline="false" type="danger">删除</el-link>
                     </template>
                 </el-table-column>
             </el-table>
@@ -31,23 +34,23 @@
             <el-pagination background layout="prev,pager,next" small
                            :page-size="pageSize" :current-page="page" :total="total"></el-pagination>
         </el-row>
+        <new-server-dialog :visible.sync="newServerDialogVisible"
+                           @added="handleServerAdded" :lock-group="true" :static-server-group="{id: groupId, groupName}"
+                           @cancel="newServerDialogVisible = false"></new-server-dialog>
     </div>
 </template>
 
 <script>
 import ServerTableItem from "@/pages/index/components/servers/ServerTableItem";
-import BombTextButton from "@/components/BombTextButton";
+import NewServerDialog from "@/pages/index/components/servers/NewServerDialog";
 
 import apis from "@/api/apis";
 
 export default {
-    name: 'server-group-view',
+    name: 'server-group',
     components: {
         ServerTableItem,
-        BombTextButton
-    },
-    props: {
-        groupName: String
+        NewServerDialog
     },
     data() {
         return {
@@ -62,8 +65,11 @@ export default {
         this.pageListServers(null, 1);
     },
     methods: {
+        handleServerAdded() {
+
+        },
         pageListServers(name, page) {
-            const params = {page};
+            const params = {page, serverGroup: this.groupId};
             if(name) {
                 params['name'] = name;
             }
@@ -77,6 +83,14 @@ export default {
                     this.$message.error(data.message)
                 }
             });
+        }
+    },
+    computed: {
+        groupName() {
+            return this.$route.params.groupName
+        },
+        groupId() {
+            return this.$route.params.groupId
         }
     }
 }

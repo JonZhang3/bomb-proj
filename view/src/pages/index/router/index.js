@@ -22,6 +22,9 @@ import ProjectDashboard from "../components/project/ProjectDashboard";
 // import ProjectFileRecycleBin from "../components/project/files/ProjectFileRecycleBin";
 
 import Servers from "@/pages/index/components/Servers";
+import ServerGroup from "@/pages/index/components/servers/ServerGroup";
+
+import Softs from "@/pages/index/components/Softs";
 
 import NotFound from "../components/NotFound";
 
@@ -42,7 +45,23 @@ const routes = [
                 path: '/servers',
                 name: 'servers',
                 component: Servers
-            }
+            },
+            {
+                path: '/softs',
+                name: 'softs',
+                component: Softs
+            },
+            {
+                path: '/servers/group/:groupId',
+                name: 'server-group',
+                component: ServerGroup,
+                meta: {
+                    hasParent: true,
+                    rootMenu() {
+                        return '/servers'
+                    }
+                }
+            },
         ]
     },
     {

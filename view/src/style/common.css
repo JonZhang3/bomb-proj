@@ -39,3 +39,18 @@ h1, h2, h3, h4, h5, h6, hr, blockquote, dl, dt, dd, form, fieldset, legend, butt
 .danger-color {
     color: #F56C6C;
 }
+
+.el-link {
+    font-weight: normal !important;
+}
+.el-link+.el-link {
+    margin-left: 10px;
+}
+
+.bomb-back-menu {
+    padding: 4px;
+    cursor: pointer;
+}
+.bomb-back-menu:hover {
+    background-color: #F2F6FC;
+}

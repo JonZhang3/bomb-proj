@@ -19,6 +19,12 @@
                         <span>主机管理</span>
                     </template>
                 </el-menu-item>
+                <el-menu-item index="/softs">
+                    <template slot="title">
+                        <i class="el-icon-s-goods"></i>
+                        <span>软件管理</span>
+                    </template>
+                </el-menu-item>
                 <el-menu-item index="2">
                     <template slot="title">
                         <i class="el-icon-s-custom"></i>
@@ -39,7 +45,24 @@
         name: 'index',
         data() {
             return {
-                activeIndex: this.$route.path
+                activeIndex: ''
+            }
+        },
+        methods: {
+            getActiveIndex(val) {
+                if(!this.$route.meta.hasParent) {
+                    this.activeIndex = val;
+                } else if(this.$route.meta.rootMenu) {
+                    this.activeIndex = this.$route.meta.rootMenu();
+                }
+            }
+        },
+        mounted() {
+            this.getActiveIndex(this.$route.path)
+        },
+        watch: {
+            '$route.path'(val) {
+                this.getActiveIndex(val)
             }
         }
     }

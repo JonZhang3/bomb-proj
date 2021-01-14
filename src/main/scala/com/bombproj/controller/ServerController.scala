@@ -79,7 +79,7 @@ class ServerController @Resource() (serverGroupService: ServerGroupService, serv
         JsonResult.success(data = serverService.pageQuery(dto))
     }
 
-    @DeleteMapping(Array("/{serverId}"))
+    @DeleteMapping(Array("/rel-server-group/{serverId}"))
     def removeFromGroup(@PathVariable("serverId") serverId: String,
                         @RequestParam("groupId") groupId: String): JsonResult = {
         val sessionConfig = SessionConfig.current()

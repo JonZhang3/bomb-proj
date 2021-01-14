@@ -22,9 +22,10 @@
                 </el-table-column>
                 <el-table-column width="140">
                     <template slot-scope="scope">
-                        <bomb-text-button>查看</bomb-text-button>
-                        <bomb-text-button>编辑</bomb-text-button>
-                        <bomb-text-button type="danger">删除</bomb-text-button>
+                        <el-link :underline="false" type="primary"
+                                 @click="handleGroupItemClick(scope.row, $event)">查看</el-link>
+                        <el-link :underline="false" type="primary">编辑</el-link>
+                        <el-link :underline="false" type="danger">删除</el-link>
                     </template>
                 </el-table-column>
             </el-table>
@@ -45,10 +46,10 @@
                 </el-table-column>
                 <el-table-column width="220">
                     <template slot-scope="scope">
-                        <bomb-text-button>查看</bomb-text-button>
-                        <bomb-text-button>编辑</bomb-text-button>
-                        <bomb-text-button>安装软件</bomb-text-button>
-                        <bomb-text-button type="danger">删除</bomb-text-button>
+                        <el-link :underline="false" type="primary">查看</el-link>
+                        <el-link :underline="false" type="primary">编辑</el-link>
+                        <el-link :underline="false" type="primary">安装软件</el-link>
+                        <el-link :underline="false" type="danger">删除</el-link>
                     </template>
                 </el-table-column>
             </el-table>
@@ -72,7 +73,6 @@
 import NewServerGroupDialog from "@/pages/index/components/servers/NewServerGroupDialog";
 import NewServerDialog from "@/pages/index/components/servers/NewServerDialog";
 import ServerTableItem from "@/pages/index/components/servers/ServerTableItem";
-import BombTextButton from "@/components/BombTextButton";
 import apis from "@/api/apis";
 
 export default {
@@ -81,7 +81,6 @@ export default {
         NewServerGroupDialog,
         NewServerDialog,
         ServerTableItem,
-        BombTextButton
     },
     data() {
         return {
@@ -106,9 +105,11 @@ export default {
             this.newServerDialogVisible = false;
             this.pageListServers(null, 1);
         },
-        handleGroupItemClick(row, column, e) {
+        handleGroupItemClick(row, e) {
             e.stopPropagation();
             e.preventDefault();
+            // this.$router.push({path: `/servers/group/${row.id}`});
+            this.$router.push({name: 'server-group', params: {groupId: row.id, groupName: row.groupName}})
         },
         listServerGroups(name, page) {
             const params = {page};

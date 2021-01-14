@@ -73,8 +73,15 @@ class ServerDao {
         sql.append(" SELECT s.id, s.serverName, s.hostName, s.sshPort, s.description, s.username, ")
         sql.append("s.tags, u.nickName createUserName")
         sql.append(" FROM servers s JOIN users u ON s.creator=u.id ")
+        if(Utils.isNotEmpty(dto.serverGroup)) {
+            sql.append(" JOIN rel_group_server gs ON s.id=gs.serverId ")
+        }
         sql.append(" WHERE s.state = ? ")
         values.add(State.COMMON.getState.asInstanceOf[Integer])
+        if(Utils.isNotEmpty(dto.serverGroup)) {
+            sql.append(" AND gs.groupId = ? ")
+            values.add(dto.serverGroup)
+        }
         if(Utils.isNotEmpty(dto.name)) {
             sql.append(" AND (s.serverName LIKE ? OR s.hostName LIKE ?) ")
             values.add(s"%${dto.name}%")
