@@ -36,6 +36,12 @@ class ServerGroupDao {
             .execute()
     }
 
+    def deleteRelServerGroupByGroupId(groupId: String): Unit = {
+        SqlBox.delete("rel_group_server")
+            .where().eq("groupId", groupId)
+            .execute()
+    }
+
     def countGroupByName(name: String, userId: String): Int = {
         val sql = "SELECT COUNT(id) FROM server_group WHERE groupName = ? AND creator = ? AND state = ?"
         A.query(sql, name, userId, State.COMMON.getState.asInstanceOf[Integer]).one(classOf[Int])

@@ -23,6 +23,7 @@ class ServerService @Resource()(serverDao: ServerDao) {
 
         if(serverDao.countByNameOrHostName(dto.serverName, dto.hostName) > 0)
             throw new BusinessException(message = "存在相同名称或 HostName 的主机")
+        if(!"true".equals(dto.rememberPass)) server.pass = ""
         serverDao.insertServer(server)
         if(Utils.isNotEmpty(dto.serverGroup)) serverDao.insertRelGroupServer(server.id, dto.serverGroup)
     }

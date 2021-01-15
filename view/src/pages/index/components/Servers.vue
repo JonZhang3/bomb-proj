@@ -24,8 +24,8 @@
                     <template slot-scope="scope">
                         <el-link :underline="false" type="primary"
                                  @click="handleGroupItemClick(scope.row, $event)">查看</el-link>
-                        <el-link :underline="false" type="primary">编辑</el-link>
-                        <el-link :underline="false" type="danger">删除</el-link>
+                        <el-link :underline="false" type="primary" @click="handleEditServerGroup(scope.row)">编辑</el-link>
+                        <el-link :underline="false" @click="handleDeleteServerGroup(scope.row.groupName, scope.row.id, $event)" type="danger">删除</el-link>
                     </template>
                 </el-table-column>
             </el-table>
@@ -49,7 +49,7 @@
                         <el-link :underline="false" type="primary">查看</el-link>
                         <el-link :underline="false" type="primary">编辑</el-link>
                         <el-link :underline="false" type="primary">安装软件</el-link>
-                        <el-link :underline="false" type="danger">删除</el-link>
+                        <el-link :underline="false" @click="handleDeleteServer(scope.row.serverName, scope.row.id, $event)" type="danger">删除</el-link>
                     </template>
                 </el-table-column>
             </el-table>
@@ -62,6 +62,9 @@
         <new-server-group-dialog :visible.sync="newServerGroupDialogVisible"
                                  @added="handleServerGroupAdded"
                                  @cancel="newServerGroupDialogVisible = false"></new-server-group-dialog>
+        <edit-server-group-dialog :visible.sync="editServerGroupDialogVisible"
+                                  @edited="handleServerGroupEdited" :data="editGroupData"
+                                  @cancel="editServerGroupDialogVisible = false"></edit-server-group-dialog>
         <new-server-dialog :visible.sync="newServerDialogVisible"
                            @added="handleServerAdded"
                            @cancel="newServerDialogVisible = false"></new-server-dialog>
@@ -71,6 +74,7 @@
 <script>
 
 import NewServerGroupDialog from "@/pages/index/components/servers/NewServerGroupDialog";
+import EditServerGroupDialog from "@/pages/index/components/servers/EditServerGroupDialog";
 import NewServerDialog from "@/pages/index/components/servers/NewServerDialog";
 import ServerTableItem from "@/pages/index/components/servers/ServerTableItem";
 import apis from "@/api/apis";
@@ -79,13 +83,16 @@ export default {
     name: 'servers',
     components: {
         NewServerGroupDialog,
+        EditServerGroupDialog,
         NewServerDialog,
         ServerTableItem,
     },
     data() {
         return {
             newServerGroupDialogVisible: false,
+            editServerGroupDialogVisible: false,
             newServerDialogVisible: false,
+            editGroupData: {id: '', groupName: '', desc: ''},
             groupPager: {pageSize: 10, page: 1, total: 0},
             serverPager: {pageSize: 10, page: 1, total: 0},
             serverGroups: [],
@@ -101,6 +108,10 @@ export default {
             this.newServerGroupDialogVisible = false;
             this.listServerGroups(null, 1);
         },
+        handleServerGroupEdited() {
+            this.editServerGroupDialogVisible = false;
+            this.listServerGroups(null, 1);
+        },
         handleServerAdded() {
             this.newServerDialogVisible = false;
             this.pageListServers(null, 1);
@@ -110,6 +121,35 @@ export default {
             e.preventDefault();
             // this.$router.push({path: `/servers/group/${row.id}`});
             this.$router.push({name: 'server-group', params: {groupId: row.id, groupName: row.groupName}})
+        },
+        handleEditServerGroup(data) {
+            this.editGroupData = {
+                id: data.id,
+                groupName: data.groupName,
+                desc: data.groupDesc
+            };
+            this.editServerGroupDialogVisible = true;
+        },
+        handleDeleteServer(serverName, id, e) {
+            e.stopPropagation();
+            e.preventDefault();
+            this.$confirm(`<span>确定删除 [<strong style="color: #f56c6c;">${serverName}</strong>] 主机吗</span>`, '提示', {
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: '删除',
+                type: 'warning'
+            }).then(() => {
+                this.deleteServer(id);
+            }).catch(() => {})
+        },
+        handleDeleteServerGroup(groupName, id, e) {
+            e.stopPropagation();
+            e.preventDefault();
+            this.$confirm(`<span>确定删除 [<strong style="color: #f56c6c;">${groupName}</strong>] 主机组吗</span>`, '提示', {
+                dangerouslyUseHTMLString: true,
+                confirmButtonText: '删除',
+                type: 'warning'
+            }).then(() => this.deleteServerGroup(id))
+            .catch(() => {})
         },
         listServerGroups(name, page) {
             const params = {page};
@@ -139,7 +179,27 @@ export default {
                     this.serverPager.total = data.data.total;
                     this.servers = data.data.records;
                 } else {
-                    this.$message.error(data.message)
+                    this.$message.error(data.message);
+                }
+            });
+        },
+        deleteServerGroup(id) {
+            apis.servers.deleteServerGroup(id).then(data => {
+                if(data.code === 1) {
+                    this.$message.success('删除成功');
+                    this.listServerGroups(null, 1)
+                } else {
+                    this.$message.error(data.message);
+                }
+            })
+        },
+        deleteServer(id) {
+            apis.servers.deleteServer(id).then(data => {
+                if(data.code === 1) {
+                    this.$message.success('删除成功');
+                    this.pageListServers(null, 1)
+                } else {
+                    this.$message.error(data.message);
                 }
             });
         }

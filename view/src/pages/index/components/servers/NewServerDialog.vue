@@ -124,6 +124,7 @@ export default {
                 sshPort: this.newServerForm.sshPort,
                 username: this.newServerForm.username,
                 pass: this.newServerForm.pass,
+                rememberPass: this.newServerForm.rememberPass,
                 tags
             }).then(data => {
                 if(data.code === 1) {

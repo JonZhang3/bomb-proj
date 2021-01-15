@@ -27,6 +27,7 @@ class ServerGroupService @Resource()(groupDao: ServerGroupDao) {
     def deleteGroup(dto: ServerGroupDto): Unit = {
         if (Utils.isEmpty(dto.id)) throw new BusinessException(message = "请选择一个主机组删除")
         this.groupDao.deleteGroup(dto)
+        this.groupDao.deleteRelServerGroupByGroupId(dto.id)
     }
 
     def pageQuery(dto: ServerGroupDto): Pager[ServerGroup] = {

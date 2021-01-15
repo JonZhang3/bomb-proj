@@ -11,7 +11,8 @@
                 </div>
             </div>
             <div>
-                <el-tag v-for="item in (data.tags ? data.tags.split(','): [])" size="mini"effect="plain">{{item}}</el-tag>
+                <el-tag v-for="(item, index) in (data.tags ? data.tags.split(','): [])" :key="index"
+                        size="mini"effect="plain">{{item}}</el-tag>
             </div>
             <div style="color: #909399;font-size: 12px;">{{data.description}}</div>
         </div>

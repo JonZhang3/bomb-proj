@@ -7,6 +7,12 @@ export default {
     addServerGroup(params) {
         return put('/api/server/group', params);
     },
+    deleteServerGroup(id) {
+        return del(`/api/server/group/${id}`);
+    },
+    updateServerGroup(groupId, params) {
+        return post(`/api/server/group/${groupId}`, params);
+    },
     addServer(params, configs) {
         return put('/api/server', params, configs);
     },
@@ -17,6 +23,6 @@ export default {
         return post(`/api/server/${serverId}`, params);
     },
     pageListServers(params) {
-        return get('/api/server', params)
+        return get('/api/server', params);
     }
 }
